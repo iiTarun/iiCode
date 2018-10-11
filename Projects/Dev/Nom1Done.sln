@@ -1,0 +1,266 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nom1Done", "Nom1Done", "{A1F49E29-48A0-415E-9775-E0BE2A300324}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nom1Done", "Nom1Done\Nom1Done.csproj", "{0F4866CA-FE47-470A-977B-CADED9405AE5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nom1Done.Service", "Nom1Done.Service", "{544B9AB9-9ABE-444D-8BC9-253E3F00BDC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nom1Done.Service", "Nom1Done.Service\Nom1Done.Service.csproj", "{36982975-3CDE-4F2B-9F24-27C030CDCA71}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nom1Done.DTO", "Nom1Done.DTO", "{8566D0DB-8B7E-4F37-8172-DE9A559389FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nom1Done.DTO", "Nom1Done.DTO\Nom1Done.DTO.csproj", "{8E55D568-CAF6-43C6-AC9F-E14FCF19E32F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nom1Done.Data", "Nom1Done.Data", "{6C304996-FE4E-49BB-AED7-807DB8AAE5B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nom1Done.Data", "Nom1Done.Data\Nom1Done.Data.csproj", "{BCFFFCEC-3B96-465C-9132-8F1CDD6C9FFC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nom1Done.Model", "Nom1Done.Model", "{363F3AAE-CDF5-4A47-8D1E-2E1513C1F395}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nom1Done.Model", "Nom1Done.Model\Nom1Done.Model.csproj", "{4D07088E-2018-492C-B14E-D39C4987247D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nom1Done.Receive", "Nom1Done.Receive\Nom1Done.Receive.csproj", "{3C3B0F40-EC75-423A-ABBE-C410F3D6B1C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CentralisedUprd.Api", "CentralisedUprd.Api\CentralisedUprd.Api.csproj", "{40FE412D-1670-488B-81B7-DD4178B2812A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdiTools", "EdiTools\EdiTools.csproj", "{B7883BF1-C766-44F9-91D6-92577A65357D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UPRD.Models", "UPRD.Models\UPRD.Models.csproj", "{2CF37ED1-F860-4786-9531-0EC44F008729}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CenterlizeUPRD", "CenterlizeUPRD", "{F185374E-DCFC-4523-B272-440CE9B7B5D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UPRD.Data", "UPRD.Data\UPRD.Data.csproj", "{93C2AB5D-974C-4B3B-82FC-7D1F2496D967}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UPRD.Services", "UPRD.Services\UPRD.Services.csproj", "{E8999A58-6474-4381-85E2-ECF98C7DEFE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchlistMailManagement", "WatchlistMailManagement\WatchlistMailManagement.csproj", "{E833F1D2-1DB2-407F-9DD1-D61DA019880A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UPRDEngine", "UPRDEngine\UPRDEngine.csproj", "{F3C884A4-C023-4570-8EDA-E33240430795}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UPRD.DTO", "UPRD.DTO\UPRD.DTO.csproj", "{F3F6CA1F-A8F0-433C-AB0B-0CC9DB174700}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nom1Done.Adminstrator", "Nom1Done.Administrator\Nom1Done.Adminstrator.csproj", "{957D8484-590F-46CC-95DE-C129BB4DCAE2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0F4866CA-FE47-470A-977B-CADED9405AE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F4866CA-FE47-470A-977B-CADED9405AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F4866CA-FE47-470A-977B-CADED9405AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F4866CA-FE47-470A-977B-CADED9405AE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36982975-3CDE-4F2B-9F24-27C030CDCA71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36982975-3CDE-4F2B-9F24-27C030CDCA71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36982975-3CDE-4F2B-9F24-27C030CDCA71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36982975-3CDE-4F2B-9F24-27C030CDCA71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E55D568-CAF6-43C6-AC9F-E14FCF19E32F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E55D568-CAF6-43C6-AC9F-E14FCF19E32F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E55D568-CAF6-43C6-AC9F-E14FCF19E32F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E55D568-CAF6-43C6-AC9F-E14FCF19E32F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCFFFCEC-3B96-465C-9132-8F1CDD6C9FFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCFFFCEC-3B96-465C-9132-8F1CDD6C9FFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCFFFCEC-3B96-465C-9132-8F1CDD6C9FFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCFFFCEC-3B96-465C-9132-8F1CDD6C9FFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D07088E-2018-492C-B14E-D39C4987247D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D07088E-2018-492C-B14E-D39C4987247D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D07088E-2018-492C-B14E-D39C4987247D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D07088E-2018-492C-B14E-D39C4987247D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C3B0F40-EC75-423A-ABBE-C410F3D6B1C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C3B0F40-EC75-423A-ABBE-C410F3D6B1C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C3B0F40-EC75-423A-ABBE-C410F3D6B1C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C3B0F40-EC75-423A-ABBE-C410F3D6B1C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40FE412D-1670-488B-81B7-DD4178B2812A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40FE412D-1670-488B-81B7-DD4178B2812A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40FE412D-1670-488B-81B7-DD4178B2812A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40FE412D-1670-488B-81B7-DD4178B2812A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7883BF1-C766-44F9-91D6-92577A65357D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7883BF1-C766-44F9-91D6-92577A65357D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7883BF1-C766-44F9-91D6-92577A65357D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7883BF1-C766-44F9-91D6-92577A65357D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CF37ED1-F860-4786-9531-0EC44F008729}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CF37ED1-F860-4786-9531-0EC44F008729}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CF37ED1-F860-4786-9531-0EC44F008729}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CF37ED1-F860-4786-9531-0EC44F008729}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93C2AB5D-974C-4B3B-82FC-7D1F2496D967}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93C2AB5D-974C-4B3B-82FC-7D1F2496D967}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93C2AB5D-974C-4B3B-82FC-7D1F2496D967}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93C2AB5D-974C-4B3B-82FC-7D1F2496D967}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8999A58-6474-4381-85E2-ECF98C7DEFE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8999A58-6474-4381-85E2-ECF98C7DEFE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8999A58-6474-4381-85E2-ECF98C7DEFE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8999A58-6474-4381-85E2-ECF98C7DEFE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E833F1D2-1DB2-407F-9DD1-D61DA019880A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E833F1D2-1DB2-407F-9DD1-D61DA019880A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E833F1D2-1DB2-407F-9DD1-D61DA019880A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E833F1D2-1DB2-407F-9DD1-D61DA019880A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3C884A4-C023-4570-8EDA-E33240430795}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3C884A4-C023-4570-8EDA-E33240430795}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3C884A4-C023-4570-8EDA-E33240430795}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3C884A4-C023-4570-8EDA-E33240430795}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3F6CA1F-A8F0-433C-AB0B-0CC9DB174700}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3F6CA1F-A8F0-433C-AB0B-0CC9DB174700}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3F6CA1F-A8F0-433C-AB0B-0CC9DB174700}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3F6CA1F-A8F0-433C-AB0B-0CC9DB174700}.Release|Any CPU.Build.0 = Release|Any CPU
+		{957D8484-590F-46CC-95DE-C129BB4DCAE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{957D8484-590F-46CC-95DE-C129BB4DCAE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{957D8484-590F-46CC-95DE-C129BB4DCAE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{957D8484-590F-46CC-95DE-C129BB4DCAE2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0F4866CA-FE47-470A-977B-CADED9405AE5} = {A1F49E29-48A0-415E-9775-E0BE2A300324}
+		{36982975-3CDE-4F2B-9F24-27C030CDCA71} = {544B9AB9-9ABE-444D-8BC9-253E3F00BDC0}
+		{8E55D568-CAF6-43C6-AC9F-E14FCF19E32F} = {8566D0DB-8B7E-4F37-8172-DE9A559389FF}
+		{BCFFFCEC-3B96-465C-9132-8F1CDD6C9FFC} = {6C304996-FE4E-49BB-AED7-807DB8AAE5B1}
+		{4D07088E-2018-492C-B14E-D39C4987247D} = {363F3AAE-CDF5-4A47-8D1E-2E1513C1F395}
+		{3C3B0F40-EC75-423A-ABBE-C410F3D6B1C2} = {A1F49E29-48A0-415E-9775-E0BE2A300324}
+		{40FE412D-1670-488B-81B7-DD4178B2812A} = {F185374E-DCFC-4523-B272-440CE9B7B5D4}
+		{2CF37ED1-F860-4786-9531-0EC44F008729} = {F185374E-DCFC-4523-B272-440CE9B7B5D4}
+		{93C2AB5D-974C-4B3B-82FC-7D1F2496D967} = {F185374E-DCFC-4523-B272-440CE9B7B5D4}
+		{E8999A58-6474-4381-85E2-ECF98C7DEFE8} = {F185374E-DCFC-4523-B272-440CE9B7B5D4}
+		{F3C884A4-C023-4570-8EDA-E33240430795} = {F185374E-DCFC-4523-B272-440CE9B7B5D4}
+		{F3F6CA1F-A8F0-433C-AB0B-0CC9DB174700} = {F185374E-DCFC-4523-B272-440CE9B7B5D4}
+		{957D8484-590F-46CC-95DE-C129BB4DCAE2} = {A1F49E29-48A0-415E-9775-E0BE2A300324}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8926EC98-6352-4484-B0AA-38B687EB59D4}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 16
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://invertedi.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Nom1Done.Service\\Nom1Done.Service.csproj
+		SccProjectTopLevelParentUniqueName1 = Nom1Done.sln
+		SccProjectName1 = Nom1Done.Service
+		SccLocalPath1 = Nom1Done.Service
+		SccProjectUniqueName2 = Nom1Done.DTO\\Nom1Done.DTO.csproj
+		SccProjectTopLevelParentUniqueName2 = Nom1Done.sln
+		SccProjectName2 = Nom1Done.DTO
+		SccLocalPath2 = Nom1Done.DTO
+		SccProjectUniqueName3 = Nom1Done.Data\\Nom1Done.Data.csproj
+		SccProjectTopLevelParentUniqueName3 = Nom1Done.sln
+		SccProjectName3 = Nom1Done.Data
+		SccLocalPath3 = Nom1Done.Data
+		SccProjectUniqueName4 = Nom1Done\\Nom1Done.csproj
+		SccProjectTopLevelParentUniqueName4 = Nom1Done.sln
+		SccProjectName4 = Nom1Done
+		SccLocalPath4 = Nom1Done
+		SccProjectUniqueName5 = Nom1Done.Model\\Nom1Done.Model.csproj
+		SccProjectTopLevelParentUniqueName5 = Nom1Done.sln
+		SccProjectName5 = Nom1Done.Model
+		SccLocalPath5 = Nom1Done.Model
+		SccProjectUniqueName6 = EdiTools\\EdiTools.csproj
+		SccProjectName6 = EdiTools
+		SccLocalPath6 = EdiTools
+		SccProjectUniqueName7 = UPRD.Models\\UPRD.Models.csproj
+		SccProjectTopLevelParentUniqueName7 = Nom1Done.sln
+		SccProjectName7 = UPRD.Models
+		SccLocalPath7 = UPRD.Models
+		SccProjectUniqueName8 = UPRD.Data\\UPRD.Data.csproj
+		SccProjectTopLevelParentUniqueName8 = Nom1Done.sln
+		SccProjectName8 = UPRD.Data
+		SccLocalPath8 = UPRD.Data
+		SccProjectUniqueName9 = UPRD.Services\\UPRD.Services.csproj
+		SccProjectTopLevelParentUniqueName9 = Nom1Done.sln
+		SccProjectName9 = UPRD.Services
+		SccLocalPath9 = UPRD.Services
+		SccProjectUniqueName10 = WatchlistMailManagement\\WatchlistMailManagement.csproj
+		SccProjectName10 = WatchlistMailManagement
+		SccLocalPath10 = WatchlistMailManagement
+		SccProjectUniqueName11 = UPRDEngine\\UPRDEngine.csproj
+		SccProjectTopLevelParentUniqueName11 = Nom1Done.sln
+		SccProjectName11 = UPRDEngine
+		SccLocalPath11 = UPRDEngine
+		SccProjectUniqueName12 = UPRD.DTO\\UPRD.DTO.csproj
+		SccProjectTopLevelParentUniqueName12 = Nom1Done.sln
+		SccProjectName12 = UPRD.DTO
+		SccLocalPath12 = UPRD.DTO
+		SccProjectUniqueName13 = Nom1Done.Receive\\Nom1Done.Receive.csproj
+		SccProjectTopLevelParentUniqueName13 = Nom1Done.sln
+		SccProjectName13 = Nom1Done.Receive
+		SccLocalPath13 = Nom1Done.Receive
+		SccProjectUniqueName14 = CentralisedUprd.Api\\CentralisedUprd.Api.csproj
+		SccProjectTopLevelParentUniqueName14 = Nom1Done.sln
+		SccProjectName14 = CentralisedUprd.Api
+		SccLocalPath14 = CentralisedUprd.Api
+		SccProjectUniqueName15 = Nom1Done.Administrator\\Nom1Done.Adminstrator.csproj
+		SccProjectTopLevelParentUniqueName15 = Nom1Done.sln
+		SccProjectName15 = Nom1Done.Administrator
+		SccLocalPath15 = Nom1Done.Administrator
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 17
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://invertedi.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Nom1Done\\Nom1Done.csproj
+		SccProjectTopLevelParentUniqueName1 = Nom1Done.sln
+		SccProjectName1 = Nom1Done
+		SccLocalPath1 = Nom1Done
+		SccProjectUniqueName2 = Nom1Done.Service\\Nom1Done.Service.csproj
+		SccProjectTopLevelParentUniqueName2 = Nom1Done.sln
+		SccProjectName2 = Nom1Done.Service
+		SccLocalPath2 = Nom1Done.Service
+		SccProjectUniqueName3 = Nom1Done.DTO\\Nom1Done.DTO.csproj
+		SccProjectTopLevelParentUniqueName3 = Nom1Done.sln
+		SccProjectName3 = Nom1Done.DTO
+		SccLocalPath3 = Nom1Done.DTO
+		SccProjectUniqueName4 = Nom1Done.Data\\Nom1Done.Data.csproj
+		SccProjectTopLevelParentUniqueName4 = Nom1Done.sln
+		SccProjectName4 = Nom1Done.Data
+		SccLocalPath4 = Nom1Done.Data
+		SccProjectUniqueName5 = Nom1Done.Model\\Nom1Done.Model.csproj
+		SccProjectTopLevelParentUniqueName5 = Nom1Done.sln
+		SccProjectName5 = Nom1Done.Model
+		SccLocalPath5 = Nom1Done.Model
+		SccProjectUniqueName6 = Nom1Done.Receive\\Nom1Done.Receive.csproj
+		SccProjectTopLevelParentUniqueName6 = Nom1Done.sln
+		SccProjectName6 = Nom1Done.Receive
+		SccLocalPath6 = Nom1Done.Receive
+		SccProjectUniqueName7 = CentralisedUprd.Api\\CentralisedUprd.Api.csproj
+		SccProjectTopLevelParentUniqueName7 = Nom1Done.sln
+		SccProjectName7 = CentralisedUprd.Api
+		SccLocalPath7 = CentralisedUprd.Api
+		SccProjectUniqueName8 = EdiTools\\EdiTools.csproj
+		SccProjectName8 = EdiTools
+		SccLocalPath8 = EdiTools
+		SccProjectUniqueName9 = UPRD.Models\\UPRD.Models.csproj
+		SccProjectTopLevelParentUniqueName9 = Nom1Done.sln
+		SccProjectName9 = UPRD.Models
+		SccLocalPath9 = UPRD.Models
+		SccProjectUniqueName10 = UPRD.Data\\UPRD.Data.csproj
+		SccProjectTopLevelParentUniqueName10 = Nom1Done.sln
+		SccProjectName10 = UPRD.Data
+		SccLocalPath10 = UPRD.Data
+		SccProjectUniqueName11 = UPRD.Services\\UPRD.Services.csproj
+		SccProjectTopLevelParentUniqueName11 = Nom1Done.sln
+		SccProjectName11 = UPRD.Services
+		SccLocalPath11 = UPRD.Services
+		SccProjectUniqueName12 = WatchlistMailManagement\\WatchlistMailManagement.csproj
+		SccProjectName12 = WatchlistMailManagement
+		SccLocalPath12 = WatchlistMailManagement
+		SccProjectUniqueName13 = UPRDEngine\\UPRDEngine.csproj
+		SccProjectTopLevelParentUniqueName13 = Nom1Done.sln
+		SccProjectName13 = UPRDEngine
+		SccLocalPath13 = UPRDEngine
+		SccProjectUniqueName14 = Nom1Done.Admin\\Nom1Done.Admin.csproj
+		SccProjectTopLevelParentUniqueName14 = Nom1Done.sln
+		SccProjectUniqueName15 = Nom1Done.Admin\\Nom1Done.Admin.csproj
+		SccProjectTopLevelParentUniqueName15 = Nom1Done.sln
+		SccProjectName15 = Nom1Done.Admin
+		SccLocalPath15 = Nom1Done.Admin
+		SccProjectUniqueName16 = UPRD.DTO\\UPRD.DTO.csproj
+		SccProjectTopLevelParentUniqueName16 = Nom1Done.sln
+		SccProjectName16 = UPRD.DTO
+		SccLocalPath16 = UPRD.DTO
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,304 @@
+﻿@model IEnumerable<Nom1Done.DTO.SummaryDTO>
+@using System.Linq;
+@using System;
+@using Nom1Done.DTO;
+@{
+    bool sqtsForLoc = ViewBag.IsSqtsForLoc;
+    var sumaryNomNew = new List<SummaryDTO>();
+    int daysInMonth = DateTime.DaysInMonth(DateTime.Now.Year, ViewBag.Month);
+    DateTime dtFrom = new DateTime(DateTime.Now.Year, ViewBag.Month, 1);
+    List<DateTime> dates = Enumerable.Range(0, daysInMonth)
+     .Select(offset => dtFrom.AddDays(offset))
+     .ToList();
+    int DateVal = 0;
+
+}
+<div class="row">
+    @*<span style="padding-left: 20px; color: #272F3C;">Sched Qty</span>*@
+</div>
+<div class="row">
+    <div class="ibox-content">
+
+        <div id="SqtsOrphanReceiptTableDiv" class="table-responsive">
+            @*<div style="overflow: hidden;" id="DivHeaderRowSqtsOrphan">
+                    <table id="SqtsOrphanReceiptTableHeader" class="table table-bordered table-hover" style="margin-top:0px!important;">
+                        <thead>
+                            <tr>
+                                @if (sqtsForLoc)
+                                {
+                                    <th class="MinimumWidth" rowspan="2">Rec Loc</th>
+                                    <th class="MinimumWidth" rowspan="2">Svc Req K</th>
+                                }
+                                else
+                                {
+                                    <th class="MinimumWidth" rowspan="2">Svc Req K</th>
+                                    <th class="MinimumWidth" rowspan="2">Rec Loc</th>
+                                }
+                                <th class="MinimumWidth" rowspan="2">Cycle</th>
+                                <th class="MinimumWidthLargeCol" rowspan="2">Up Name</th>
+                                <th class="MinimumWidthLargeCol" rowspan="2">Dn Name</th>
+                                <th class="MinimumWidth" rowspan="2">Pkg Id</th>
+                                <th class="MinimumWidth" rowspan="2">Nom Tracking Id</th>
+
+                                @if (Model.Count() > 0)
+                                {
+                                    foreach (var CurrentMonthDates in dates)
+                                    {
+                                        <th class="nosort dates" colspan="2">@CurrentMonthDates.Day</th>
+                                    }
+
+                                }
+                                <th class="MinimumWidth dates" rowspan="2">Total</th>
+
+                            </tr>
+                            <tr>
+                                @if (Model.Count() > 0)
+                                {
+                                    foreach (var CurrentMonthDates in dates)
+                                    {
+                                        <th class="nosort dates">Rec</th>
+                                        <th class="nosort dates">Del</th>
+                                    }
+                                }
+                            </tr>
+                        </thead>
+                    </table>
+                </div>*@
+            @*<div style="overflow:scroll;" onscroll="OnScrollDiv('#DivHeaderRowSqtsOrphan', this)" id="DivMainContentSqtsOrphan">*@
+            <table class="table table-bordered table-striped" id="SqtsOrphanReceiptTable">
+                <thead>
+                    <tr>
+                        @if (sqtsForLoc)
+                        {
+                            <th class="MinimumWidth" rowspan="2">Rec Loc</th>
+                            <th class="MinimumWidth" rowspan="2">Svc Req K</th>
+                        }
+                        else
+                        {
+                            <th class="MinimumWidth" rowspan="2">Svc Req K</th>
+                            <th class="MinimumWidth" rowspan="2">Rec Loc</th>
+                        }
+                        <th class="MinimumWidth" rowspan="2">Cycle</th>
+                        <th class="MinimumWidthLargeCol" rowspan="2">Up Name</th>
+
+                        <th class="MinimumWidth" rowspan="2">Pkg Id</th>
+                        <th class="MinimumWidth" rowspan="2">Nom Tracking Id</th>
+                        <th class="MinimumWidth" rowspan="2">Statement Date</th>
+
+                        @if (Model.Count() > 0)
+                        {
+                            foreach (var CurrentMonthDates in dates)
+                            {
+                                <th class="nosort dates" colspan="1">@CurrentMonthDates.Day</th>
+                            }
+
+                        }
+                        <th class="MinimumWidth dates">Total</th>
+
+                    </tr>
+                    <tr>
+                        @if (Model.Count() > 0)
+                        {
+                            foreach (var CurrentMonthDates in dates)
+                            {
+                                <th class="nosort Rdates">Rec</th>
+                                @*<th class="nosort dates">Del</th>*@
+                            }
+                        }
+                        <th class="nosort Rdates">Rec</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.GroupBy(a => new { a.NomTrackingId, a.RecLoc, a.DelLoc, a.ContractSVC, a.UpStreamName, a.PkgId }))
+                    {
+                        <tr class="sum">
+                            @{
+                                DateVal = 0;
+                            }
+                            @if (sqtsForLoc)
+                            {
+                                <td class="orangeThemeColor">@item.Key.RecLoc</td>
+                                <td class="orangeThemeColor">@item.Key.ContractSVC</td>
+                            }
+                            else
+                            {
+
+                                <td class="orangeThemeColor">@item.Key.ContractSVC</td>
+                                <td class="orangeThemeColor">@item.Key.RecLoc</td>
+                            }
+
+
+                            <td>@item.OrderByDescending(a => a.StatementDate).FirstOrDefault().Cycle</td>
+                            <td>@item.Key.UpStreamName</td>
+
+                            <td>@item.Key.PkgId</td>
+                            <td>@item.Key.NomTrackingId</td>
+                            <td>@item.Max(a => a.StatementDate)</td>
+
+                            @if (Model.Count() > 0)
+                            {
+
+                                foreach (var rec1 in dates.Where(a => a.Date < item.FirstOrDefault().nomStartDate))
+                                {
+                                    var className = "Rsum" + DateVal;
+                                    <td class="transparentZeros dates @className">0</td> //TODO: For Rec QTY
+                                    @*<td class="dates @className"> 0 </td>*@ //TODO: For del QTY
+                                    DateVal = DateVal + 1;
+                                }
+
+                                foreach (var rec1 in dates.Where(a => a.Date >= item.FirstOrDefault().nomStartDate && a.Date <= item.LastOrDefault().nomStartDate))
+                                {
+
+                                    var className2 = "Rsum" + DateVal;
+                                    //int? resit = item.Where(a => a.StatementDate == rec1).FirstOrDefault().Qty;
+                                    //int? resit = item.Where(a => a.nomStartDate <= rec1 && a.nomEndDate >= rec1).FirstOrDefault() == null ? 0 : item.Where(a => a.nomStartDate <= rec1 && a.nomEndDate >= rec1).FirstOrDefault().Qty;
+                                    var itm = item.Where(a => a.nomStartDate == rec1).FirstOrDefault() == null ? null : item.Where(a => a.nomStartDate == rec1).FirstOrDefault();
+                                    //int? resit = item.Where(a => a.StatementDate == rec1).FirstOrDefault() == null ? 0 : item.Where(a => a.StatementDate == rec1).FirstOrDefault().Qty;
+                                    string resQty = itm != null ? String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}", itm.RecPointQty) : "0";
+                                    string delQty = itm != null ? String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}", itm.DelPointQty) : "0";
+
+                                    string ReductionReason = (itm == null || string.IsNullOrEmpty(itm.ReductionReason)) ? "Not Available" : itm.ReductionReason;
+
+                                    <td class="Rsum combat dates @className2" data-toggle="tooltip" data-container="body" title="Reduction Reason: @ReductionReason">@resQty</td> //TODO: For Rec QTY
+                                    @*<td class="sum combat dates @className2">@delQty</td>*@ //TODO: For del QTY
+                                    DateVal++;
+
+                                }
+
+                                foreach (var rec1 in dates.Where(a => a.Date > item.LastOrDefault().nomStartDate))
+                                {
+
+                                    var className3 = "Rsum" + DateVal;
+                                    <td class="transparentZeros sum dates @className3">0</td> //TODO: For Rec QTY
+                                    @*<td class="sum dates @className3">0</td>*@//TODO: For del QTY
+                                    DateVal++;
+                                }
+                            }
+                            @{
+                                //DateVal = DateVal + 1;
+                                var tempClass = "Rsum" + DateVal;
+                            }
+                            <td class="Rtotal-combat dates @tempClass">0</td>
+                            @{
+                                DateVal++;
+                            }
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="orangeThemeColor">
+                        @{
+                            DateVal = 0;
+                        }
+
+                        <td colspan="7">Total</td>
+
+                        @if (Model.Count() > 0)
+                        {
+                            foreach (var CurrentMonthDates in dates)
+                            {
+                                var classNameFooter = "Rdates" + DateVal;
+                                <td class="sum @classNameFooter"></td> // TODO: For Rec
+                                @*<td class="sum @classNameFooter"></td>*@// TODO: For Del
+                                DateVal = DateVal + 1;
+                            }
+
+                        }
+                        @{
+                            //DateVal = DateVal + 1;
+                            var ClassNameFooterTotal = "Rdates" + DateVal;
+                        }
+                        <td class="sum @ClassNameFooterTotal"></td>
+
+
+                    </tr>
+                </tfoot>
+            </table>
+
+            @*</div>*@
+        </div>
+
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $('tr').each(function () {
+            //the value of sum needs to be reset for each row, so it has to be set inside the row loop
+            var sum = 0
+            //find the combat elements in the current row and sum it
+            $(this).find('.Rsum').each(function () {
+                var combat = $(this).text();
+                if (combat.length !== 0) {
+                    sum += parseInt(combat.replace(/\,/g, ''), 10);
+                }
+            });
+            //set the value of currents rows sum to the total-combat element in the current row
+            $('.Rtotal-combat', this).html(sum);
+            $('.Rtotal-combat', this).digits();
+        });
+
+
+        CalculateColumn();
+
+        //MakeStaticHeader('#DivHeaderRowSqtsOrphan', '#DivMainContentSqtsOrphan', '#SqtsOrphanReceiptTable', 300, 1080, 80, false);
+
+        //var mainTable = $("#SqtsOrphanReceiptTable").DataTable({
+        //    "bPaginate": false,
+        //    "searching": false,
+        //    "order": [0],
+        //    "columnDefs": [{
+        //        "targets": 'nosort',
+        //        "orderable": false
+        //    }],
+        //});
+
+        //var headerTable = $("#SqtsOrphanReceiptTableHeader").DataTable({
+        //    "bPaginate": false,
+        //    "searching": false,
+        //    "order": [0],
+        //    "columnDefs": [{
+        //        "targets": 'nosort',
+        //        "orderable": false
+        //    }],
+        //    "bDeferRender": true,
+        //    "bAutoWidth": false,
+        //    "bFilter": false,
+        //    "bInfo": false,
+        //    "deferLoading": 0,
+        //    "language": {
+        //        "emptyTable": " ",
+        //        "zeroRecords": " "
+        //    },
+        //});
+
+        //$("#SqtsOrphanReceiptTableHeader").find("tr:gt(1)").remove();
+
+        //$('#SqtsOrphanReceiptTableHeader').on('order.dt', function () {
+        //    var order = headerTable.order();
+        //    mainTable.column(order[0][0]).order(order[0][1]).draw();
+        //    $("#SqtsOrphanReceiptTableHeader").find("tr:gt(1)").remove();
+        //});
+
+    });
+
+    function CalculateColumn() {
+        $('table thead tr').find('.Rdates').each(function (i) {
+           // debugger;
+            var sum = 0
+            $("tr td.Rsum" + i).each(function () {
+                  //debugger;
+                var combat = $(this).text();
+                if (combat.length !== 0) {
+                    sum += parseInt(combat.replace(/\,/g, ''), 10);
+                }
+            });
+            $('.Rdates' + i).html(sum);
+            $('.Rdates' + i).digits();
+        });
+
+    }
+</script>

@@ -1,0 +1,47 @@
+﻿@model Nom.ViewModel.NominationPartialDTO
+
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">Select Route</h4>
+        </div>
+        <div class="modal-body">
+            <div class="ibox float-e-margins">              
+
+                <div class="ibox-content">
+                    <table class="table table-striped table-bordered table-hover" id="RoutesModalTable">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>EDI Route Id</th>
+                                <th>Route Description</th>
+                                <th>Direction Id</th>
+                                <th>Direction Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Routes)
+                            {
+                                <tr class="gradeX">
+                                    <td><button type="button" style="background-color:#FF6C3A !important; border-color:#FF6C3A !important;" onclick="RoutePopUpClick('@item.EDIRouteId','@item.RouteDescription',' @item.DirectionId','@item.DirectionDescription','@Model.ForRow','@Model.PopUpFor')" class="btn btn-primary">Select</button></td>
+                                    <td>@item.EDIRouteId</td>
+                                    <td>
+                                        @item.RouteDescription
+                                    </td>
+                                    <td>@item.DirectionId</td>
+                                    <td>@item.DirectionDescription</td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

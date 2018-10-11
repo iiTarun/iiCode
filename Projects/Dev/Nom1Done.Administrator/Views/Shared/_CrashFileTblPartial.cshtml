@@ -1,0 +1,32 @@
+﻿@model IEnumerable<UPRD.DTO.CrashFileDTO>
+<div class="form-group">
+    <table id="crashFileTable" class="table table-striped table-bordered ">
+        <thead>
+            <tr>
+                <th>File name</th>
+                <th>Created On</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.FileName</td>
+                    <td>@item.CreatedOn</td>
+                    <td>
+                        @Html.ActionLink("download", "DownloadCrashFile", "CrashFile", new { fileName = item.FileName, shipperDuns =item.ShipperDuns}, new { Style = "color:Blue;text-decoration-line: underline" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+        </tfoot>
+    </table>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('#crashFileTable').DataTable();
+    });
+</script>

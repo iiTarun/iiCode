@@ -1,0 +1,55 @@
+﻿@model Nom.ViewModel.LocationListDTO
+@{
+    ViewBag.Title = "Index";
+    var count = 1;
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                @*<span class="label label-success pull-right">Current Date/Time: @System.DateTime.Now</span>*@
+                <h4>Locations</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox-content m-b-sm border-bottom">
+            <div class="ibox-content">
+
+                <div class="row">
+                    <table class="table table-bordered table-hover" id="LocationTable">
+                        <thead>
+                            <tr>
+                                <th style="min-width: 60px;">Sr.No.</th>
+                                <th style="min-width: 120px;">Name</th>
+                                <th style="min-width: 120px;">LocPropCode</th>
+                                <th style="min-width: 120px;">IsActive</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.LocationList)
+                            {
+                                <tr class="gradeX">
+                                    <td>@count</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.PropCode</td>
+                                    <td>@item.IsActive</td>
+                                </tr>
+                                count++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,78 @@
+﻿
+@model Nom1Done.DTO.WatchListDTO
+@using Nom1Done.Enums
+@{
+    Guid CurrentRowId = Guid.NewGuid();
+    var LocProp = "Select";
+}
+
+
+<tr id="RuleListItem_@CurrentRowId" class="newWatchListRule" rel="@CurrentRowId">
+     @Html.Hidden("RuleList.Index", CurrentRowId.ToString())
+    <td>
+        @Html.DropDownList("RuleList[" + CurrentRowId + "].PipelineDuns", new SelectList(ViewBag.PipelineId, "DUNSNo", "Name", Model.RuleList[0].PipelineDuns), "-Select Pipeline-", new { @class = "WatchListPipeDropdown form-control", rel = CurrentRowId, @onChange = "OnChangePipelineSelect(" + "'" + CurrentRowId + "'" + ")" })
+    </td>
+    @if (Model.DatasetId != EnercrossDataSets.SWNT)
+    {
+        @*<td>
+                @Html.DropDownList("RuleList[" + CurrentRowId + "].LocationIdentifier", new SelectList(ViewBag.LocationIdentifier, "Identifier", "Name", Model.RuleList[0].LocationIdentifier), "-Select Location-", new { @class = "WatchListLocDropdown form-control", rel = CurrentRowId, disabled = "disabled" })
+            </td>*@
+        <td class="cursor">
+            <button type="button" class="btn btn-success btn-outline" style="text-align:start; width:200px !important;"  onclick="OpenPopUp('@Model.DatasetId','@CurrentRowId')">
+                Select
+            </button>
+            @Html.Hidden("RuleList[" + CurrentRowId + "].LocationIdentifier", Model.RuleList[0].LocationIdentifier, new { @rel = CurrentRowId })
+        </td>
+    }
+    else
+    {
+        <td>
+            @Html.DropDownList("RuleList[" + CurrentRowId + "].IsCriticalNotice", new SelectList(new List<Object>{
+     new { value = "true" , text = "Critical"  },
+     new { value = "false" , text = "Non-Critical" }
+    }, "value", "text", Model.RuleList[0].IsCriticalNotice), "-Select NoticeType-", new { @class = "WatchlistNoticeTypeDropDown form-control", rel = CurrentRowId })
+        </td>
+    }
+    <td>
+        @Html.CheckBox("RuleList[" + CurrentRowId + "].AlertSent", @Model.RuleList[0].AlertSent, new { @class = "toggleBtn" })
+    </td>
+    <td>
+        @Html.DropDownList("RuleList[" + CurrentRowId + "].AlertFrequency", new SelectList(new List<Object>{
+ new { value = WatchlistAlertFrequency.Daily , text = "Daily"  },
+ new { value = WatchlistAlertFrequency.WhenAvailable , text = "When Available" }
+}, "value", "text", Model.RuleList[0].AlertFrequency), "-Select-", new { @class = "WatchlistAlertFreq form-control", rel = CurrentRowId })
+    </td>
+    <td>
+        @Html.DropDownList("RuleList[" + CurrentRowId + "].PropertyId", new SelectList(ViewBag.Properties, "Id", "Title", Model.RuleList[0].PropertyId), "-Select Field-", new { @class = "WatchlistField form-control propertySelect", rel = CurrentRowId, @onChange = "OnChangePropertySelect(" + "'" + CurrentRowId + "'" + ")" })
+        <input id="PropertyDataType_@CurrentRowId" type="hidden" value="" />
+    </td>
+    <td>
+        @Html.Label("Is Between",new {@class= ".col-md-1" })  
+    </td>
+    <td>
+        @Html.TextBox("RuleList[" + CurrentRowId + "].value", Model.RuleList[0].value, new { @class = "form-control allownumericwithoutdecimal", @rel = CurrentRowId })
+    </td> 
+    <td>
+        @Html.TextBox("RuleList[" + CurrentRowId + "].UpperValue", Model.RuleList[0].UpperValue, new { @class = "form-control allownumericwithoutdecimal", @rel = CurrentRowId })
+    </td>
+    <td>
+        <a class="btn" href="#" onclick="onclickDeleteRule(this);">
+            <i class="fa fa-times-circle glyphicon-color" aria-hidden="true" title="Delete"></i>
+       </a>
+    </td>
+</tr>
+
+<script>
+
+    $(function () {
+        toggelBtn();
+        $(".allownumericwithoutdecimal").on("keypress keyup blur", function (event) {
+            $(this).val($(this).val().replace(/[^\d].+/, ""));
+            if ((event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
+        });
+    });
+    $(".WatchListPipeDropdown,.WatchListLocDropdown,.WatchlistNoticeTypeDropDown,.WatchlistAlertFreq, .WatchlistField, .WatchlistOper").select2();
+
+</script>

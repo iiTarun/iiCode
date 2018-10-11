@@ -1,0 +1,162 @@
+﻿@model Nom1Done.DTO.BatchDetailDTO
+
+@for (var i = 0; i < Model.MarketList.Count; i++)
+{
+    Guid CurrentRowId = Guid.NewGuid();
+    var LocationProp = "--Select--";
+    var LocationName = "--Select--";
+    var Location = "--Select--";
+    var TransactionTypeDescription = "--Select--";
+    var TransactionType = "--Select--";
+    var ServiceRequestNo = "--Select--";
+    var ServiceRequestType = "--Select--";
+    var DownstreamIDProp = "--Select--";
+    var DownstreamIDName = "--Select--";
+    var DownstreamID = "--Select--";
+    <tr class="gradeX newMarketRow" id="MarketTable_@CurrentRowId" rel="@CurrentRowId">
+        @Html.Hidden("MarketList.Index", CurrentRowId.ToString())
+        <td><input type="checkbox" value="@CurrentRowId" class="marketchkboxes" onclick="MarketTableChkBoxClicked(this)" onchange="marketchkboxesOnChange()" /></td>
+        @*<td>
+            <span></span>
+        </td>*@
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','Market',@Model.PipelineId)">
+                @if (Model.MarketList[i].LocationProp != null)
+                {
+                    LocationProp = Model.MarketList[i].LocationProp;
+                }
+                @LocationProp
+            </span>
+            @Html.Hidden("MarketList[" + CurrentRowId + "].LocationProp", Model.MarketList[i].LocationProp, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','Market',@Model.PipelineId)">
+                @if (Model.MarketList[i].LocationName != null)
+                {
+                    LocationName = Model.MarketList[i].LocationName;
+                }
+                @LocationName
+            </span>
+            @Html.Hidden("MarketList[" + CurrentRowId + "].LocationName", Model.MarketList[i].LocationName, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','Market',@Model.PipelineId)">
+                @if (Model.MarketList[i].Location != null)
+                {
+                    Location = Model.MarketList[i].Location;
+                }
+                @Location
+            </span>
+            @Html.Hidden("MarketList[" + CurrentRowId + "].Location", Model.MarketList[i].Location, new { @rel = CurrentRowId })
+        </td>
+        @*<td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentRowId','Market',@Model.PipelineId)">
+                @if (Model.MarketList[i].TransactionTypeDescription != null)
+                {
+                    TransactionTypeDescription = Model.MarketList[i].TransactionTypeDescription;
+                }
+                @TransactionTypeDescription
+            </span>
+            @Html.Hidden("MarketList[" + CurrentRowId + "].TransactionTypeDescription", Model.MarketList[i].TransactionTypeDescription, new { @rel = CurrentRowId })
+        </td>*@
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentRowId','Market',@Model.PipelineId)">
+                @if (Model.MarketList[i].TransactionType != null)
+                {
+                    TransactionType = Model.MarketList[i].TransactionType;
+                }
+                @TransactionType
+            </span>
+            @Html.Hidden("MarketList[" + CurrentRowId + "].TransactionType", Model.MarketList[i].TransactionType, new { @rel = CurrentRowId })
+            @Html.Hidden("MarketList[" + CurrentRowId + "].TransTypeMapId", Model.MarketList[i].TransTypeMapId, new { @rel = CurrentRowId })
+            @Html.Hidden("MarketList[" + CurrentRowId + "].TransactionTypeDescription", Model.MarketList[i].TransactionTypeDescription, new { @rel = CurrentRowId })
+         </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentRowId','Market',@Model.PipelineId)">
+                @if (Model.MarketList[i].ServiceRequestNo != null)
+                {
+                    ServiceRequestNo = Model.MarketList[i].ServiceRequestNo;
+                }
+                @ServiceRequestNo
+            </span>
+            @Html.Hidden("MarketList[" + CurrentRowId + "].ServiceRequestNo", Model.MarketList[i].ServiceRequestNo, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentRowId','Market',@Model.PipelineId)">
+                @if (Model.MarketList[i].ServiceRequestType != null)
+                {
+                    ServiceRequestType = Model.MarketList[i].ServiceRequestType;
+                }
+                @ServiceRequestType
+            </span>
+            @Html.Hidden("MarketList[" + CurrentRowId + "].ServiceRequestType", Model.MarketList[i].ServiceRequestType, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Market',@Model.PipelineId)">
+                @if (Model.MarketList[i].DownstreamIDProp != null)
+                {
+                    DownstreamIDProp = Model.MarketList[i].DownstreamIDProp;
+                }
+                @DownstreamIDProp
+            </span>
+            @Html.Hidden("MarketList[" + CurrentRowId + "].DownstreamIDProp", Model.MarketList[i].DownstreamIDProp, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Market',@Model.PipelineId)">
+                @if (Model.MarketList[i].DownstreamIDName != null)
+                {
+                    DownstreamIDName = Model.MarketList[i].DownstreamIDName;
+                }
+                @DownstreamIDName
+            </span>
+            @Html.Hidden("MarketList[" + CurrentRowId + "].DownstreamIDName", Model.MarketList[i].DownstreamIDName, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Market',@Model.PipelineId)">
+                @if (Model.MarketList[i].DownstreamID != null)
+                {
+                    DownstreamID = Model.MarketList[i].DownstreamID;
+                }
+                @DownstreamID
+            </span>
+            @Html.Hidden("MarketList[" + CurrentRowId + "].DownstreamID", Model.MarketList[i].DownstreamID, new { @rel = CurrentRowId })
+        </td>
+        @*<td>@Html.TextBoxFor(a => a.MarketList[CurrentRowId].DefaultInd, new { @class = "form-control", @rel = CurrentRowId })</td>*@
+        <td>@Html.TextBox("MarketList[" + CurrentRowId + "].ReceiptQuantityGross", Model.MarketList[i].ReceiptQuantityGross, new { @class = "form-control cellMarketRec", @type = "number", @rel = CurrentRowId, @min = "0", @oninput = "FuelValidationMarket(" + "'" + CurrentRowId + "'" + ")", @onkeyup = "FuelValidationMarket(" + "'" + CurrentRowId + "'" + ")", onblur = "OnMarketRecQtyChange()" })</td>
+        <td class="cursor">
+            @*<span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentRowId','Market',@Model.PipelineId)">
+                @Html.TextBox("MarketList[" + CurrentRowId + "].FuelPercentage", Model.MarketList[i].FuelPercentage, new { @class = "form-control", @rel = CurrentRowId, @readonly = true })
+            </span>*@
+            @Html.TextBox("MarketList[" + CurrentRowId + "].FuelPercentage", Model.MarketList[i].FuelPercentage, new { @class = "form-control", @rel = CurrentRowId, @onblur = "FuelPercentChangeMarket(" + "'" + CurrentRowId + "'" + ")" })
+        </td>
+        <td>@Html.TextBox("MarketList[" + CurrentRowId + "].FuelQunatity", Model.MarketList[i].FuelQunatity, new { @class = "form-control", @rel = CurrentRowId, @readonly = true })</td>
+        <td>@Html.TextBox("MarketList[" + CurrentRowId + "].DeliveryQuantityNet", Model.MarketList[i].DeliveryQuantityNet, new { @class = "form-control cellMarketDel", @type = "number", @rel = CurrentRowId, @min = "0", @oninput = "FuelValidationMarketDelQty(" + "'" + CurrentRowId + "'" + ")", @onkeyup = "FuelValidationMarketDelQty(" + "'" + CurrentRowId + "'" + ")", onblur = "OnMarketDelQtyChange()" })</td>
+        <td>@Html.TextBox("MarketList[" + CurrentRowId + "].DnstreamRank", Model.MarketList[i].DnstreamRank, new { @class = "form-control rank", @rel = CurrentRowId, maxlength = "3" })</td>
+        <td>@Html.TextBox("MarketList[" + CurrentRowId + "].PackageID", Model.MarketList[i].PackageID, new { @class = "form-control", @rel = CurrentRowId })</td>
+        <td>@Html.TextBox("MarketList[" + CurrentRowId + "].DnContractIdentifier", Model.MarketList[i].DnContractIdentifier, new { @class = "form-control", @rel = CurrentRowId })</td>
+        <td>@Html.TextBox("MarketList[" + CurrentRowId + "].DnPackageID", Model.MarketList[i].DnPackageID, new { @class = "form-control", @rel = CurrentRowId })</td>
+      
+
+    </tr>
+}
+
+<script>
+    $('.rank').keypress(function (e) {
+        var regex = new RegExp("^[0-9]+$");
+
+        var charCode = e.which;
+         
+        if (charCode == 8 || charCode == 0) {
+            return;
+        }
+        else {
+            var keyChar = String.fromCharCode(charCode);
+            if (regex.test(keyChar)) {
+                return true;
+            }
+        }
+        e.preventDefault();
+        return false;
+    });
+
+</script>

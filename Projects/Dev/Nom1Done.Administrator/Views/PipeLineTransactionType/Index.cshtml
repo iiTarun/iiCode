@@ -1,0 +1,156 @@
+﻿@model UPRD.DTO.Pipeline_TransactionType_MapDTO
+
+@{
+    /**/
+
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>PipeLine Transaction Types</h2>
+
+
+
+@Html.HiddenFor(a => a.pipelineDuns, new { @id = "hdnPipelineDuns" })
+
+<div class="ibox float-e-margins">
+    <a class="btn btn-add-edit" onclick="PopupForm('@Url.Action("AddorEdit", "PipeLineTransactionType")')"><i class="glyphicon glyphicon-plus"></i>Add New </a>
+    <button type="submit" onclick="SyncData('@Url.Action("SyncData", "PipeLineTransactionType")')" class="btn btn-w-m btn-success btn-outline"><i class="fa fa-bars"></i> Sync Data</button>
+</div>
+<br />
+<div class="card">
+    <div class="card-body">
+
+
+        <table id="TransactionDetails" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+
+                <tr>
+                    <th style="min-width: 380px;">Name</th>
+                    <th style="min-width: 150px;">PathType</th>
+                    <th style="min-width: 150px;">Active</th>
+                    <th style="min-width: 150px;">Edit/Delete</th> 
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+</div>
+
+
+@section scripts
+{
+
+
+
+    <script>
+
+  var Popup, dataTable;
+
+        $(document).ready(function () {
+            var selectedId = $('#hdnSelectedId').val();
+            dataTable = $("#TransactionDetails").DataTable({
+                "scrollX": true,
+                "scrollY": 400,
+                "ajax": {
+
+                    "url": "/PipeLineTransactionType/PostData",
+                    "type": "POST",
+                    "dataType": "json",
+                    "data": {PipelineDuns: $("#hdnPipelineDuns").val()}
+                },
+                "columns": [
+                    { "data": "Name", "autoWidth": true },
+                    { "data": "PathType", "autoWidth": true },
+
+
+
+                    { "data": "IsActive", "IsActive": true },
+
+                  {
+                      "data": "ID", "render": function (data, type, row) {
+                          if (row.IsActive === true) {
+
+                              return "<a class='btn btn-add-edit btn-sm' onclick=PopupForm('@Url.Action("AddorEdit", "PipeLineTransactionType")/" + data + "')><i class='fa fa-pencil'></i> Edit</a><a class='btn btn-delete btn-sm' style='margin-left:5px' onclick=Delete('@Url.Action("Delete", "PipeLineTransactionType")/" + data + "')><i class='fa fa-trash'></i> DeActivate</a>";
+                          }
+                          else {
+                         return "<a class='btn btn-delete btn-sm' style='margin-left:5px' onclick=Activate('@Url.Action("Activate", "PipeLineTransactionType")/" + data + "')><i class='fa fa-trash'></i> Activate</a>";
+
+                          }
+                          },
+                        "orderable": true,
+                        "searchable": true,
+                        "info": true,
+                        "Paging": true,
+                        "searching": true,
+                        "width": "150px",
+
+                    }
+
+
+
+                ],
+                "language": { "emptyTable": "No data found" }
+
+            })
+        });
+        
+        
+
+        function PopupForm(url) {
+
+            var formDiv = $('<div/>');
+            $.get(url)
+                .done(function (response) {
+                    formDiv.html(response);
+                    Popup = formDiv.dialog({
+                        autopen: true,
+                        resizable: false,
+                        title: "Add New Transaction type",
+                        height: 400,
+                        width: 600,
+                        close: function () {
+                            Popup.dialog('destroy').remove();
+                        },
+                        open: function () {
+                            $(this).closest(".ui-dialog")
+                                .find(".ui-dialog-titlebar-close")
+                                .removeClass("ui-dialog-titlebar-close")
+                                .html("<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>");
+                        }
+                    });
+                });
+        }
+        function SubmitForm(form) {
+            $(form).append('<input type="hidden" name="pipelineDuns" value="' + $("#hdnPipelineDuns").val() + '" />');
+            $.validator.unobtrusive.parse(form);
+            if ($(form).valid()) {
+                $.ajax({
+                    type: "POST",
+                    url: form.action,
+                          //data: model,
+                    data: $(form).serialize(),
+
+                    success: function (data) {
+                        if (data.success) {
+
+                            Popup.dialog('close');
+                            dataTable.ajax.reload();
+                            alert(data.message);
+                        }
+                    }
+
+                });
+            }
+
+            return false;
+        }
+
+     
+
+        </script>
+   
+
+}
+

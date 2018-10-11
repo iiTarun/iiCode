@@ -1,0 +1,46 @@
+﻿@model UPRD.DTO.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+    Layout = null;
+}
+
+<link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+<link rel="stylesheet" href="~/assets/scss/style.css">
+<link href="~/assets/css/custome.css" rel="stylesheet" />
+<body class="bg-dark">
+    <div class="sufee-login d-flex align-content-center flex-wrap">
+        <div class="container">
+            <div class="login-content">
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal login-form", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <h4>Create a new account.</h4>
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "control-label" })
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Register</button>
+                    <div class="register-link m-t-15 text-center">
+                        <p>Already have account ? @Html.ActionLink("Sign In", "Login") </p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</body>
+
+
+
+
+
+

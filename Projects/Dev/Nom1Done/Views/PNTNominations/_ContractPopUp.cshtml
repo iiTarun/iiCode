@@ -1,0 +1,159 @@
+﻿@model Nom.ViewModel.NominationPartialDTO
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">Select Contracts</h4>
+        </div>
+        <div class="modal-body">
+            <div class="ibox float-e-margins">
+
+
+                <div class="ibox-content m-b-sm border-bottom">
+                    <label class="control-label">Add New Contract</label>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label" for="status">Contract Number</label>
+                                @*<input type="text" class="form-control" placeholder="Flow Start Date" />*@
+                                @Html.TextBoxFor(a => a.OnFlyContractNumber, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label" for="status">Fuel Percentage (Max: 99.99)</label>
+                                @Html.TextBoxFor(a => a.OnFlyFuelPercentage, new { @class = "form-control" })
+                                @*<input type="text" class="form-control" placeholder="Flow End Date" />*@
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group" style="margin-top:22px;">
+                                <button type="button" onclick="manualContractSave('@Model.ForRow','@Model.PopUpFor','@Model.PipelineDuns')" name="Save" class="btn btn-w-m btn-success btn-outline"><i class="glyphicon glyphicon-save"></i>Save</button>
+                                @*<button type="button" class="btn btn-w-m btn-success btn-outline"><i class="glyphicon glyphicons-refresh"></i>Reset</button>*@
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                <div class="ibox-content">
+                    <table class="table table-striped table-bordered table-hover" id="ContactModalTable">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>Request No</th>
+                                <th>FuelPercentage</th>
+                                <th>MDQ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Contracts)
+                            {
+                                <tr class="gradeX">
+                                    <td><button type="button" style="background-color:#FF6C3A !important; border-color:#FF6C3A !important;" onclick="ContractPopUpClick('@item.RequestNo','@item.RequestType',' @item.FuelPercentage','@Model.ForRow','@Model.PopUpFor')" class="btn btn-primary">Select</button></td>
+                                    <td>@item.RequestNo</td>
+                                    <td>
+                                        @item.FuelPercentage
+                                    </td>
+                                    <td>@item.MDQ</td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#OnFlyContractNumber').keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z0-9 ]+$");
+       
+        var charCode = e.which;
+         
+        if (charCode == 8 || charCode == 0 || charCode == 45 || charCode == 35) {
+            return;
+        }
+        else {
+            var keyChar = String.fromCharCode(charCode);
+            if (regex.test(keyChar)) {
+                return true;
+            }
+        }
+        e.preventDefault();
+        return false;
+    });
+
+    $('#OnFlyFuelPercentage').keypress(function (event) {
+            var flag=isNumber(event, this);
+
+           return flag;
+        });
+
+
+     $('#OnFlyFuelPercentage').keyup(function (event) {
+            var flag = NumberValidate(this);
+           return flag;
+       });
+
+
+    function NumberValidate(element)
+    {
+           if(($(element).val()) - 99.99 > 0)
+            {
+               $(element).val("99.99");
+               return false;
+             }
+         return true;
+    }
+
+
+    function isNumber(evt, element) {
+
+        var charCode = (evt.which) ? evt.which : event.keyCode
+
+        if ( (charCode != 46 || $(element).val().indexOf('.') != -1) &&      // “.” CHECK DOT, AND ONLY ONE.
+            (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+    function manualContractSave(ForRow, ContractFrom, PipelineDuns)
+    {
+         
+        var fuelPer = $("#OnFlyFuelPercentage").val();
+        var contractNumber = $("#OnFlyContractNumber").val();
+        var reg = /<(.|\n)*?>/g;
+        if (fuelPer == "" || contractNumber == "" || ($.trim(contractNumber).length == 0)) {
+            toastr.warning("Please fill both fields(ContractNumber and FuelPercentage) in Contract to save");
+        } else if (reg.test(contractNumber) == true) {
+            toastr.warning("", "These Special Charaters are not allow in contractNumber.");
+        }else {
+
+
+            $.ajax({
+                url: '/Contracts/OnflyContractSave',
+                data: { ContractNumber: contractNumber, FuelPercentage: fuelPer, pipelineDuns: PipelineDuns },
+                type: 'GET',
+                success: function (result) {
+                     
+                    if (result == "True")
+                    {
+                        toastr.success("", "Contract saved successfully.");
+                        ContractPopUpClick(contractNumber, "", fuelPer, ForRow, ContractFrom);
+                    }
+                    else
+                        toastr.warning("", "Contract Saving failed.");
+                }
+            });
+
+        }
+    }
+</script>
+

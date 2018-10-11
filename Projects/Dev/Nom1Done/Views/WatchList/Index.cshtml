@@ -1,0 +1,383 @@
+﻿@model Nom1Done.DTO.WatchListDTO
+@using Nom1Done.Enums
+@{
+    ViewBag.Title = "WatchList";
+}
+<style>
+    .toggle.ios, .toggle-on.ios, .toggle-off.ios {
+        border-radius: 20px;
+    }
+        .toggle.ios .toggle-handle {
+            border-radius: 20px;
+        }
+
+    .RuleTableScrollBar {
+        max-height: 400px;
+        min-width: 1050px;
+        overflow-x: scroll;
+        overflow-y: scroll;
+    }
+
+    .minWidth {
+        min-width: 200px;
+    }
+
+    .cursor {
+        cursor: pointer;
+    }
+</style>
+
+
+@using (Html.BeginForm("Index", "WatchList", FormMethod.Post))
+{
+    @Html.HiddenFor(a => a.id)
+
+
+    <div style="min-height:568px !important">
+        <div class="row">
+            <div class="col-md-2 col-md-offset-1 font-bold" style="padding-top:5px!important;">
+                <b>Create a Watchlist</b>
+            </div>
+
+            <div class="col-md-3 font-bold">
+                @Html.DropDownListFor(a => a.DatasetId,
+           new SelectList(
+               new List<object>
+                {
+                    new {value="1",text="Operational Capacity"},
+                    new {value="2",text="Unsubscribed Capacity"},
+                    new {value="3",text="System Wide Notices"},
+                    new {value="0",text="--Select Dataset--"}
+                },
+               "value",
+                "text",
+                "0"),
+           new { @class = "form-control"})
+            </div>
+
+            @*<div class="col-md-3" style="margin-left:60px !important;">
+                    <a href="@Url.Action("List")" class="btn btn-w-m btn-success btn-outline"><i class="glyphicon glyphicon-plus"></i>Show my watchlist</a>
+                </div>*@
+
+
+        </div>
+        <br />
+        <div class="row" style="margin-bottom:30px !important;">
+            <div id="WatchListSettings">
+
+            </div>
+        </div>
+    </div>
+}
+
+    <div class="modal inmodal" id="LocationPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+
+<script>
+    $(function () {
+        toggelBtn();
+    }); 
+    $(document).ready(function () {
+        var value = '@ViewBag.Status';
+        if (value != "") {
+            toastr.success("", "@ViewBag.Status");
+        }
+
+        var valueFlag = '@ViewBag.EditFlag';
+
+        if (valueFlag != "") {
+            var url = '@Url.Action("UpdateWatchListSetting", "WatchList")' + "?id=" + valueFlag;
+            //$("#WatchListSettings").load(url, function () {
+            //    $('#WatchListSettings').fadeIn('fast');
+            //})
+            $.ajax({
+                url: url,
+                cache: false,
+                success: function (data) {
+                    $("#WatchListSettings").html(data);
+                }
+            });
+        }
+
+        $("#DatasetId").on("change", function () {
+            var url = '@Url.Action("GetWatchListSetting", "WatchList")' + "?selectedItem=" + $(this).val();
+            $("#WatchListSettings").load(url, function () {
+                $('#WatchListSettings').fadeIn('fast');
+            })
+        });
+
+    });
+
+    function toggelBtn() {
+        $('.toggleBtn').bootstrapToggle({
+            style: "ios",
+            onstyle: "success",
+            offstyle: "info"
+        });
+    }
+
+
+    function OnChangePipelineSelect(CurrentRowId) {       
+        if ($("#WatchListDataSetId").val() == "SWNT") { return; }
+        var LocId = "#RuleList_" + CurrentRowId + "__LocationIdentifier";      
+        $(LocId).val(""); $(LocId).parent().find('button').html("Select");
+        
+        //if ($("#WatchListDataSetId").val() == "OACY") {
+        //    $("#RuleList_" + CurrentRowId + "__UpperValue").val("");
+        //    var propDropDownId = $("#RuleList_" + CurrentRowId + "__PropertyId");
+        //    //$(propDropDownId).empty();
+        //    //var listItems = "<option value='0'>-Select Operator-</option>";
+        //    //$(propDropDownId).html(listItems);
+        //    $("#RuleList_" + CurrentRowId + "__PropertyId").val("0");
+        //} else {
+        //    var OperatorDropDownId = $("#RuleList_" + CurrentRowId + "__ComparatorsId");
+        //    $(OperatorDropDownId).empty();
+        //    var listItems = "<option value='0'>-Select Operator-</option>";
+        //    $(OperatorDropDownId).html(listItems);
+        //    $("#RuleList_" + CurrentRowId + "__ComparatorsId").val("0");
+        //}
+        //$("#RuleList_" + CurrentRowId + "__value").val("");     
+
+
+    }
+
+
+    function OnChangePropertySelect(CurrentRowId) {
+        
+        var PropertyDropdownId = "#RuleList_" + CurrentRowId + "__PropertyId";
+        var selectedPropertyId = $(PropertyDropdownId).val();
+        var OperatordropdownId = "#RuleList_" + CurrentRowId + "__ComparatorsId";
+        var fieldValueId = "#RuleList_" + CurrentRowId + "__value";
+        if (selectedPropertyId == "") { return; }
+        if ($("#WatchListDataSetId").val() == "OACY") {
+            var fieldUpperValueId = "#RuleList_" + CurrentRowId + "__UpperValue";           
+        }
+        $.ajax({
+            url: "WatchList/GetOperator?propertyId=" + selectedPropertyId,
+            datatype: "JSON",
+            type: "POST",
+            success: function (result) {
+                if ($("#WatchListDataSetId").val() != "OACY") {
+                    $(OperatordropdownId).empty();
+                    var listItems = "";
+                    var data = result.Operators;
+
+                    listItems += "<option value='0'>-Select Operator-</option>";
+                    for (var i = 0; i < data.length; i++) {
+                        listItems += "<option value='" + data[i].Id + "'>" + data[i].Title + "</option>";
+                    }
+                    $(OperatordropdownId).html(listItems);
+                }
+
+                var dataType = result.DatatypeId;
+                var propertyType = "#PropertyDataType_" + CurrentRowId;
+                $(propertyType).val(dataType);
+                if (dataType == 3) {
+                    $(fieldValueId).val(''); $(fieldValueId).attr('type', 'text');
+                    $(fieldValueId).attr('readonly', true); $(fieldValueId).attr('placeholder', 'Select date');
+                    $(fieldValueId).datepicker({ todayBtn: false, autoclose: true });
+                } else if (dataType == 1) {
+                    var parent = $(fieldValueId).parent();
+                    $(fieldValueId).remove();
+                    parent.html('<input class="form-control" id="RuleList_' + CurrentRowId + '__value" name="RuleList[' + CurrentRowId + '].value" rel="' + CurrentRowId + '" type="text" placeholder="e.g. force majeure" value="">');
+                } else if (dataType == 2) {
+                    var parent = $(fieldValueId).parent();
+                    $(fieldValueId).remove();
+                    parent.html('<input class="form-control" id="RuleList_' + CurrentRowId + '__value" name="RuleList[' + CurrentRowId + '].value" rel="' + CurrentRowId + '" type="number" min="0" max="1000000000"  value="">');
+                    if ($("#WatchListDataSetId").val() == "OACY") {
+                        var parent = $(fieldUpperValueId).parent();
+                        $(fieldUpperValueId).remove();
+                        parent.html('<input class="form-control" id="RuleList_' + CurrentRowId + '__UpperValue" name="RuleList[' + CurrentRowId + '].UpperValue" rel="' + CurrentRowId + '" type="number" min="0" max="1000000000"  value="">');
+                    }
+                } else if (dataType == 4) {
+                    var parent = $(fieldValueId).parent();
+                    $(fieldValueId).remove();
+                    parent.html('<input class="form-control" id="RuleList_' + CurrentRowId + '__value" name="RuleList[' + CurrentRowId + '].value" rel="' + CurrentRowId + '" type="number" min="0" max="100" step="any"  value="">');
+                    if ($("#WatchListDataSetId").val() == "OACY") {
+                        var parent = $(fieldUpperValueId).parent();
+                        $(fieldUpperValueId).remove();
+                        parent.html('<input class="form-control" id="RuleList_' + CurrentRowId + '__UpperValue" name="RuleList[' + CurrentRowId + '].UpperValue" rel="' + CurrentRowId + '" type="number" min="0" max="100" step="any"  value="">');
+
+                    }
+                }
+            }
+        });
+    }
+
+    function onclickDeleteRule(e) {
+
+        var row = $(e).parent().parent();
+        row.remove();
+    }
+
+    function cancelbtn() {
+        window.location.reload();
+    }
+
+    function validation() {
+       
+        var fieldFlag = 0;
+        var operatorFlag = 0;
+        var thresholdFlag = 0;
+        var upperValFlag = 0;
+        var rangeValFlag = 0;
+        var flag = true;
+        var dataset = $("#DatasetId").val();
+        var listname = $("#ListName").val();
+        var ruleCount = $("#WatchListRuleTable tbody").find("tr").length;
+        if (dataset == 0) {
+            toastr.warning("", "Please select dataset of watchlist."); flag = false;
+        }
+        if (listname == "") {
+            toastr.warning("", "Please enter WatchList Name."); flag = false;
+        }
+        if (ruleCount == 0) {
+            toastr.warning("", "Please add Point of watchlist."); flag = false;
+        } else {
+            $("#WatchListRuleTable tbody").find("tr").each(function () {
+              
+                var CurrentRowId = $(this).attr("rel");
+                var pipelineDuns = "#RuleList_" + CurrentRowId + "__PipelineDuns";
+                var pipelineDunsValue = $(pipelineDuns).val();
+                if (pipelineDunsValue == "" || pipelineDunsValue == null) {
+                    fieldFlag++;
+                    $(pipelineDuns).addClass("danger"); flag = false;
+                }
+
+                if(dataset==3){
+                    var isNoticeCritical = "#RuleList_" + CurrentRowId + "__IsCriticalNotice";
+                    var IsNoticeCtri = $(isNoticeCritical).val();
+                    if (IsNoticeCtri == "") {
+                        fieldFlag++;
+                        $(isNoticeCritical).addClass("danger");
+                        //toastr.warning("", "Please select Notice Type of watchlist Pipes.");
+                        flag = false;
+                    }
+                }else{
+                    var locId = "#RuleList_" + CurrentRowId + "__LocationIdentifier";
+                    var LocationId = $(locId).val();
+                    if (LocationId == "" || LocationId == null) {
+                        fieldFlag++;
+                        $(locId).addClass("danger");
+                        // toastr.warning("", "Please select Location of watchlist Point.");
+                        flag = false;
+                    }
+                }
+
+                var PropertyDropdownId = "#RuleList_" + CurrentRowId + "__PropertyId";
+                var selectedPropertyId = $(PropertyDropdownId).val();
+                var propertyType = "#PropertyDataType_" + CurrentRowId;
+                var propertyTypeVal =  $(propertyType).val();
+                var OperatordropdownId = "#RuleList_" + CurrentRowId + "__ComparatorsId";
+                var selectedOperator = $(OperatordropdownId).val();
+                var fieldValueId = "#RuleList_" + CurrentRowId + "__value";
+                var fieldValue = $(fieldValueId).val();
+
+                if (dataset ==2) {     //EnercrossDataSets.UNSC=2
+                if (selectedPropertyId == 0) {
+                    fieldFlag++;
+                    $(PropertyDropdownId).addClass("danger");
+                    //toastr.warning("", "Please select Field of watchlist rule.");
+                    flag = false;
+                }
+                if (selectedOperator == 0) {
+                    fieldFlag++;
+                    $(OperatordropdownId).addClass("danger"); 
+                    flag = false;
+                }
+                if (fieldValue == "") {
+                    fieldFlag++;
+                    $(fieldValueId).addClass("danger");
+                   // toastr.warning("", "Please select field value of watchlist rule.");
+                    flag = false;
+                }  
+                }
+              
+                if (dataset == 1) {     //EnercrossDataSets.OACY=1
+
+                    var fieldUpperValueId = "#RuleList_" + CurrentRowId + "__UpperValue";
+                    var fieldUpperValue = $(fieldUpperValueId).val();
+                    if (selectedPropertyId == 0)
+                    {
+                        fieldFlag++;
+                        $(PropertyDropdownId).addClass("danger");                      
+                        flag = false;
+                    }                  
+                    if (fieldValue == "")
+                    {
+                        fieldFlag++;
+                        $(fieldValueId).addClass("danger");                      
+                        flag = false;
+                    } else if (fieldUpperValue == "")
+                    {
+                        fieldFlag++;
+                        $(fieldUpperValueId).addClass("danger");
+                        flag = false;
+                    } else if ((fieldUpperValue - fieldValue) < 0) {
+                        flag = false;
+                        toastr.warning("", "The 'Lower  Value' must smaller than 'Upper value'."); 
+                    }
+                    if (propertyTypeVal == '4') {
+                        if (fieldValue < 0 || fieldValue > 100 || fieldUpperValue < 0 || fieldUpperValue > 100) {
+                            rangeValFlag++;
+                            toastr.warning("", "The ‘Lower Value’ and ‘Upper Value’ must be integers between 0 and 100 inclusive. No negative integers allowed.");
+                            flag = false;
+                        }
+                    } else if (propertyTypeVal == '2')  {
+                        if (fieldValue < 0 || fieldUpperValue < 0) {
+                            rangeValFlag++;
+                            toastr.warning("", "The ‘Lower Value’ and ‘Upper Value’ must be integers between 0 and infinity. No negative integers allowed.");
+                            flag = false;
+                        }
+                    }
+                }
+
+
+            });
+          
+            if (fieldFlag > 0) { toastr.warning("", "Please enter missing values."); }          
+
+        }
+        return flag;
+    }
+
+
+    function LocationPopUpSelect(name, identifier, prop, rowid) {
+      
+        var LocId = "#RuleList_" + rowid + "__LocationIdentifier";      
+        $('#LocationPopUpModal').modal('hide');      
+        $(LocId).val(identifier);       
+        var namelength = name.length;
+        if (namelength > 20) {
+            $(LocId).parent().find('button').html(name.substring(0, 20) + "...");          
+        } else {
+            $(LocId).parent().find('button').html(name + " / " + identifier);
+        }
+       
+    }
+
+    function OpenPopUp(DataSetType, ClickedRow) {        
+        var pipelineDuns = $("#RuleList_" + ClickedRow + "__PipelineDuns").val();       
+        $.ajax({
+           
+            url: '/WatchList/PopUpPartials',
+            type: 'GET',
+            data: { dataSet: DataSetType, clickedRow: ClickedRow, pipelineDuns: pipelineDuns },
+            dataType: 'html',
+            contentType: 'application/html;charset=utf-8'
+        })
+            .success(function (result) {
+                $('#LocationPopUpModal').html(result);
+                $('#LocationPopUpModal').modal('show');
+            })
+            .error(function (xhr, status) {
+                alert(status);
+            })
+    }
+
+
+</script>
+
+
+
+

@@ -1,0 +1,332 @@
+﻿@model Nom1Done.Nom.ViewModel.BONoticeSearchCriteria
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Notices";
+    var count = 1;
+}
+@*@{
+        WebGrid grid = new WebGrid(rowsPerPage: Model.PageSize);
+        grid.Bind(Model.NoticeList,
+                  autoSortAndPage: false,
+                  rowCount: Model.RowsCount
+        );
+
+    }*@
+
+<style>
+    /*.VerticalCenter {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+    }*/
+</style>
+<div class="section clearfix object-non-visible" data-animation-effect="fadeIn">
+    <div class="container">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title" style="background-color:#f3f3f4 !important;">
+                <h2>Notices <span id="pipelinedetail"></span></h2>
+            </div>
+            <div class="ibox-content" style="background-color:#f3f3f4 !important;">
+                <div class="row" id="dvPageResult"></div>
+
+                <div class="row" id="dvSearch" style="margin:20px !important;">
+                    @using (Html.BeginForm("Index", "Notices", FormMethod.Post))
+                    {
+                        @Html.HiddenFor(a => a.pipelineId)
+                        @Html.HiddenFor(a => a.PipelineDuns)
+                        <input type="hidden" value="@ViewBag.Type" name="Type" />
+
+
+                        <div class="row">
+                            <div class="col-md-6 col-md-offset-1">
+                                <div class="form-group">
+                                    <label class="form-label">Notices Type</label>
+                                    <div  class="input-group col-md-6">
+                                        @Html.DropDownListFor(a => a.IsCritical, new SelectList(
+       new List<Object>{
+         new { value = "true" , text = "Critical"  },
+         new { value = "false" , text = "Non-Critical" }
+      }, "value", "text", 0), new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Search by Description</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                                    @Html.TextBoxFor(m => m.Keyword, new { value = Model.Keyword, @placeHolder = "Subject/Description", @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                   
+
+                        <div class="row" id="PostDatesDiv" style="margin-top:15px !important;">
+                            <div class="col-md-6 col-md-offset-1">
+                                <label class="form-label">Post Start Date</label>
+                                <div class="input-group col-md-6">
+                                    @Html.TextBoxFor(m => m.postStartDate, "{0:MM/dd/yyyy}", new { @type = "calendar", @autocomplete="off", @class = "form-control postStartDate", @style = "background-color: white; padding:6px !important;",  id = "postStartDate" })
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Post End Date</label>
+                                <div class="input-group col-md-12">
+                                    @Html.TextBoxFor(m => m.postEndDate, "{0:MM/dd/yyyy}", new { @type = "calendar", @autocomplete = "off", @class = "form-control postEndDate", @style = "background-color: white; padding:6px !important;",  id = "postEndDate" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" id="EffectiveDatesDiv" style="margin-top:15px !important;">
+                            <div class="col-md-6 col-md-offset-1">
+                                <label class="form-label">Effective Start Date</label>
+                                <div class="input-group col-md-6">
+                                    @Html.TextBoxFor(m => m.EffectiveStartDate, "{0:MM/dd/yyyy}", new { @type = "calendar", @autocomplete = "off", @class = "form-control EffectiveStartDate", @style = "background-color: white; padding:6px !important;",  id = "effectiveStartDate" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Effective End Date</label>
+                                <div class="input-group col-md-12">
+                                    @Html.TextBoxFor(m => m.EffectiveEndDate, "{0:MM/dd/yyyy}", new { @type = "calendar", @autocomplete = "off", @class = "form-control EffectiveEndDate", @style = "background-color: white; padding:6px !important;", id = "effectiveEndDate" })
+                                </div>
+                            </div>
+                        </div>
+                            <div class="row" style="margin-top:20px !important;">
+                                <div class="col-sm-4">
+                                </div>
+                                <div class="col-sm-5" style="margin-left:20px !important;">
+                                    <button onclick="return ValidateForm();" class="btn btn-primary" style="width:100px !important; padding:8px; background-color:#FF6C3A !important; border-color:#FF6C3A !important;" type="submit" value="Search" name="RequestType"><span class="icon_search"></span>&nbsp; Search</button>
+
+                                    <a class="btn btn-primary" style="width:100px !important; padding:8px; background-color:#FF6C3A !important; border-color:#FF6C3A !important;" href="/Notices/Index?pipelineId=@ViewBag.pipelineID">Reset</a>
+
+                                    @*<button class="btn btn-primary" style="padding:8px;" type="submit" name="download">Download .CSV</button>*@
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                            </div>
+                            }
+                        </div>
+                <br />
+                <br />
+                <br />
+
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content" style="background-color:#f3f3f4 !important;">
+                                <table class="table table-bordered table-hover" id="NoticeTable">
+                                    <thead>
+                                        <tr>
+                                            <th style="min-width: 120px;">Notice Type Desc</th>
+                                            <th style="min-width: 120px;">Notice ID</th>
+                                            <th style="min-width: 120px;">Posted Date/Time</th>
+                                            <th style="min-width: 120px;">Effective Start Date/Time</th>
+                                            <th style="min-width: 120px;">Effective End Date/Time</th>
+                                            <th style="min-width: 120px;">Subject</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+
+        //$(":input[type=text]:not([readonly='readonly'])").attr("autocomplete", "off");
+
+        //$(":input[type=calendar])").attr("autocomplete", "off");
+
+        var iscritical=$("#IsCritical").val();
+        var keyword=$("#Keyword").val();
+        var watchlistId = 0; //$("#WatchListId").val();
+        var postStartDate = $('#postStartDate').val();
+        if($.trim(postStartDate) == ''){
+            var psDate="";
+        }else{
+            var psdate1=new Date(postStartDate);
+            var psDate=psdate1.toISOString();
+        }
+        var postEndDate = $('#postEndDate').val();
+        // var peDate=new Date(postEndDate);
+
+        if($.trim(postEndDate) == ''){
+            var peDate="";
+        }else{
+            var psdate2=new Date(postEndDate);
+            var peDate=psdate2.toISOString();
+        }
+
+        var effectiveStartDate = $('#effectiveStartDate').val();
+        //var esDate=new Date(effectiveStartDate);
+        if($.trim(effectiveStartDate) == ''){
+            var esDate="";
+        }else{
+            var psdate3=new Date(effectiveStartDate);
+            var esDate=psdate3.toISOString();
+        }
+
+        var effectiveEndDate = $('#effectiveEndDate').val();
+        // var eeDate=new Date(effectiveEndDate);
+        if($.trim(effectiveEndDate) == ''){
+            var eeDate="";
+        }else{
+            var psdate4=new Date(effectiveEndDate);
+            var eeDate=psdate4.toISOString();
+        }
+
+        var dateFilter = { PostStartDate: psDate, PostEndDate: peDate,EffectiveStartDate: esDate, EffectiveEndDate: eeDate, Keyword: keyword,IsCritical:iscritical,WatchListId:watchlistId };
+
+        $('#NoticeTable').DataTable(
+        {
+                "searching": false,
+                "lengthMenu": [10, 20, 30],
+            "order":[[2,"desc"]],
+            "columnDefs": [
+                { "width": "5%", "targets": [0] },
+                { "className": "text-center custom-middle-align", "targets": [0, 1, 2, 3, 4, 5] },
+                {
+                    "orderable": false,
+                    "className": 'select-checkbox',
+                    "targets":   0
+                }
+            ],
+            "select": {
+                "style":    'os',
+                "selector": 'td:not(:last-child)'
+            },
+            "language":
+                {
+                    "processing": "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
+                },
+            "processing": true,
+            "serverSide": true,
+            "scrollX": true,
+            "scrollCollapse": true,
+            "ajax":
+                {
+                    "url": "/Notices/GetData",
+                    "data":{pipelineDuns : '@Model.PipelineDuns', filters:dateFilter},
+                    "type": "POST",
+                    "dataType": "JSON"
+                },
+            "columns": [
+                     { "data": "NoticeTypeDesc1"},
+                     { "data": "NoticeId",
+                         "render": function (data, type, row) {
+                             var urlHref = "@Url.Action("Detail", "Notices")?ID=" + row.Id + "&pipelineDuns=" + row.TransportationserviceProvider;
+                             var result = '<a href=' + urlHref + '>' + row.NoticeId + '</a>';
+                             return result;
+
+                         }
+                     },
+                    { "data": "PostingDateTime",
+                        "render": function(data){
+                            return moment(data).format("MM/DD/YYYY hh:mm:ss");
+                        }
+                    } ,
+                    { "data": "NoticeEffectiveDateTime",
+                        "render": function(data){
+                            return moment(data).format("MM/DD/YYYY hh:mm:ss");
+                        } },
+                    { "data": "NoticeEndDateTime",
+                        "render": function(data){
+                            return moment(data).format("MM/DD/YYYY hh:mm:ss");
+                        } },
+                    { "data": "Subject",
+                        "render": function (data, type, row) {
+                            var urlHref = "@Url.Action("Detail", "Notices")?ID=" + row.Id + "&pipelineDuns=" + row.TransportationserviceProvider;
+                            var result = '<a href=' + urlHref + '>' + row.Subject + '</a>';
+                            return result;
+
+                        }
+                    }
+            ]
+        });
+
+        $(function () {
+            $("#postStartDate").datepicker({
+                todayBtn: 1,
+                autoclose: true,
+            }).on('changeDate', function (selected) {
+                var minDate = new Date(selected.date.valueOf());
+                $('#postEndDate').datepicker('setStartDate', minDate);
+            });
+
+            $("#postEndDate").datepicker({ autoclose: true })
+                .on('changeDate', function (selected) {
+                    var maxDate = new Date(selected.date.valueOf());
+                    $('#postStartDate').datepicker('setEndDate', maxDate);
+                });
+
+            $("#effectiveStartDate").datepicker({
+                todayBtn: 1,
+                autoclose: true,
+            }).on('changeDate', function (selected) {
+                var minDate = new Date(selected.date.valueOf());
+                $('#effectiveEndDate').datepicker('setStartDate', minDate);
+            });
+
+            $("#effectiveEndDate").datepicker({ autoclose: true })
+                .on('changeDate', function (selected) {
+                    var maxDate = new Date(selected.date.valueOf());
+                    $('#effectiveStartDate').datepicker('setEndDate', maxDate);
+                });
+        });
+
+        $("#IsCritical").change(function () {
+            var val = this.value;
+            if (val == 0) {
+                // Model.IsCritical=false;
+            } else {
+                // Model.IsCritical=true;
+            }
+        });
+
+    });
+
+    function ValidateForm() {
+        //alert("got");
+        var result = "";
+        if ($("#postStartDate").val() != "" && $("#postEndDate").val() == "") {
+            result = "Post End Date";
+        }
+        if ($("#postEndDate").val() != "" && $("#postStartDate").val() == "") {
+            if (result != "")
+                result = result + ", Post Start Date";
+            else
+                result = result +  "Post Start Date";
+        }
+        if ($("#effectiveStartDate").val() != "" && $("#effectiveEndDate").val() == "") {
+            if (result != "")
+                result = result + ", Effective End Date";
+            else
+                result = result + "Effective End Date";
+        }
+
+        if ($("#effectiveEndDate").val() != "" && $("#effectiveStartDate").val() == "") {
+            if (result != "")
+                result = result + ", Effective Start Date";
+            else
+                result = result + "Effective Start Date";
+        }
+
+        if (result != "") {
+            toastr.warning("", result + " required");
+            return false;
+        }
+        else {
+            // toastr.success("Form Validated");
+            return true;
+        }
+    }
+
+</script>

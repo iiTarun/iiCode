@@ -1,0 +1,25 @@
+﻿@model Nom.ViewModel.LocationsDTO
+@{
+    Guid CurrentRowIndex = Guid.NewGuid();
+    string RowStatusClass = "label-warning";
+}
+
+    @Html.HiddenFor(a => a.PipelineID, new { @id="hdnPipelineID"})
+    @Html.HiddenFor(a => a.PipelineDuns)
+
+<div class="ibox-content">
+    <div style="width:90%; margin:0 auto" class="tablecontainer">
+        <table id="LocationOacyTable" class="table table-striped table-bordered" style="width:50%">
+            <thead>
+                <tr>
+                    <th style="min-width: 120px;">Name</th>
+                    <th style="min-width: 120px;">Identifier</th>
+                    <th style="min-width: 120px;">LocPropCode</th>
+                    <th style="min-width: 120px;">R-D-BVersion</th>
+                    <th style="min-width: 120px;">IsActive</th>
+                    <th style="min-width: 120px;">Edit/Save</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>

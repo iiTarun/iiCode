@@ -1,0 +1,78 @@
+﻿@model Nom1Done.DTO.WatchListCollection
+@{
+    ViewBag.Title = "WatchListCollection";
+}
+
+<div style="min-height:568px !important">
+
+    <div class="row border-bottom white-bg page-heading" style="padding:0px !important;">
+        <div class="col-md-4" style="margin-left:18px !important; margin-top:7px !important;"> <h2><b>WatchList Collection</b> </h2></div>
+        <div class="col-md-7" style="margin:20px !important;">
+            <a href="@Url.Action("Index","WatchList")" class="btn btn-w-m btn-success btn-outline  pull-right"><i class="glyphicon glyphicon-plus"></i>Add New WatchList</a>
+            @*<button id="SendBtn" onclick="SendEmail();" type="button" class="btn btn-w-m btn-success btn-outline"><i class="glyphicon glyphicon-send"></i> Send Email To All</button>*@
+         </div>
+
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox-content m-b-sm border-bottom">
+                <div>
+                    <table class="table table-bordered table-hover" id="watchlistCollectionTable">
+                        <thead>
+                            <tr class="bg-color">
+                                <th style="min-width: 120px; padding-left:30px !important;">
+                                    WatchList Name
+                                </th>
+                                <th style="min-width: 120px; padding-left:30px !important;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.CollectionWatchList)
+                         {
+                                <tr>
+                                    <td style="padding-left:30px !important;">
+                                        @Html.DisplayFor(modelItem => item.ListName)
+                                    </td>
+                                    <td style="padding-left:30px !important;">
+                                        @Html.ActionLink("Edit", "Index", new {  watchListId=item.id })
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        @Html.ActionLink("Delete", "Delete", new {  id = item.id })
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        @Html.ActionLink("View Results", "ExecutedResult", new { watchListId = item.id })
+                                    </td>
+                                </tr>
+                        }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+       var value = '@ViewBag.Status';
+         if (value != "") {
+         toastr.success("", "@ViewBag.Status");
+        }
+    });
+
+    function SendEmail() {
+        $.ajax({
+            url: '/WatchList/SendEmail',
+            type: 'Get',         
+        })
+     .success(function (result) {
+         if (result=="True")
+            toastr.success("", "Successfully Sent email.");
+     });
+    }
+    
+</script>
+
+
+
+

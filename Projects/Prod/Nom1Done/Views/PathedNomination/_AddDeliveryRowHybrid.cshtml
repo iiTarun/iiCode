@@ -1,0 +1,227 @@
+﻿@model Nom.ViewModel.PathedDTO
+
+@for (var i = 0; i < Model.DeliveryNoms.Count; i++)
+{
+    Guid CurrentRowId = Guid.NewGuid();
+    var LocationProp = "--Select--";
+    var LocationName = "--Select--";
+    var Location = "--Select--";
+    var TransactionType = "--Select--";
+    var DnstreamIDProp = "--Select--";
+    var DnstreamIDName = "--Select--";
+    var DnstreamID = "--Select--";
+    var ServiceRequesterContractCode = "-Select-";
+
+    <tr class="gradeX newDeliveryRow" id="DeliveryTable_@CurrentRowId" rel="@CurrentRowId">
+        @Html.Hidden("DeliveryNoms.Index", CurrentRowId.ToString())
+        <td><input type="checkbox" value="@CurrentRowId" class="Deliverychkboxes" onchange="DeliverychkboxesOnChange()"></td>
+
+
+        <td>
+            <span class="label label-info" id="status_@CurrentRowId" value="0">Unsubmitted</span>
+            @Html.Hidden("DeliveryNoms[" + CurrentRowId + "].StatusId", 0, new { @rel = CurrentRowId })
+        </td>
+        <td>
+            <span></span>
+        </td>
+        <td>
+            @Html.DropDownList("DeliveryNoms[" + CurrentRowId + "].NomSubCycle", new SelectList(
+                  new List<Object>{
+                       new { value = "Y" , text = "Yes"  },
+                       new { value = "N" , text = "No" }
+            }, "value", "text", Model.DeliveryNoms[i].NomSubCycle), new { @class = "form-control" })
+        </td>
+
+
+
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentRowId','Delivery',@Model.PipelineID)">
+                @if (Model.DeliveryNoms[i].TransactionType != null)
+                {
+                    TransactionType = Model.DeliveryNoms[i].TransactionType;
+                }
+                @TransactionType
+            </span>
+            @Html.Hidden("DeliveryNoms[" + CurrentRowId + "].TransactionTypeDesc", Model.DeliveryNoms[i].TransactionTypeDesc, new { @rel = CurrentRowId })
+            @Html.Hidden("DeliveryNoms[" + CurrentRowId + "].TransactionType", Model.DeliveryNoms[i].TransactionType, new { @rel = CurrentRowId })
+            @Html.Hidden("DeliveryNoms[" + CurrentRowId + "].TransTypeMapId", Model.DeliveryNoms[i].TransTypeMapId, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentRowId','Delivery',@Model.PipelineID)">
+                @if (Model.DeliveryNoms[i].ServiceRequesterContractCode != null)
+                {
+                    ServiceRequesterContractCode = Model.DeliveryNoms[i].ServiceRequesterContractCode;
+                }
+                @ServiceRequesterContractCode
+            </span>@Html.Hidden("DeliveryNoms[" + CurrentRowId + "].ServiceRequesterContractCode", Model.DeliveryNoms[i].ServiceRequesterContractCode, new { @rel = CurrentRowId })
+            @Html.Hidden("DeliveryNoms[" + CurrentRowId + "].ServiceRequesterContractName", Model.DeliveryNoms[i].ServiceRequesterContractName, new { @rel = CurrentRowId })
+        </td>
+
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUpSpecialDelLocation('@CurrentRowId','Delivery','@Model.PipelineID')">
+                @if (Model.DeliveryNoms[i].DeliveryLocProp != null)
+                {
+                    LocationProp = Model.DeliveryNoms[i].DeliveryLocProp;
+                }
+                @LocationProp
+            </span>
+            @Html.Hidden("DeliveryNoms[" + CurrentRowId + "].DeliveryLocProp", Model.DeliveryNoms[i].DeliveryLocProp, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUpSpecialDelLocation('@CurrentRowId','Delivery','@Model.PipelineID')">
+                @if (Model.DeliveryNoms[i].DeliveryLocName != null)
+                {
+                    LocationName = Model.DeliveryNoms[i].DeliveryLocName;
+                }
+                @LocationName
+            </span>
+            @Html.Hidden("DeliveryNoms[" + CurrentRowId + "].DeliveryLocName", Model.DeliveryNoms[i].DeliveryLocName, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUpSpecialDelLocation('@CurrentRowId','Delivery','@Model.PipelineID')">
+                @if (Model.DeliveryNoms[i].DeliveryLocId != null)
+                {
+                    Location = Model.DeliveryNoms[i].DeliveryLocId;
+                }
+                @Location
+            </span>
+            @Html.Hidden("DeliveryNoms[" + CurrentRowId + "].DeliveryLocId", Model.DeliveryNoms[i].DeliveryLocId, new { @rel = CurrentRowId })
+        </td>
+
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Delivery',@Model.PipelineID)">
+                @if (Model.DeliveryNoms[i].DnstreamProp != null)
+                {
+                    DnstreamIDProp = Model.DeliveryNoms[i].DnstreamProp;
+                }
+                @DnstreamIDProp
+            </span>
+            @Html.Hidden("DeliveryNoms[" + CurrentRowId + "].DnstreamProp", Model.DeliveryNoms[i].DnstreamProp, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Delivery',@Model.PipelineID)">
+                @if (Model.DeliveryNoms[i].DnstreamName != null)
+                {
+                    DnstreamIDName = Model.DeliveryNoms[i].DnstreamName;
+                }
+                @DnstreamIDName
+            </span>
+            @Html.Hidden("DeliveryNoms[" + CurrentRowId + "].DnstreamName", Model.DeliveryNoms[i].DnstreamName, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Delivery',@Model.PipelineID)">
+                @if (Model.DeliveryNoms[i].DnstreamId != null)
+                {
+                    DnstreamID = Model.DeliveryNoms[i].DnstreamId;
+                }
+                @DnstreamID
+            </span>
+            @Html.Hidden("DeliveryNoms[" + CurrentRowId + "].DnstreamId", Model.DeliveryNoms[i].DnstreamId, new { @rel = CurrentRowId })
+        </td>
+
+        <td>@Html.TextBox("DeliveryNoms[" + CurrentRowId + "].DnstreamK", Model.DeliveryNoms[i].DnstreamK, new { @class = "form-control", @rel = CurrentRowId })</td>
+        <td>@Html.TextBox("DeliveryNoms[" + CurrentRowId + "].DeliveryQty", Model.DeliveryNoms[i].DeliveryQty, new { @class = "form-control cellDeliveryRec", @type = "number", @rel = CurrentRowId, @min = "0", @oninput = "FuelValidationDelivery(" + "'" + CurrentRowId + "'" + ")", @onkeyup = "FuelValidationDelivery(" + "'" + CurrentRowId + "'" + ")" })</td>
+        <td>@Html.TextBox("DeliveryNoms[" + CurrentRowId + "].DeliveryRank", Model.DeliveryNoms[i].DeliveryRank, new { @class = "form-control rank", @rel = CurrentRowId, maxlength = "3" })</td>
+        <td>@Html.TextBox("DeliveryNoms[" + CurrentRowId + "].PackageId", Model.DeliveryNoms[i].PackageId, new { @class = "form-control", @rel = CurrentRowId })</td>
+
+    </tr>
+
+}
+<script>
+
+    $(document).ready(function () {
+        var todaydate = new Date();
+        $(function () {
+            var Eflag=0;
+            $(".Startdtpicker").datepicker({
+                todayBtn: false,
+                autoclose: true,
+                startDate: todaydate
+            }).on('changeDate', function (selected) {               
+                if(Eflag==0){
+                    var minDate = new Date(selected.date.valueOf());
+                    $('.Enddtpicker').datepicker('setStartDate', minDate);
+                }
+            });
+
+            $(".Enddtpicker").datepicker({ autoclose: true, todayHighlight: false, startDate: todaydate   })
+                .on('changeDate', function (selected) {                   
+                    Eflag=1;
+                    var maxDate = new Date(selected.date.valueOf());
+                    $('.Startdtpicker').datepicker('setEndDate', maxDate);
+                });
+        });
+
+
+        $('.rank').keypress(function (e) {
+            var regex = new RegExp("^[0-9]+$");
+
+            var charCode = e.which;
+
+            if (charCode == 8 || charCode == 0) {
+                return;
+            }
+            else {
+                var keyChar = String.fromCharCode(charCode);
+                if (regex.test(keyChar)) {
+                    return true;
+                }
+            }
+            e.preventDefault();
+            return false;
+        });
+
+
+    });
+
+
+    $(".cycleSelect").change(function () {
+          
+            var rel = $(this).attr("rel");
+            var index = rel;
+            var startDate = "#DeliveryNoms_" + index + "__StartDateTime";
+            var startDateValue = $(startDate).val();
+            var endDate = "#DeliveryNoms_" + index + "__EndDateTime";
+            var endDateValue = $(endDate).val();
+            var cycle = "#DeliveryNoms_" + index + "__CycleId";
+            var valueCycle = $(cycle).val();
+            var BegginingTime = "";
+            var EndTime = "";
+
+            if (valueCycle == 1 || valueCycle == 2) // timeley
+            {
+                BegginingTime = " 09:00 AM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 3)//intrs day 1
+            {
+                BegginingTime = " 02:00 PM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 4)//intrs day 2
+            {
+                BegginingTime = " 06:00 PM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 5)//intrs day 3
+            {
+                BegginingTime = " 10:00 PM";
+                EndTime = " 09:00 AM";
+            }
+
+            var startDateOnly = startDateValue.split(" ");
+            var endDateOnly = endDateValue.split(" ");
+            var finalStartdate = startDateOnly[0].concat(BegginingTime);
+            var finalEndDate = endDateOnly[0].concat(EndTime);
+
+            $(startDate).val(finalStartdate);
+            $(endDate).val(finalEndDate);
+
+
+    });
+
+</script>
+
+
+
+

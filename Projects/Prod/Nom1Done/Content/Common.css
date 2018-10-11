@@ -1,0 +1,231 @@
+﻿
+.StyleCheckboxtxt {
+padding-bottom: 4px; 
+width:2.1%;
+padding-top: 4px;
+ text-align: center;
+  background-color: #fff; 
+  margin-top: -10px;
+}
+
+.styleSErviceRequestlbtn
+{
+    margin-top: -10px;
+     background-color: #fff;
+     width:3.3%
+}
+
+.be-detail-header {
+    border-bottom: 1px solid #edeff2;
+    margin-bottom: 50px;
+}
+
+.StyleTTDescriptiontxt{
+    margin-top: -10px;
+    width:2.8%;
+     background-color: #fff;
+}
+.StyleSErviceTypetxt
+{
+    Width:4.2%
+}
+
+.StyleReceiptLocationProplbtn
+{
+    margin-top: -10px;
+     background-color: #fff;
+     width:6.89%
+}
+
+.StyleReceiptLocationNametxt
+{ Width:7.1%}
+
+.StyleReceiptLocationtxt{
+    Width:6%
+}
+
+.StyleReceiptQuantity{
+    Width:6.2%;
+}
+.StyleFuelPercentagetxt {
+Width:6.4%
+}
+
+.StyleFuelQuantitytxt {
+Width:3.6%
+}
+
+.styleDeleiveryQuantity{
+    Width:5.1%
+    
+}
+.StyleUpRank{
+    Width:7.3%
+}
+.StyleCounterPartyname{
+    Width:7.2%
+}
+.StylePackageIDtxt{Width :3%}
+.StyleTTtxt
+{
+   width:1.7%
+
+}
+    .AlighnMent
+{
+        text-align:center;
+font-size:9px !important;
+    }
+        .ContractAlighnMent
+{
+        text-align:center;
+font-size:12px !important;
+padding-left:9px !important;
+padding-right:9px !important;
+    }
+
+.ImageStyle {
+   width:17px !important;
+   -webkit-margin-after:-5px;
+}
+
+.Textboxsize {
+   
+    width:5.18% !important;
+    -webkit-margin-before:0em;
+}
+
+​#chkCheckBoxDB tr{
+    display:inline-block;
+    margin-right:20px;
+}​
+.TextboxSize4 {
+
+width:4.19% !important;
+}
+
+.StyleDlMatrixDivDwnUp{width: 105%; overflow-y: scroll;overflow-x:hidden; margin-bottom: 23px}
+.StyleDlMatrixInnerdivDwnUp{width: 100%; overflow-y: scroll; margin-bottom: -2px}
+.StyleDlMatrixImageDiv{text-align: center; margin-top: 5px}
+.StyleDlMtarixDatalistDivDwnUp{width: 99%; margin-bottom: 23px; margin-left: 2px}
+.StyleDlmatrixHearder{color: #f00; font-weight: bold;text-align:left}
+.StyleBlankDivDown{ text-align: center; margin-right: 48px; margin-top: 5px}
+.StyleChktxtDwn{padding-bottom: 4px; width:2.0% ;padding-top: 4px; text-align: center; background-color: #fff; margin-top: -10px}
+.StyleTTDescriptionlbtnDown{margin-top: -10px;width:2.7%; background-color: #fff}
+.StyleTTtxtDown{width:1.7%;font-size:x-small}
+.StyleServiceTypeRDown{margin-top: -10px; background-color: #fff;width:3.2%;font-size:x-small}
+.StyleServiceTypeDown{Width:4.0%;font-size:x-small}
+.StyleRecLocPropDown{margin-top: -10px; background-color: #fff;width:6.4%}
+.StyleRecLocNameDown{Width:6.9%;font-size:x-small}
+.StyleRecLocDown{Width:5.8%;font-size:x-small }
+.StyleRecQtyDown{Width:5.8%;font-size:x-small}
+.FuelPercentageDown{Width:6.2%;font-size:x-small}
+.StyleFuelQuantitydown{Width:3.6%;font-size:x-small}
+.StyleCounterPartyNomdown{Width:7%;font-size:x-small}
+.StyleDelQtyDown{ Width:4.9%;Font-size:x-small}
+.StyleUpRankDown{Width:7.1% ;font-size:x-small}
+.StylePackageIDDown{Width:3%;font-size:x-small}
+.StyleDlContractCheckBox{ padding-bottom: 4px; padding-top: 4px; text-align: center; background-color: #fff; margin-top: -10px}
+.StyleSerReqNoDlContract{margin-top: -10px; background-color: #fff;}
+.StyleCheckboxDlContract{padding-bottom: 4px; padding-top: 4px;width:1.6%; text-align: center; background-color: #fff; margin-top: -10px}
+.StyleTTDecriptionDlContract{margin-top: -10px; background-color: #fff;width:4.4%;font-size:x-small}
+.StyleTTtxtDlContract{width:1.3%;font-size:x-small}
+.StyleRecLocPropDlContract{margin-top: -10px; background-color: #fff;width:4%;font-size:x-small}
+.StyleRecLocNameDlContract{Font-Size:X-Small; Width:5.35%}
+.StyleRecLocDlContract{Font-Size:X-Small  ;Width:3.18%}
+.StyleDownRankDlContract{Font-Size:X-Small ;Width:4.5%}
+.StyleRecZoneDlContract{Font-Size:X-Small ; Width:3.5%}
+.StyleDelLocPropDlContract{margin-top: -10px; background-color: #fff;width:3.8%;font-size:x-small}
+.StyleDelLocNamedlContract{Width:5.4% ;Font-Size:X-Small}
+.StyleDelLocDlContract{ Width:2.92% ;Font-Size:X-Small}
+.StyleUprankDlContract{Width:3.5%; Font-Size:X-Small}
+.StyleDelZoneDlContract{Width:3.5% ;Font-Size:X-Small}
+.StyleReceiptZoneDlContract{ Width:4.7% ;Font-Size:X-Small}
+.StyleFuelPercentageDlContract{Width:2.8% ;Font-Size:X-Small}
+.StleFuelDTHDlContract{Width:3.6% ;Font-Size:X-Small}
+.StyleDeleiveryDTNDlContract{Width:4.8% ;Font-Size:X-Small}
+.StylePackageIDDlContract{Width:2.7%  ;Font-Size:X-Small}
+.StylePathRankDlContract{Width:3.6%  ;Font-Size:X-Small}
+.StyleCheckDlSupply{padding-bottom: 4px; padding-top: 4px;width:1%; text-align: center; background-color: #fff; margin-top: -10px}
+.StyleLocProplbtnDlSupply{margin-top: -10px; background-color: #fff;width:3.1%;font-size:x-small}
+.StyleLocNameDlsupply{Width:4.5%; font-size:X-Small}
+.StyleLocDlSupply{ Width:2.2% ;font-size:X-Small}
+.StyleTTDescriptionDlSupply{margin-top: -10px; background-color: #fff;width:5%;font-size:x-small}
+.StyleTTtxtDlSupply{font-size:X-Small ;Width:1.8%}
+.StyleServiceRequestKDlSupply{margin-top: -10px; background-color: #fff;width:3.6%;font-size:x-small}
+.StyleServicetypeDlSupply{Width:4.2% ;font-size:X-Small}
+.StyleUpIdPropDlSupply{margin-top: -10px; background-color: #fff;width:3.7%;font-size:x-small}
+.StyleUpNameDlSupply{Width:4.4% ;font-size:X-Small}
+.StyleUpIDDlSupply{ Width:3% ;font-size:X-Small}
+.styleDefaultIndDlSupply{font-size:X-Small ;Width:5.9% ;margin-top: -10px; border: 1px solid #C4C4C4; background-color: #fff}
+.StyleRecQtyDlSupply{ font-size:X-Small; Width:6.2%}
+.StyleFuelPercentageDlsupply{font-size:X-Small ;Width:3.4%}
+.StyleFuelQtyDlsupply{Width:3.5% ;font-size:X-Small}
+.StyleDelQtyDlSupply{Width:5.4% ;font-size:X-Small}
+.StyleUprankDlSupply{Width:4% ;font-size:X-Small}
+.StylePackageID{Width:3.6% ;font-size:X-Small}
+.StyleDivTotalDlSupply{padding-bottom: 4px; padding-top: 4px;width:1% ;text-align: left;font-size:x-small !important}
+.StyleDiv2DlSupply{width:3.1%}
+.StyleDiv3DlSupply{Width:3.53%}
+.StyleDiv4DlSupply{width:5%}
+.StyleDiv5dlSupply{Width:.9%}
+.StyleDiv6dlSupply{width:3.6%}
+.StyleDiv7Dlsupply{Width:3.2%}
+.StyleDiv8DlSupply{width:3.8%}
+.styleDiv9Dlsupply{Width:3.2%}
+.StyleDiv10DlSupply{Width:2.1%}
+.StyleDiv11DlSupply{Width:5%}
+.StyleRecQtyTotalDlSupply{background-color: #d8d8d8 ;Width:6.3% }
+.StyleDiv12DlSupply{Width:1.7%}
+.StyleDiv1Dlsupply{Width:3%}
+.StyleDelQtyDlsupply{background-color: #d8d8d8 ;Width:5.3% }
+.styleDiv13DlSupply{Width:3.1%}
+.StyleDiv14DlSupply{Width:2.5%}
+.StyleCheckDlMarket{padding-bottom: 4px; padding-top: 4px;width:1%; text-align: center; background-color: #fff; margin-top: -10px}
+.StyleLocProDlMarket{margin-top: -10px; background-color: #fff;width:3.1%;font-size:x-small}
+.StyleLocName{ font-size:X-Small ;Width:4.5%}
+.StyleLoctxtDlmarket{ Width:2.2% ;font-size:X-Small}
+.StyleTTDescriptionDlmarket{margin-top: -10px; background-color: #fff;width:4.9%;font-size:x-small}
+.StyleTTtxtDlMarket{font-size:X-Small; Width:1.9%}
+.StyleServiceRequestKDlMarket{margin-top: -10px; background-color: #fff;width:3.6%;font-size:x-small}
+.StyleServiceTypeDlMarket{Width:4%  ;font-size:X-Small}
+.StyleUpIdPropDlMarket{margin-top: -10px; background-color: #fff;width:4.92%;font-size:x-small}
+.StyleDownNameDlMarket{ Width:5.3% ;font-size:X-Small}
+.StyledownIdDlMarket{ Width:4.1% ;font-size:X-Small}
+.StyleDefaultIndDlMarket{font-size:X-Small; Width:6% ;margin-top: -10px; border: 1px solid #C4C4C4}
+.StyleRecQtyDlMarket{font-size:X-Small; Width:3.7%;background-color: #d8d8d8}
+.StyleFuelPercentageDlMarket{ font-size:X-Small ;Width:3.5%}
+.StyleFuelqtyDlMarket{Width:3.6%; font-size:X-Small}
+.StyleDelQtyDlMarket{Width:3.5% ;font-size:X-Small;background-color: #d8d8d8}
+.StyleDownrankDlMarket{Width:4.8% ;font-size:X-Small}
+.StlepackageIdDlmarket{Width:3.1% ;font-size:X-Small}
+.StyleTotalDlMarket{padding-bottom: 4px; padding-top: 4px;width:1% ;text-align: center;font-size:x-small !important}
+.StyleDiv1DlMarket{width:3.1%}
+.StyleDiv2DlMarket{Width:3.53%}
+.StyleDiv3DlMarket{Width:1.2%}
+.StyleDiv4DlMarket{width:5%}
+.StyleDiv5DlMarket{Width:.9%}
+.StyleDiv6DlMarket{width:3.6%}
+.StyleDiv7DlMarket{Width:3.2%}
+.StyleDiv8DlMarket{width:4.6%}
+.StyleDiv9DlMarket{Width:4.4%}
+.StyleDiv10DlMarket{Width:3%}
+.styleDiv11DlMarket{Width:3.9%}
+.StyleRecQtyDlMarket{background-color: #d8d8d8 ;Width:3.5%}
+.StyleDiv12DlMarket{Width:1.93%}
+.StyleDiv13DlMarket{Width:3.13%}
+.StyleDelQtyDlMarket{ background-color: #d8d8d8 ;Width:3.9%}
+.StyleDiv14DlMarket{Width:3.25%}
+.StyleDiv15DlMarket{Width:2.5%}
+
+/*@media screen and (-webkit-min-device-pixel-ratio:0) {
+    .StyleCheckboxtxt {
+padding-bottom: 8px !important; 
+width:5%;
+padding-top: 8px;
+ text-align: left;
+  background-color: #808080; 
+  margin-top: -20px;
+}
+}*/
+s

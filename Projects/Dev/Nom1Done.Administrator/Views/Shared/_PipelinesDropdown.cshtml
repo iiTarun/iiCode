@@ -1,0 +1,13 @@
+﻿<div class="navbar-header">
+    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " style="background-color: #2F4050 !important;
+                              border-color: #2F4050 !important;" href="#"><i class="fa fa-arrows-h"></i></a>
+    <div class="minimalize-styl-2">
+        <label class="col-md-3 control-label" style="text-align: right;">
+            <b>Pipelines:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </label>
+        <div class="col-md-9">
+            @Html.DropDownList("SelectedItem", ViewBag.PipelineDropdown as SelectList, new { @class = "pipeline-dropdown form-control", @onchange = "ChangePipeline(true)", id = "PipelineDropdown" })
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,169 @@
+﻿@model IEnumerable<Nom1Done.Model.PipelineEDISetting>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PipeDuns)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ISA08_segment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ISA06_Segment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ISA11_Segment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ISA12_Segment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ISA16_Segment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GS01_Segment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GS02_Segment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GS03_Segment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GS07_Segment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GS08_Segment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ST01_Segment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataSeparator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SegmentSeperator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DatasetId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShipperCompDuns)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SendManually)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ForOacy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ForUnsc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ForSwnt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PipeDuns)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ISA08_segment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ISA06_Segment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ISA11_Segment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ISA12_Segment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ISA16_Segment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GS01_Segment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GS02_Segment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GS03_Segment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GS07_Segment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GS08_Segment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ST01_Segment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataSeparator)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SegmentSeperator)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DatasetId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShipperCompDuns)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SendManually)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ForOacy)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ForUnsc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ForSwnt)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $(".table").DataTable();
+    })
+</script>

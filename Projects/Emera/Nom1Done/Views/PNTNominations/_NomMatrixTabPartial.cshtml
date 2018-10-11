@@ -1,0 +1,182 @@
+﻿@model  IEnumerable<Nom.ViewModel.NomMatrixDTO>
+
+
+<div class="panel-body">
+    @foreach (var item in Model)
+    {
+        if (item.LocType == "R")
+        {
+            <div style="background:#cecccc !important;">
+                @if (item.RecUpType == "RecUpStream")
+                {
+                    @*<div style="background:#cecccc !important;">*@
+                    <h4>(@item.Loc)  UpStream</h4>
+                    <table>
+                        <tr>
+                            <th>Contract</th>
+                            <th style="min-width: 200px !important;">CounterParty/Loc</th>
+                            @*<th>Quantity</th>*@
+                            <th>Rec QTY</th>
+                            <th>Del QTY</th>
+                            <th>TransactionType</th>
+                        </tr>
+                        @foreach (var record in item.ReceiptUpStreamLst)
+                        {
+                            <tr>
+                                <td>@record.Contract</td>
+                                <td>@record.CounterParty</td>
+                                @*<td>@record.Quantity</td>*@
+                                <td>@record.RecQty</td>
+                                <td>@record.DelQty</td>
+                                <td>@record.TransactionType</td>
+                            </tr>
+                        }
+                    </table>
+                    <br /><hr /><br />
+                    @*</div>*@
+                }
+                @if (item.RecDnType == "RecDownStream")
+                {
+                    @*<div style="background:#cecccc !important;">*@
+                    <h4>(@item.Loc)  DownStream</h4>
+                    <table>
+                        <tr>
+                            <th>Contract</th>
+                            <th style="min-width: 200px !important;">CounterParty/Loc</th>
+                            @*<th>Quantity</th>*@
+                            <th>Rec QTY</th>
+                            <th>Del QTY</th>
+                            <th>TransactionType</th>
+                        </tr>
+                        @foreach (var record in item.ReceiptDownStreamLst)
+                        {
+                            <tr>
+                                <td>@record.Contract</td>
+                                <td>@record.Loc</td>
+                                @*<td>@record.Quantity</td>*@
+                                <td>@record.RecQty</td>
+                                <td>@record.DelQty</td>
+                                <td>@record.TransactionType</td>
+                            </tr>
+                        }
+                    </table>
+                    <br /><hr /><br />
+                    @*</div>*@
+                }
+            </div>
+        }
+        if (item.LocType == "D")
+        {
+            if (item.DelUpType == "DelUpStream")
+            {
+                <h4>(@item.Loc)  UpStream</h4>
+                <table>
+                    <tr>
+                        <th>Contract</th>
+                        <th style="min-width: 200px !important;">CounterParty/Loc</th>
+                        @*<th>Quantity</th>*@
+                        <th>Rec QTY</th>
+                        <th>Del QTY</th>
+                        <th>TransactionType</th>
+
+                    </tr>
+                    @foreach (var record in item.DeliveryUpStreamLst)
+                    {
+                        <tr>
+                            <td>@record.Contract</td>
+                            <td>@record.RecLocation</td>
+                            @*<td>@record.Quantity</td>*@
+                            <td>@record.RecQty</td>
+                            <td>@record.DelQty</td>
+                            <td>@record.TransactionType</td>
+                        </tr>
+                    }
+                </table> <br /><hr /><br />
+            }
+            if (item.DelDnType == "DelDownStream")
+            {
+                <h4>(@item.Loc)  DownStream</h4>
+                <table>
+                    <tr>
+                        <th>Contract</th>
+                        <th style="min-width: 200px !important;">CounterParty/Loc</th>
+                        @*<th>Quantity</th>*@
+                        <th>Rec QTY</th>
+                        <th>Del QTY</th>
+                        <th>TransactionType</th>
+                    </tr>
+                    @foreach (var record in item.DeliveryDownStreamLst)
+                    {
+                        <tr>
+                            <td>@record.ContractNo</td>
+                            <td>@record.Loc</td>
+                            @*<td>@record.Quantity</td>*@
+                            <td>@record.RecQty</td>
+                            <td>@record.DelQty</td>
+                            <td>@record.TransactionType</td>
+                        </tr>
+                    }
+                </table> <br /><hr /><br />
+            }
+        }
+        if (item.LocType == "B")
+        {
+            if (item.RecUpType == "RecUpStream")
+            {
+                @*<div style="background:#cecccc !important;">*@
+                <h4>(@item.Loc)  UpStream</h4>
+                <table>
+                    <tr>
+                        <th>Contract</th>
+                        <th style="min-width: 200px !important;">CounterParty/Loc</th>
+                        @*<th>Quantity</th>*@
+                        <th>Rec QTY</th>
+                        <th>Del QTY</th>
+                        <th>TransactionType</th>
+                    </tr>
+                    @foreach (var record in item.ReceiptUpStreamLst)
+                    {
+                        <tr>
+                            <td>@record.Contract</td>
+                            <td>@record.CounterParty</td>
+                            @*<td>@record.Quantity</td>*@
+                            <td>@record.RecQty</td>
+                            <td>@record.DelQty</td>
+                            <td>@record.TransactionType</td>
+                        </tr>
+                    }
+                </table>
+                <br /><hr /><br />
+                @*</div>*@
+            }
+            if (item.DelDnType == "DelDownStream")
+            {
+                <h4>(@item.Loc)  DownStream</h4>
+                <table>
+                    <tr>
+                        <th>Contract</th>
+                        <th style="min-width: 200px !important;">CounterParty/Loc</th>
+                        @*<th>Quantity</th>*@
+                        <th>Rec QTY</th>
+                        <th>Del QTY</th>
+                        <th>TransactionType</th>
+                    </tr>
+                    @foreach (var record in item.DeliveryDownStreamLst)
+                    {
+                        <tr>
+                            <td>@record.ContractNo</td>
+                            <td>@record.Loc</td>
+                            @*<td>@record.Quantity</td>*@
+                            <td>@record.RecQty</td>
+                            <td>@record.DelQty</td>
+                            <td>@record.TransactionType</td>
+                        </tr>
+                    }
+                </table> <br /><hr /><br />
+            }
+        }
+    }
+
+</div>
+
+

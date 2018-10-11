@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Nom1Done.DTO.SqtsDTO>
+
+<link href="~/Content/SQTSPopup.css" rel="stylesheet" />
+
+<div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Sched Qty Summary </h4>
+        </div>
+        <div class="modal-body">
+            <div class="fc-content">
+                <table id="sqtsPartialTable" class="table table-striped table-bordered ">
+                    <thead>
+                        <tr>
+                            <th>Receipt Location</th>
+                            <th>Delivery Location</th>
+                            <th>Statement Date</th>
+                            <th>Begining Date</th>
+                            @*<th>Ending Date</th>*@
+                            <th>Cycle</th>
+                            <th class="text-right">Reduction Reason</th>
+                            <th>Receipt Qty</th>
+                            <th>Delivery Qty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.RecLoc</td>
+                                <td>@item.DelLoc</td>
+                                <td>@item.StatementDatetime</td>
+                                <td>@item.BeginingDate.ToShortDateString()</td>
+                                @*<td>@item.EndDate.Date.ToShortDateString()</td>*@
+                                <td>@item.Cycle</td>
+                                <td>@item.ReductionReason</td>
+                                <td>@(item.RecQty.ToString() == "0" ? "0" : String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}", item.RecQty))</td>
+                                <td>@(item.DelQty.ToString() == "0" ? "0" : String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}", item.DelQty))</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+
+                    </tfoot>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#sqtsPartialTable").DataTable({
+        "oLanguage":
+        {
+            "sEmptyTable":"No Sched Qty data received yet"
+        },
+        "order": [[2, 'desc']],
+    });
+</script>

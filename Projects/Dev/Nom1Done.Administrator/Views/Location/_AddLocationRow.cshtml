@@ -1,0 +1,39 @@
+﻿@model UPRD.DTO.LocationListDTO
+@{
+    Guid CurrentRowId = Guid.NewGuid();
+
+    var Contract = "--Select--";
+
+    var LocName = "";
+    var LocIdentifier = "";
+    var LocPropCode = "";
+    var RDBVersion = "--Select--";
+
+}
+
+<tr class="gradeX" id="LocationTable_@CurrentRowId" rel="@CurrentRowId">
+    @Html.Hidden("LocationsList.Index", CurrentRowId.ToString())
+
+    <td>@Html.TextBox("LocationsList[" + CurrentRowId + "].Name", Model.LocationsList[0].Name, new { @class = "form-control", @rel = CurrentRowId })</td>
+    <td>@Html.TextBox("LocationsList[" + CurrentRowId + "].Identifier", Model.LocationsList[0].Identifier, new { @class = "form-control", @rel = CurrentRowId })</td>
+    <td>@Html.TextBox("LocationsList[" + CurrentRowId + "].PropCode", Model.LocationsList[0].PropCode, new { @class = "form-control", @rel = CurrentRowId })</td>
+    <td>@Html.DropDownList("LocationsList[" + CurrentRowId + "].RDUsageID", new SelectList(
+                              new List<Object>{
+   new { value = "1" , text = "R"  },
+   new { value = "2" , text = "D" },
+   new { value = "3" , text = "B" },
+                                }, "value", "text", Model.LocationsList[0].RDUsageID), new { @class = "form-control width: -webkit-fill-available;", @rel = CurrentRowId})
+
+    </td>
+    @*<td>@Html.TextBox("LocationsList[" + CurrentRowId + "].CreatedDate", @Model.LocationsList[0].CreatedDate, new { @class = "form-control ", @rel = CurrentRowId, @readonly = "true" })</td>*@
+    <td>
+        <a class="btn" href="#" onclick="onclickDeleteRule(this);">
+            <i class="fa fa-times-circle glyphicon-color" aria-hidden="true" title="Delete"></i>
+        </a>
+    </td>
+</tr>
+<script>
+  
+
+</script>
+

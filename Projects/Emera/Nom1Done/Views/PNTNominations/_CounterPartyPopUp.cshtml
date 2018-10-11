@@ -1,0 +1,95 @@
+﻿@model  Nom.ViewModel.NominationPartialDTO
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">Select CounterParties</h4>
+        </div>
+        <div class="modal-body">
+            <div class="ibox float-e-margins">               
+                <div class="ibox-content">
+                    <table class="table table-striped table-bordered table-hover" id="CounterPartyModalTable">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>Name</th>
+                                <th>Identifier</th>
+                                <th>PropCode</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @*@foreach (var item in Model.CounterParties)
+                            {
+                                <tr class="gradeX">
+                                    <td><button type="button" onclick="CounterPartyPopUpSelect('@item.Identifier','@item.Name','@item.PropCode','@Model.ForRow','@Model.PopUpFor')" class="btn btn-primary">Select</button></td>
+                                    <td>@item.Name</td>
+                                    <td>
+                                        @item.Identifier
+                                    </td>
+                                    <td>@item.PropCode</td>
+                                </tr>
+                            }*@
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+ $(document).ready(function () {
+
+     var table= $('#CounterPartyModalTable').DataTable(
+        {
+            "searching": true,
+            "order": [[1, 'asc']],
+            "columnDefs": [
+                { "width": "5%", "targets": [0] },
+                { "className": "text-left custom-middle-align", "targets": [0, 1, 2, 3] },
+                {
+                    "orderable": false,
+                    "targets":   0
+                },
+                {
+                    "orderable": true,
+                    "targets": [1, 2, 3]
+                }
+            ],
+            "select": {
+                "style":    'os',
+                "selector": 'td:not(:last-child)'
+            },
+            "language":
+                {
+                    "processing": "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
+                },
+            "processing": true,
+            "serverSide": true,
+            "scrollX": true,
+            "scrollCollapse": true,
+            "ajax":
+                {
+                    "url": "/PathedNomination/GetCounterParties",
+                    "data":{pipelineId : @Model.PipelineId},
+                    "type": "POST",
+                    "dataType": "JSON"
+                    },
+                    "columns": [
+                    { "data": "ID",
+                   "render": function ( data, type, row ) {
+                       var popup="CounterPartyPopUpSelect('"+row.Identifier+"','"+row.Name+"','"+row.PropCode+"','@Model.ForRow','@Model.PopUpFor')";
+                       return '<button type="button" style="background-color:#FF6C3A !important; border-color:#FF6C3A !important;" onclick="'+popup+'" class="btn btn-primary">Select</button>';
+                    },
+                    "className": "dt-body-center" },
+                    { "data": "Name"},
+                    { "data": "Identifier" },
+                    { "data": "PropCode" }
+                    ]
+           });
+
+});
+</script>
+

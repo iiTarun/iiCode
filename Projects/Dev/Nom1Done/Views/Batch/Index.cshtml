@@ -1,0 +1,217 @@
+﻿@if (ViewBag.IsPermission != null && ViewBag.IsPermission == true)
+{
+    <div class="row">
+
+        @if (ViewBag.ModelTypeID == (int)Nom1Done.DTO.NomType.HyPathedPNT)
+        {<div class="ibox-content">
+                <button id="PNTBtn" type="button" onclick="PNTbtnClick();" class="btn btn-w-m btn-success btn-outline">PNT</button>
+                <button id="PathedBtn" type="button" onclick="pathedBtnClick()" class="btn btn-w-m btn-success btn-outline">Pathed</button>
+            </div>
+        }
+        @if (ViewBag.ModelTypeID == (int)Nom1Done.DTO.NomType.HyNonPathedPNT)
+        {<div class="ibox-content">
+                <button id="PNTBtn" type="button" onclick="PNTbtnClick();" class="btn btn-w-m btn-success btn-outline">PNT</button>
+                <button id="NonPathedBtn" type="button" onclick="nonpathedBtnClick()" class="btn btn-w-m btn-success btn-outline">NonPathed</button>
+            </div>
+        }
+
+    </div>
+    @*<input id="autorefreshCounter" name="counter"type="hidden" value="0"/>*@
+    @Html.Hidden("NotifierEntity", (object)ViewBag.NotifierEntity)
+    <div id="MainPartialDiv">
+        @if (ViewBag.ModelTypeID == (int)Nom1Done.DTO.NomType.PNT)
+        {
+
+            Html.RenderAction("_Batch", new { pipelineDuns = ViewBag.PipelineDuns });
+
+        }
+    </div>
+
+
+    <div class="modal inmodal" id="LocationPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+    <div class="modal inmodal" id="ContractPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+    <div class="modal inmodal" id="CounterPartyPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+    <div class="modal inmodal" id="TransactionTypePopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+    <div id="RankValidationPopUpModal"></div>
+    <div class="modal inmodal" id="RejectionReasonPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+}
+else
+{
+    <div>
+        <div style="padding-top:170px" class="dz-clickable h1 text-center"><b>You do not have access to this pipeline.</b></div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        if ('@ViewBag.ModelTypeID' !== '@((int)Nom1Done.DTO.NomType.PNT)') {
+            Initializeload();
+        }
+    });
+
+    function Initializeload() {
+        var activeBtnBatchHybrid = localStorage.getItem('activeBtnBatchHybrid');
+        if (activeBtnBatchHybrid)
+        {
+            $(activeBtnBatchHybrid).addClass("active hover");
+            $(activeBtnBatchHybrid).click();
+        } else
+        {
+            $("#PNTBtn").addClass("active hover");
+            $("#PNTBtn").click();
+        }
+    }
+
+
+    function PNTbtnClick() {
+
+        localStorage.setItem('activeBtnBatchHybrid', "#PNTBtn");
+        if ('@ViewBag.ModelTypeID' == '@((int)Nom1Done.DTO.NomType.HyNonPathedPNT)') {
+            $("#NonPathedBtn").removeClass("active hover");
+        } else {
+            $("#PathedBtn").removeClass("active hover");
+        }
+        $("#PNTBtn").addClass("active hover");
+        var mainDiv = $("#MainPartialDiv");
+        $.ajax({
+            url: '/Batch/_Batch',
+            type: 'Get',
+            data: { pipelineDuns:'@ViewBag.PipelineDuns' },
+        })
+      .success(function (result) {
+          mainDiv.empty();
+          mainDiv.html(result);
+      });
+    }
+
+    function pathedBtnClick() {
+        localStorage.setItem('activeBtnBatchHybrid', "#PathedBtn");
+        $("#PathedBtn").addClass("active hover");
+        $("#PNTBtn").removeClass("active hover");
+        var mainDiv = $("#MainPartialDiv");
+        $.ajax({
+            url: '/Batch/LoadHybridPathedPartial',
+            type: 'Get',
+            data: { pipelineDuns:'@ViewBag.PipelineDuns' },
+        })
+       .success(function (result) {
+           mainDiv.empty();
+           mainDiv.html(result);
+       });
+    }
+
+    function nonpathedBtnClick() {
+        localStorage.setItem('activeBtnBatchHybrid', "#NonPathedBtn");
+        $("#NonPathedBtn").addClass("active hover");
+        $("#PNTBtn").removeClass("active hover");
+        var mainDiv = $("#MainPartialDiv");
+        $.ajax({
+            url: '/Batch/LoadHybridNonPathedPartial',
+            type: 'Get',
+            data:  { pipelineDuns : '@ViewBag.PipelineDuns' },
+        })
+       .success(function (result) {
+           mainDiv.empty();
+           mainDiv.html(result);
+       });
+    }
+</script>
+
+@section scripts {
+
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+
+    <script type="text/javascript">
+        var signalRHubInitialized = false;
+
+        $(function () {
+            InitializeSignalRHubStore();
+        });
+
+        function InitializeSignalRHubStore() {
+
+            if (signalRHubInitialized)
+                return;
+
+            try {
+                var clientHub = $.connection.nomDoneHub;
+
+                clientHub.client.broadcastMessage = function (message) {
+                    if (message === "Refresh" ){
+                        ReloadIndexPartial();
+                    }
+                };
+
+                $.connection.hub.start().done(function () {
+
+                    clientHub.server.initializeNomTable($("#NotifierEntity").val());
+                    signalRHubInitialized = true;
+                });
+
+            } catch (err) {
+                signalRHubInitialized = false;
+            }
+        };
+
+        function ReloadIndexPartial() {
+
+            var mainDiv = $("#MainPartialDiv");
+            var URL = " ";
+            if ('@ViewBag.ModelTypeID' == '@((int)Nom1Done.DTO.NomType.HyNonPathedPNT)' && $("#NonPathedBtn").hasClass("active hover")) {
+                URL = "/Batch/LoadHybridNonPathedPartial";
+            } else if ('@ViewBag.ModelTypeID' == '@((int)Nom1Done.DTO.NomType.HyPathedPNT)' && $("#PathedBtn").hasClass("active hover")) {
+                URL = "/Batch/LoadHybridPathedPartial";
+            }else{
+                URL = "/Batch/_Batch";
+            }
+            if (URL != " ") {
+                $.ajax({
+                    url: URL,
+                    type: "Get",
+                    data: { pipelineDuns : '@ViewBag.PipelineDuns' },
+                    success: function (result) {
+                        mainDiv.empty();
+                        mainDiv.html(result);
+                        if (!signalRHubInitialized)
+                            InitializeSignalRHubStore();
+                    }
+                });
+            }
+
+        };
+
+        //function RefreshStatus() {
+        //    var TransactionIds = [];
+        //    $("span[id^=status_]:contains('Submitted'), span[id^=status_]:contains('Draft'), span[id^=status_]:contains('In-Process')").each(function () {
+        //        TransactionIds.push($(this).attr('rel'));
+        //    })
+        //    $.ajax({
+        //        url: '/PathedNomination/GetStatus',
+        //        dataType: 'json',
+        //        type: "Post",
+        //        data: { objList: TransactionIds },
+        //        success: function (result) {
+        //            console.log(result);
+        //            if (result != null) {
+        //                for (var i = 0; i < result.length; i++) {
+        //                    UpdateStatusOfNoms(result[i].StatusName, result[i].Key, result[i].value, result[i].StatusId);
+        //                }
+        //            }
+        //        }
+        //    });
+        //}
+        //function UpdateStatusOfNoms(status, id, className,statusId) {
+        //    $("#status_" + id).text(status);
+        //    $("#status_" + id).removeClass();
+        //    $("#status_" + id).addClass("label "+className);
+        //    $("#statusId_"+id).val(statusId);
+        //}
+
+    </script>
+}

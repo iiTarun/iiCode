@@ -1,0 +1,80 @@
+﻿.orangeThemeColor {
+    background-color: #272F3C !important;
+    color: white !important;
+}
+
+table.table-bordered {
+    border: 1px solid #FF6C3A;
+}
+
+    table.table-bordered th {
+        border: 0.1px solid #FF6C3A !important;
+        color: white;
+        font-size: 12px;
+        text-align: center;
+        background-color: #272F3C !important;
+    }
+
+    table.table-bordered > tbody > tr > td {
+        border: 1px solid #FF6C3A;
+        text-align: center;
+        font-size: 12px;
+        white-space: nowrap;
+        width: auto
+    }
+
+    table.table-bordered > tfoot > tr > td {
+        border: 1px solid #FF6C3A;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 12px;
+        width: auto
+    }
+
+    ul#menu {
+    padding-top: 10px;
+    }
+
+ul#menu li {
+    display: block;
+    max-width: 50%;
+    color: #FF6C3A;
+    text-align: center;
+    text-decoration: underline;
+    font-size: 16px;
+    padding: 7px 10px;
+}
+
+    ul#menu li:hover {
+        background-color: #FF6C3A;
+        padding: 7px 10px;
+        margin-left: 1px;
+        color: #fff;
+        font-size:16px;
+    }
+    ul#menu li a:hover {
+        color:#fff;
+    }
+
+a:focus {
+    background-color: #FF6C3A;
+    padding: 7px 10px;
+    margin-left: 1px;
+    color: #fff;
+    font-size: 16px;
+    text-decoration: underline !important;
+}
+    
+
+.center-screen {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+a {
+    color: inherit;
+    user-select: inherit; 
+}

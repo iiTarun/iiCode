@@ -1,0 +1,122 @@
+﻿@model Nom1Done.DTO.WatchListDTO
+@using Nom1Done.Enums
+@{ 
+    Guid CurrentRowId = Guid.NewGuid();
+    var LocOrNoticeType = "";
+    var addbtnText = "Add Points";
+}
+<hr/>
+
+@Html.HiddenFor(a => a.DatasetId,new { id="WatchListDataSetId" })
+
+@*<h3 style="margin:25px !important;">Define Points</h3>*@
+<div class="row" style="margin:25px !important;">
+    <div class="row">
+        <div class="col-md-3">
+            <label>WatchList Name</label>  
+            @Html.TextBoxFor(a=>a.ListName,"",new { @class = "form-control" ,@placeholder="Enter WatchList Name" })
+        </div>
+        <div class="col-md-3">
+            <br/>  
+            @if (Model.DatasetId == EnercrossDataSets.SWNT) { addbtnText = "Add Pipes"; }
+            <button style="margin-top:5px !important;" type="button" id="addRuleSetting" class="btn btn-w-m btn-success btn-outline">@addbtnText</button>
+        </div>
+        <div class="col-md-3">
+            <label>Email for Alerts:</label>
+            @Html.TextBoxFor(a => a.UserEmail, "", new { @class = "form-control", @readonly = "true" })
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <div id="RuleTableDiv" class="RuleTableScrollBar">
+        <table class="table" id="WatchListRuleTable">
+            <thead>
+                <tr>
+                    <th class="minWidth"> Pipeline</th>
+                    <th class="minWidth">
+                        @if (Model.DatasetId != EnercrossDataSets.SWNT)
+        {
+            LocOrNoticeType = "Location";
+        }
+        else
+        {
+            LocOrNoticeType = "Notice Type";
+        }
+                        @LocOrNoticeType
+                    </th>
+                    <th style="min-width:120px;">Get Email Alerts</th>
+                    <th class="minWidth"> Alert Frequency</th>
+ @if (Model.DatasetId == EnercrossDataSets.SWNT)
+{
+                <th class="minWidth"> Field (optional)</th>
+                <th class="minWidth"> Operator (optional)</th>         
+                <th class="minWidth"> Value (optional)&nbsp;&nbsp;<i id="imgtooltip" data-toggle="tooltip" title="Type exact word or phrase with no quotes for e.g. Shadyside meter" alt="ToolTip" class="fa fa-info-circle" style="width:60px; height:20px;"></i></th>
+}
+else if (Model.DatasetId == EnercrossDataSets.OACY)
+{
+                <th class="minWidth">Field</th>
+                <th class="">Operator</th>
+                <th class="minWidth">Lower Value<br>(must be an integer)</th>
+                <th class="minWidth">Upper Value<br>(must be an integer)</th>
+}
+else
+{
+                <th class="minWidth"> Field</th>
+                <th class="minWidth"> *Operator</th>
+                <th class="minWidth"> *Percent</th>
+}
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+  
+</div>
+
+<br />
+<div class="row">
+    <div class="col-md-2 col-md-offset-3">
+        <input type="submit" id="savebtn" value="Save" name="Save"  onclick="return validation();" class="btn btn-w-m btn-success btn-outline" />
+    </div>
+    <div class="col-md-3 pull-left">
+        <input type="button" value="Cancel" onclick="cancelbtn();" class="btn btn-w-m btn-success btn-outline" />
+    </div>
+</div>
+
+<script>
+    $(document).ready(function ()
+    { 
+    $('[data-toggle="tooltip"]').tooltip()
+    $("#WatchListRuleTable").hide();
+    $("#savebtn").hide();
+
+   //  $(":input[type=text]:not([readonly='readonly'])").attr("autocomplete", "off");
+
+    $(function () {
+        $('.listbox').multiselect({
+            includeSelectAllOption: true,
+            buttonWidth: '240px',
+            maxHeight: 200,
+        });
+    });
+
+
+    $("#addRuleSetting").click(function () {
+        $("#WatchListRuleTable").show();
+        $("#savebtn").show();
+        event.preventDefault();
+            $.ajax({
+                url: '@Url.Action("AddRuleSettings", "WatchList")' + "?datasetId=" + $("#DatasetId").val(),
+                cache: false,
+                success: function (html) {                   
+                    $("#WatchListRuleTable tbody").append(html);
+                }
+            });
+      });
+
+    });    
+
+ </script>
+
+

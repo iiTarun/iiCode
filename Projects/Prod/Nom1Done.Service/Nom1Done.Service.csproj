@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{36982975-3CDE-4F2B-9F24-27C030CDCA71}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nom1Done.Service</RootNamespace>
+    <AssemblyName>Nom1Done.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DidiSoft.Pgp">
+      <HintPath>..\..\..\iiProjects\Enercross23_3_17\Enercross.CoreDB\ThirdPartyDlls\DidiSoft.Pgp.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=1.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.1.1.2\lib\net451\Microsoft.IdentityModel.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=5.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.5.1.2\lib\net451\Microsoft.IdentityModel.Tokens.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.5.1.2\lib\net451\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Twilio, Version=5.9.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Twilio.5.9.2\lib\net451\Twilio.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationLogService.cs" />
+    <Compile Include="BatchService.cs" />
+    <Compile Include="Common\Constants.cs" />
+    <Compile Include="Common\Email.cs" />
+    <Compile Include="Common\JobManager.cs" />
+    <Compile Include="Common\ManageIncomingRequests.cs" />
+    <Compile Include="Common\RejectedNomModel.cs" />
+    <Compile Include="Common\Search.cs" />
+    <Compile Include="ContractService.cs" />
+    <Compile Include="CounterPartyService.cs" />
+    <Compile Include="CycleIndicatorService.cs" />
+    <Compile Include="DashboardService.cs" />
+    <Compile Include="EmailandSMSservice.cs" />
+    <Compile Include="EmailQueuService.cs" />
+    <Compile Include="EmailTemplateService.cs" />
+    <Compile Include="Format.cs" />
+    <Compile Include="Interface\IApplicationLogService.cs" />
+    <Compile Include="Interface\IBatchService.cs" />
+    <Compile Include="Interface\IContractService.cs" />
+    <Compile Include="Interface\ICounterPartiesService.cs" />
+    <Compile Include="Interface\ICycleIndicator.cs" />
+    <Compile Include="Interface\IDashboardService.cs" />
+    <Compile Include="Interface\IEmailQueueService.cs" />
+    <Compile Include="Interface\IEmailTemplateService.cs" />
+    <Compile Include="Interface\ILocationService.cs" />
+    <Compile Include="Interface\IManageIncomingRequestService.cs" />
+    <Compile Include="Interface\ImetadataBidUpIndicatorService.cs" />
+    <Compile Include="Interface\ImetadataCapacityTypeIndicatorService.cs" />
+    <Compile Include="Interface\ImetadataExportDeclarationService.cs" />
+    <Compile Include="Interface\ImetadataFileStatusService.cs" />
+    <Compile Include="Interface\ImetadataQuantityTypeIndicatorService.cs" />
+    <Compile Include="Interface\ImetadataRequestTypeService.cs" />
+    <Compile Include="Interface\IModalFactory.cs" />
+    <Compile Include="Interface\INonPathedService.cs" />
+    <Compile Include="Interface\IPasswordHistoryService.cs" />
+    <Compile Include="Interface\IPathedNominationService.cs" />
+    <Compile Include="Interface\IPipelineEDISettingService.cs" />
+    <Compile Include="Interface\IPipelineService.cs" />
+    <Compile Include="Interface\IPNTNominationService.cs" />
+    <Compile Include="Interface\ISettingService.cs" />
+    <Compile Include="Interface\ITransactionalReportingService.cs" />
+    <Compile Include="Interface\IUploadNominationService.cs" />
+    <Compile Include="Interface\IUprdStatusService.cs" />
+    <Compile Include="Interface\IUserService.cs" />
+    <Compile Include="Interface\INotifierEntityService.cs" />
+    <Compile Include="LocationService.cs" />
+    <Compile Include="metadataBidUpIndicatorService.cs" />
+    <Compile Include="metadataCapacityTypeIndicatorService.cs" />
+    <Compile Include="metadataExportDeclarationService.cs" />
+    <Compile Include="metadataFileStatusService.cs" />
+    <Compile Include="metadataQuantityTypeIndicatorService.cs" />
+    <Compile Include="metadataRequestTypeService.cs" />
+    <Compile Include="ModalFactory.cs" />
+    <Compile Include="NonPathedService.cs" />
+    <Compile Include="NonPathedTypeVariance.cs" />
+    <Compile Include="NotifierEntityService.cs" />
+    <Compile Include="PasswordHistoryService.cs" />
+    <Compile Include="PathedNominationService.cs" />
+    <Compile Include="PipelineEDISettingService.cs" />
+    <Compile Include="PipelineService.cs" />
+    <Compile Include="PNTNominationService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SettingService.cs" />
+    <Compile Include="TransactionalReportingService.cs" />
+    <Compile Include="UploadNominationService.cs" />
+    <Compile Include="UprdStatusService.cs" />
+    <Compile Include="UserService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EdiTools\EdiTools.csproj">
+      <Project>{B7883BF1-C766-44F9-91D6-92577A65357D}</Project>
+      <Name>EdiTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nom1Done.Data\Nom1Done.Data.csproj">
+      <Project>{bcfffcec-3b96-465c-9132-8f1cdd6c9ffc}</Project>
+      <Name>Nom1Done.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nom1Done.DTO\Nom1Done.DTO.csproj">
+      <Project>{8e55d568-caf6-43c6-ac9f-e14fcf19e32f}</Project>
+      <Name>Nom1Done.DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nom1Done.Model\Nom1Done.Model.csproj">
+      <Project>{4d07088e-2018-492c-b14e-d39c4987247d}</Project>
+      <Name>Nom1Done.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UPRD.Data\UPRD.Data.csproj">
+      <Project>{93C2AB5D-974C-4B3B-82FC-7D1F2496D967}</Project>
+      <Name>UPRD.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UPRD.Models\UPRD.Models.csproj">
+      <Project>{2CF37ED1-F860-4786-9531-0EC44F008729}</Project>
+      <Name>UPRD.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ThirdPartyDlls\BouncyCastle.CryptoExt.dll" />
+    <Content Include="ThirdPartyDlls\DidiSoft.Pgp.dll" />
+    <Content Include="ThirdPartyDlls\DidiSoft.Pgp.Net.LdapClient.dll" />
+    <Content Include="ThirdPartyDlls\DidiSoft.Pgp.Net.LdapClient.xml" />
+    <Content Include="ThirdPartyDlls\DidiSoft.Pgp.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

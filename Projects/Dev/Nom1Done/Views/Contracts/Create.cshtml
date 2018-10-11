@@ -1,0 +1,322 @@
+﻿@model Nom.ViewModel.ContractsDTO
+
+@{
+    ViewBag.Title = "Create";
+    //Layout = "~/Views/Shared/_SiteLayout.cshtml";
+}
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h2>Create Contract</h2>
+            </div>
+            <div class="ibox-content">
+
+
+
+                @using(Html.BeginForm())
+                {                                  
+                    @Html.HiddenFor(a => a.PipeDuns, new { @id = "PipelineId", @class = "form-control" })
+                    <div class="form-horizontal">
+                        <h4>Contract</h4>
+                        <hr />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                      
+                        <div class="form-group">
+                              <label class="col-sm-2 control-label">* Contract #</label>
+                                 <div class="col-md-10">
+                                      @Html.EditorFor(model => model.RequestNo, new { htmlAttributes = new { @class = "form-control" } })
+                                      @Html.ValidationMessageFor(model => model.RequestNo, "", new { @class = "text-danger" })
+                                  </div>
+                         </div>
+                        <div class="hr-line-dashed"></div>
+
+
+                        <div class="form-group">
+                             <label class="col-sm-2 control-label">Contract Type</label>
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.RequestTypeID,new SelectList( ViewBag.RequestType, "ID", "Name", Model.RequestTypeID ),"", new { @class = "form-control" })
+                                @*@Html.ValidationMessageFor(model => model.RequestTypeID, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">* Rate Schedule</label>
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.RateSchedule, new { htmlAttributes = new { @class = "form-control" } })
+                           </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">                           
+                            <label class="col-sm-2 control-label">* FuelPercentage (Max: 99.99)</label>
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.FuelPercentage, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.FuelPercentage, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">                           
+                            <label class="col-sm-2 control-label">* MDQ/MSQ</label>
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.MDQ, new { htmlAttributes = new { @class = "form-control" ,@type = "number", @min = "0" } })                               
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">                          
+                            <label class="col-sm-2 control-label">* Receipt Location</label>
+                             <div class="col-md-10" id="RecLocDiv">
+                                 <span data-toggle="modal" onclick="OpenPopUpLocation('RecLoc','@Model.PipeDuns')">
+                                     --Select--
+                                 </span>
+                                @Html.HiddenFor(model=>model.LocationFromIdentifier, new { htmlAttributes = new { @class = "form-control" } })   
+                                @Html.HiddenFor(model => model.LocationFrom, new { htmlAttributes = new { @class = "form-control" } })                            
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">                        
+                             <label class="col-sm-2 control-label">* Delivery Location</label>
+                             <div class="col-md-10" id="DelLocDiv">
+                                 <span data-toggle="modal" onclick="OpenPopUpLocation('DelLoc','@Model.PipeDuns')">
+                                     --Select--
+                                 </span>
+                                 @Html.HiddenFor(model => model.LocationToIdentifier, new { htmlAttributes = new { @class = "form-control" } })
+                                 @Html.HiddenFor(model => model.LocationTo, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">                         
+                            <label class="col-sm-2 control-label">Expires</label>
+                            <div class="col-md-10">
+                                <div class="input-group date">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    @Html.TextBoxFor(a => a.ValidUpto,"{0:MM/dd/yyyy }", new { @class = "form-control dtpicker", placeholder = "Expire Date ... ",})                                  
+                                </div>                              
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">                          
+                            <label class="col-sm-2 control-label">* Receipt Zone</label>
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.ReceiptZone, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.ReceiptZone, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+
+                        <div class="form-group">                          
+                            <label class="col-sm-2 control-label">* Delivery Zone</label>
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.DeliveryZone, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.DeliveryZone, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">                               
+                                @*<button class="btn btn-white" type="button" onclick="clean();">Cancel</button>*@
+                                <button class="btn btn-primary" style="background-color:#FF6C3A !important; border-color:#FF6C3A !important;" name="Save" onclick="return validate();" type="submit">Create</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="LocationPopUpModal" role="dialog" aria-hidden="true">
+
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+<script>
+   
+    $(function () {
+        $('.dtpicker').datepicker({ startDate: new Date(), autoclose: true, clearBtn: true });
+        
+    });
+
+
+    $('#FuelPercentage, #MDQ').keypress(function (event) {
+        var flag = isNumber(event, this);
+
+        return flag;
+    });
+
+
+    $('#MDQ').keyup(function (element) {
+      
+        if (($("#MDQ").val())-100000000 > 0) {
+            $("#MDQ").val("100000000.00");
+            return false;
+        }
+        if (($("#MDQ").val()) < 0) {
+            $("#MDQ").val("00.00");
+            return false;
+        }
+        return true;
+    });
+
+
+
+    $('#FuelPercentage').keyup(function (event) {
+        var flag = NumberValidate(this);
+        return flag;
+    });
+
+
+    $('#RequestNo').keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z0-9 ]+$");
+
+        var charCode = e.which;
+
+        if (charCode == 8 || charCode == 0 || charCode == 45 || charCode == 35) {
+            return;
+        }
+        else {
+            var keyChar = String.fromCharCode(charCode);
+            if (regex.test(keyChar)) {
+                return true;
+            }
+        }
+        e.preventDefault();
+        return false;
+    });
+
+    function NumberValidate(element) {
+        if (($(element).val()) - 99.99 > 0) {
+            $(element).val("99.99");
+            return false;
+        }
+        return true;
+    }
+
+    function OnMDQChange() {
+       
+        if (($("#MDQ").val()) < 0) {
+            $("#MDQ").val("00.00");
+        }
+    }
+
+
+
+    function isNumber(evt, element) {
+       
+        var charCode = (evt.which) ? evt.which : event.keyCode
+
+        if ((charCode != 46 || $(element).val().indexOf('.') != -1) &&      // “.” CHECK DOT, AND ONLY ONE.
+            (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+
+    $('#ReceiptZone, #DeliveryZone, #RateSchedule').keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z0-9 ]+$");
+         
+        var charCode = e.which;
+
+        if (charCode == 8 || charCode == 0) {
+            return;
+        }
+        else {
+            var keyChar = String.fromCharCode(charCode);
+            if (regex.test(keyChar)) {
+                return true;
+            }
+        }
+        e.preventDefault();
+        return false;
+    });
+
+    function OpenPopUpLocation(PopupFrom, pipelineDuns) {
+        $.ajax({
+            url: '/Contracts/NotimationsPartials',
+            type: 'GET',
+            data: { popUpFor: PopupFrom, pipelineDuns: pipelineDuns },
+            dataType: 'html',
+            contentType: 'application/html;charset=utf-8'
+        })
+               .success(function (result) {                   
+                       $('#LocationPopUpModal').html(result);
+                       $('#LocationPopUpModal').modal('show');
+                      // $('#locationModalTable').DataTable();                                  
+               })
+               .error(function (xhr, status) {
+                   alert(status);
+               })
+    }
+
+
+    
+    function CntrLocationPopUpSelect(Name, Id, PropCode, RowNo, LocationPopUpFrom) {
+       
+        $('#LocationPopUpModal').modal('hide');        
+        if (LocationPopUpFrom == "RecLoc") {  
+            $('#RecLocDiv').find('span').text(Name);
+            $('#LocationFromIdentifier').val(Id);
+            $('#LocationFrom').val(Name);
+        } else if (LocationPopUpFrom == "DelLoc") {           
+            $('#DelLocDiv').find('span').text(Name);
+            $('#LocationToIdentifier').val(Id);  
+            $('#LocationTo').val(Name);
+        }
+
+    }
+
+
+
+    function validate()
+    {
+        var flag = true;
+        var RequestNo = $('#RequestNo').val();
+        var RateSchedule=$("#RateSchedule").val();
+        var RequestTypeID = $("#RequestTypeID").val();
+        var FuelPercentage = $("#FuelPercentage").val();
+        var MDQ = $("#MDQ").val();
+        var LocationFromID = $("#LocationFromIdentifier").val();
+        var LocationToID = $("#LocationToIdentifier").val();
+        var ValidUpto = $("#ValidUpto").val();
+        var ReceiptZone = $("#ReceiptZone").val();
+        var DeliveryZone = $("#DeliveryZone").val();      
+        var reg = /<(.|\n)*?>/g;
+        if (($.trim(RequestNo).length == 0) || ($.trim(RateSchedule).length == 0) || (RateSchedule == "") || (RequestNo == "") || (FuelPercentage == "") || (MDQ == "") || (LocationFromID == "") || (LocationToID == "") || (ValidUpto == "") || (ReceiptZone == "") || (DeliveryZone == ""))
+        {
+            toastr.warning("Please Fill required fields(*).");
+            flag = false;
+        } else if (reg.test(RequestNo) == true) {
+            toastr.warning("", "These Special Charaters are not allow in RequestNo.");
+            flag = false;
+        }
+
+
+        if (FuelPercentage < 0) {
+            toastr.warning("Please Fill positive value in FuelPercentage");
+            flag = false;
+        }
+
+        if (MDQ < 0) {
+            toastr.warning("Please Fill positive value in MDQ");
+            flag = false;
+        }
+
+        return flag;
+    }
+
+
+
+</script>

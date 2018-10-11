@@ -1,0 +1,386 @@
+﻿
+@model UPRD.DTO.LocationsDTO
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var count = 1;
+    Guid CurrentRowIndex = Guid.NewGuid();
+}
+<style>
+    span.field-validation-error {
+        color: red;
+    }
+
+    #LocationTable_filter, #LocationTable_info {
+        display: none
+    }
+
+    #LocationTable_Paging {
+        display: none;
+    }
+</style>
+<link href="~/Content/bootstrap-notify.css" rel="stylesheet" />
+
+<script>
+
+    function AddLocationRow(strPipelineDuns) {
+
+        var pipelineDuns = (strPipelineDuns ? strPipelineDuns: @Model.PipelineDuns);
+        var rowCount = $('#LocationTable tbody tr').length;
+        $.ajax({
+            url: '/Location/AddLocationRow',
+            data: { pipelineDuns: pipelineDuns,RowCount: rowCount },
+            type: 'GET',
+            success: function (html) {
+                $('#LocationTable > tbody').prepend(html);
+            }
+        });
+    }
+    function AddEmptyLocation(PipelineID) {
+
+        $.ajax({
+            url: '/Location/AddEmptyLocation',
+            data: {pipelineId:@Model.PipelineID},
+            type: 'POST',
+            success: function (data) {
+                if (data.success) {
+                    $.notify(data.message, {
+                        globalPosition: "top center",
+                        className: "success"
+                    })
+                }
+            }
+        });
+    }
+
+    function onclickDeleteRule(e) {
+        var row = $(e).parent().parent();
+        row.remove();
+    }
+
+</script>
+
+<div>
+    @ViewBag.msg
+</div>
+
+@using (Html.BeginForm("AddLocation", "Location", FormMethod.Post))
+{
+
+    @Html.HiddenFor(a => a.PipelineID)
+    @Html.HiddenFor(a => a.PipelineDuns, new { @id = "hdnPipelineDuns" })
+
+
+    <div class="ibox float-e-margins">
+        <button type="button" id="btnAddLocation" class="btn btn-w-m btn-add-edit btn-outline" onclick="AddLocationRow('@Model.PipelineDuns')"><i class="glyphicon glyphicon-plus"></i> Add</button>
+        <button type="submit" name="Save" class="btn btn-w-m  btn-add-edit btn-outline"><i class="fa fa-save"></i> Save</button>
+        <button type="button" id="btnShowOacyUnsc" class="btn btn-w-m btn-add-edit btn-outline" onclick="btnLocOacyUnsc()"><i class="fa fa-trash"></i> Add Oacy/Unsc Locations</button>
+
+    </div>
+    <br />
+    <div class="">
+        <div class="">
+            <table id="LocationTable" class="table table-bordered table-hover" style="margin-top:0px!important;">
+                <thead>
+                    <tr class="bg-color" style="background-color: #F5F5F6!important;">
+                        <th style="min-width: 150px;">Location Name</th>
+                        <th style="min-width: 150px;">Location Identifier</th>
+                        <th style="min-width: 150px;">Location PropCode</th>
+                        <th style="min-width: 150px;">R-D-BVersion</th>
+                        <th style="min-width: 150px;"></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+}
+<div id="MainPartialDiv" class="border-bottom white-bg" style="display:none">
+    @Html.Partial("LocationOacyUnsc", Model)
+</div>
+
+
+
+
+
+<div class="card">
+    <div class="card-body">
+        <table id="LocationDatatable" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th style="min-width: 130px;">Name</th>
+                    <th style="min-width: 130px;">Identifier</th>
+                    <th style="min-width: 130px;">LocPropCode</th>
+                    <th style="min-width: 130px;">R-D-BVersion</th>
+                    <th style="min-width: 130px;">IsActive</th>
+                    <th style="min-width: 150px;">Edit/Delete</th>
+                </tr>  
+            </thead>   
+        </table>       
+    </div>             
+</div>
+
+
+<div id="dialogUnacyData" style="display:none">
+    <div style="width:90%; margin:0 auto">
+        <div class="form-group">
+            <label class="control-label">Name</label>
+            <input id="frmUnacyLocName" class="form-control" />
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+        <div class="form-group">
+            <label class="control-label">Identifier</label>
+            <input id="frmUnacyIdentifier" class="form-control" />
+
+        </div>
+        <div class="form-group">
+            <label class="control-label">PropCode</label>
+            <input id="frmUnacyPropCode" class="form-control" />
+
+        </div>
+        <div class="form-group">
+            <label class="control-label">RDUsageID</label>
+            <select class="form-control width: -webkit-fill-available;" id="frmUnacyRDUsageID">
+                <option value="1">R</option>
+                <option value="2">D</option>
+                <option value="3">B</option>
+            </select>
+
+        </div>
+        <div class="form-group">
+
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" onclick="SaveLocation('unacy')" />
+            <input type="reset" value="Reset" class="btn" />
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+
+    var Popup, dataTable;
+    $(document).ready(function () {
+        Popup = $("#dialogUnacyData").dialog({
+
+            autoOpen: false,
+            resizable: true,
+            title: 'Fill Location Detail',
+            height: 400,
+            width: 600,
+            modal: true,
+            hide: {
+                effect: "explode",
+                duration: 1000
+            },
+            open: function () {
+                $(this).closest(".ui-dialog")
+                    .find(".ui-dialog-titlebar-close")
+                    .removeClass("ui-dialog-titlebar-close")
+                    .html("<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>");
+            }
+        });
+
+
+
+        dataTable = $("#LocationDatatable").DataTable({
+            "scrollX": true,
+            "scrollY": 400,
+                "ajax": {
+                    "url": "/Location/GetData",
+                    "type": "POST",
+                    "datatype": "json",
+                    "data": {PipelineDuns: $("#hdnPipelineDuns").val()}
+                },
+                "columns": [
+                    { "data": "Name", "autoWidth": true },
+                    { "data": "Identifier", "autoWidth": true },
+                    { "data": "PropCode", "autoWidth": true },
+                    { "data": "RDB", "autoWidth": true },
+                    { "data": "IsActive", "autoWidth": true },
+                            {
+                        "data": "ID", "render": function (data, type, row) {
+                            if (row.IsActive === true) {
+
+                                return "<a class='btn btn-add-edit btn-sm' onclick=PopupForm('@Url.Action("AddorEdit", "Location")/" + data + "')><i class='fa fa-pencil'></i> Edit</a><a class='btn btn-delete btn-sm' style='margin-left:5px' onclick=Delete('@Url.Action("Delete", "Location")/" + data + "')><i class='fa fa-trash'></i> DeActivate</a>";
+                            }
+                            else {
+                                
+                                return "<a class='btn btn-delete btn-sm' style='margin-left:5px' onclick=Activate('@Url.Action("Activate", "Location")/" + data + "')><i class='fa fa-trash'></i> Activate</a>";
+
+                            }
+                        },
+                        "orderable": true,
+                        "searchable": true,
+                        "info": true,
+                        "Paging": true,
+                        "searching": true,
+                        "width": "150px",
+
+                    },
+               
+                ],
+                "language": {
+                    "emptyTable" : "No data found, Please click on <b>Add New Location</b> Button"
+                }
+        });
+    });
+
+
+    function PopupForm(url) {
+            var formDiv = $('<div/>');
+            $.get(url)
+                .done(function (response) {
+                formDiv.html(response);
+                Popup = formDiv.dialog({
+                    autoOpen: true,
+                    resizable: true,
+                    title: 'Fill Location Detail',
+                    height: 400,
+                    width: 600,
+                    close: function () {
+                        Popup.dialog('destroy').remove();
+                    },
+                     open: function () {
+                        $(this).closest(".ui-dialog")
+                            .find(".ui-dialog-titlebar-close")
+                            .removeClass("ui-dialog-titlebar-close")
+                            .html("<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>");
+                    }
+
+                });
+            });
+        }
+
+    function SaveLocation(strdialog) {
+      
+            var model = {};
+            if (strdialog == 'unacy')
+            {
+
+                model = { Name: $("#frmUnacyLocName").val(), RDUsageID: $("#frmUnacyRDUsageID").val(), PropCode: $("#frmUnacyIdentifier").val(), Identifier: $("#frmUnacyPropCode").val(), Id: $("#frmUnacyLocationId").val() };
+            }
+            else
+            {
+                model = { Name: $("#frmName").val(), RDUsageID: $("#frmRDUsageID").val(), PropCode: $("#frmIdentifier").val(), Identifier: $("#frmPropCode").val(), Id: $("#frmLocationId").val(), PipelineDuns: $("#hdnPipelineDuns").val() };
+            }
+
+        var url = "/Location/AddOrEdit";
+
+                $.ajax({
+                    type : "POST",
+                    url: url,
+                    data: model,
+                    success : function (data) {
+                        if(data.success)
+                        {
+                            Popup.dialog('close');
+                            dataTable.ajax.reload();
+                            toastr.success(data.message);
+
+                        }
+                    }
+                });
+
+        }
+
+   
+
+        function btnLocOacyUnsc() {
+            datatable1 = $('#LocationOacyTable').DataTable();
+            datatable1.destroy();
+            dataTable1 = $("#LocationOacyTable").DataTable({
+                "scrollX": true,
+                "scrollY": 400,
+                "ajax": {
+
+                    "url": "/Location/GetLocNotIntblLocation",
+                    "type": "POST",
+                    "datatype": "json",
+                    "data": { PipelineDuns: $("#hdnPipelineDuns").val() }
+                },
+                "columns": [
+                    { "data": "Name", "autoWidth": true },
+                    { "data": "Identifier", "autoWidth": true },
+                    { "data": "PropCode", "autoWidth": true },
+                    { "data": "RDB", "autoWidth": true },
+                    { "data": "IsActive", "autoWidth": true },
+                    {
+                        "data": "ID", "render": function (data, type, row) {
+                            return "<button class='btn btn-add-edit btn-sm' ><i class='fa fa-pencil'></i> Edit</button>";
+                        },
+                        "width": "150px",
+
+                    }
+
+                ],
+                "language": {
+
+                    "emptyTable": "No data found, Please click on <b>Add New Location</b> Button"
+                }
+            });
+
+
+            $('#LocationOacyTable tbody').on('click', 'button', function () {
+                var data = dataTable1.row($(this).parents('tr')).data();
+                $("#frmUnacyLocName").val(data.Name);
+                $("#frmUnacyIdentifier").val(data.Identifier);
+                $("#frmUnacyPropCode").val(data.PropCode);
+                $("#frmUnacyRDUsageID").val(data.RDUsageID);
+
+                $("#dialogUnacyData").dialog("open");
+            });
+
+            $("#MainPartialDiv").show();
+            if ($(this).val().length > 0) {
+                $(":submit").attr("disabled", true);
+            }
+    }
+
+      function AddLocationRow(strPipelineDuns) {
+
+        var pipelineDuns = (strPipelineDuns ? strPipelineDuns: @Model.PipelineDuns);
+        var rowCount = $('#LocationTable tbody tr').length;
+        $.ajax({
+            url: '/Location/AddLocationRow',
+            data: { pipelineDuns: pipelineDuns,RowCount: rowCount },
+            type: 'GET',
+            success: function (html) {
+                $('#LocationTable > tbody').prepend(html);
+            }
+        });
+    }
+    function AddEmptyLocation(PipelineID) {
+
+        $.ajax({
+            url: '/Location/AddEmptyLocation',
+            data: {pipelineId:@Model.PipelineID},
+            type: 'POST',
+            success: function (data) {
+                if (data.success) {
+                    toastr.success(data.message);
+
+                }
+            }
+        });
+    }
+
+    function onclickDeleteRule(e) {
+        var row = $(e).parent().parent();
+        row.remove();
+    }
+
+
+</script>
+
+
+
+
+
+
+
+
+

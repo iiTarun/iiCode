@@ -1,0 +1,200 @@
+﻿@model List<Nom1Done.DTO.SQTSOPPerTransactionDTO>
+@{
+    bool sqtsForLoc = ViewBag.IsSqtsForLoc;   
+    int daysInMonth = DateTime.DaysInMonth(DateTime.Now.Year, ViewBag.Month);
+    DateTime dtFrom = new DateTime(DateTime.Now.Year, ViewBag.Month, 1);
+    List<DateTime> dates = Enumerable.Range(0, daysInMonth)
+     .Select(offset => dtFrom.AddDays(offset))
+     .ToList();
+    int DateVal = 0;
+}
+
+
+
+<div class="row">
+
+</div>
+<div class="row">
+    <div class="ibox-content">
+
+        <div id="SqtsOperPartialTableDiv" class="table-responsive">
+            <table class="table stripe row-border order-column table-bordered table-striped" id="SqtsOperPartialTable">
+                <thead>
+                    <tr>
+                        <th class="MinimumWidth" rowspan="2">K Flow R or D</th>
+                        @if (sqtsForLoc)
+                        {                           
+                            <th class="MinimumWidth" rowspan="2">Rec Loc</th>
+                            <th class="MinimumWidth" rowspan="2">Del Loc</th>
+                            <th class="MinimumWidth" rowspan="2">Svc Req K</th>
+                        }
+                        else
+                        {
+                            <th class="MinimumWidth" rowspan="2">Svc Req K</th>
+                            <th class="MinimumWidth" rowspan="2">Rec Loc</th>
+                            <th class="MinimumWidth" rowspan="2">Del Loc</th>
+                        }
+                        <th class="MinimumWidth" rowspan="2">Cycle</th>
+                        <th class="MinimumWidthLargeCol" rowspan="2">Up Name</th>
+                        <th class="MinimumWidthLargeCol" rowspan="2">Dn Name</th>
+                        <th class="MinimumWidth" rowspan="2">Pkg Id</th>
+                        <th class="MinimumWidth" rowspan="2">Conf Tracking Id</th>
+                        <th class="MinimumWidth" rowspan="2">Statement Date</th>
+
+
+                        @if (Model.Count() > 0)
+                        {
+                            foreach (var CurrentMonthDates in dates)
+                            {
+                                <th class="nosort dates" colspan="2">@CurrentMonthDates.Day</th>
+                            }
+
+                        }                      
+
+                    </tr>
+                    <tr>
+                        @if (Model.Count() > 0)
+                        {
+                            foreach (var CurrentMonthDates in dates)
+                            {
+                                <th class="nosort Rdates">Rec</th>
+                                <th class="nosort Ddates">Del</th>
+                            }
+                        }                       
+                    </tr>
+                </thead>
+                <tbody> 
+                    @foreach (var item in Model)
+                    {
+                        var delLoc = "";
+                        var recLoc = "";
+                        <tr>     
+                            <td class="orangeThemeColor">@item.ContractualFLowIndicator</td>   
+                            @if (item.ContractualFLowIndicator == "R") { recLoc = item.Location; } else { delLoc = item.Location; }
+
+                            @if (sqtsForLoc)
+                            {
+                               
+                                <td class="orangeThemeColor">@recLoc</td>
+                                <td class="orangeThemeColor">@delLoc</td>
+                                <td class="orangeThemeColor">@item.ServiceRequesterContract</td>
+                            }
+                            else
+                            {
+
+                                <td class="orangeThemeColor">@item.ServiceRequesterContract</td>
+                                <td class="orangeThemeColor">@recLoc</td>
+                                <td class="orangeThemeColor">@delLoc</td>
+                            }
+
+
+                            <td>@item.CycleIndicator</td>
+                            <td>@item.UpstreamParty</td>
+                            <td>@item.DownstreamParty</td>
+                            <td>@item.PkgId</td>
+                            <td>@item.ConfirmationTrackingID</td>
+                            <td>@item.StatementDate</td>
+
+                            @if (Model.Count() > 0)
+                            {
+
+                                foreach (var rec1 in dates.Where(a => a.Date < item.EffectiveStartDate))
+                                {                                   
+                                    <td class="transparentZeros dates ">0</td> //TODO: For Rec QTY
+                                    <td class="transparentZeros dates ">0</td> //TODO: For Del QTY
+                                    DateVal = DateVal + 1;
+                                }
+
+                                foreach (var rec1 in dates.Where(a => a.Date >= item.EffectiveStartDate && a.Date <= item.EffectiveEndDate))
+                                {
+                                    var resQty = "0";
+                                    var delQty =  "0";
+                                    var delTrans = "";
+                                    var recTrans = "";
+                                    string recRedRes = "";
+                                    string delRedRes = "";
+                                    if (item.ContractualFLowIndicator.Trim() == "R")
+                                    {
+                                        if (item.Quantity < 10) {
+                                            resQty = item.Quantity.ToString();
+                                        } else {
+                                            resQty = rec1 != null ? String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}", item.Quantity) : "0";
+                                        }
+                                        delQty = "0";
+                                        delTrans = "transparentZeros";
+                                        recRedRes = (rec1 == null || string.IsNullOrEmpty(item.ReductionReason)) ? "Not Available" : item.ReductionReason;
+                                        <td class="Rsum combat dates @recTrans" data-toggle="tooltip" data-container="body" title="Reduction Reason: @recRedRes">@resQty</td> //TODO: For Rec QTY
+                                        <td class="Dsum combat dates @delTrans" data-toggle="tooltip" data-container="body" >@delQty</td> //TODO: For Del QTY
+                                    }
+                                    else
+                                    {
+                                        recTrans = "transparentZeros";
+                                        resQty = "0";
+                                        if (item.Quantity < 10) {
+                                            delQty = item.Quantity.ToString();
+                                        } else {
+                                            delQty = rec1 != null ? String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}", item.Quantity) : "0";
+                                        }
+                                        delRedRes = (rec1 == null || string.IsNullOrEmpty(item.ReductionReason)) ? "Not Available" : item.ReductionReason;
+                                        <td class="Rsum combat dates @recTrans" data-toggle="tooltip" data-container="body" >@resQty</td> //TODO: For Rec QTY
+                                        <td class="Dsum combat dates @delTrans" data-toggle="tooltip" data-container="body" title="Reduction Reason: @delRedRes">@delQty</td> //TODO: For Del QTY
+                                    }
+
+
+                                    //string ReductionReason = (rec1 == null || string.IsNullOrEmpty(item.ReductionReason)) ? "Not Available" : item.ReductionReason;
+
+                                   
+                                    DateVal++;
+
+                                }
+
+                                foreach (var rec1 in dates.Where(a => a.Date > item.EffectiveEndDate))
+                                {
+                                   
+                                    <td class="transparentZeros dates">0</td> //TODO: For Rec QTY
+                                    <td class="transparentZeros dates">0</td>//TODO: For Del QTY
+                                    DateVal++;
+                                }
+                            }
+                        </tr>
+                       }    
+                </tbody>                
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+
+        $('[data-toggle="tooltip"]').tooltip();
+
+        if (@Model.Count > 0) {
+            TableConfig();
+        }
+        
+    });
+    function TableConfig() {
+        // Setup - add a text input to each footer cell
+        $('#SqtsOperPartialTable tfoot th').each(function (i) {
+            var title = $('#SqtsOperPartialTable thead th').eq($(this).index()).text();
+            $(this).html('<input type="text" placeholder="Search ' + title + '" data-index="' + i + '" />');
+        });
+         //DataTable
+        var table = $('#SqtsOperPartialTable').DataTable({
+            scrollY: "300px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: false,
+            fixedColumns: true
+        });
+        // Filter event handler
+        $(table.table().container()).on('keyup', 'tfoot input', function () {
+            table
+                .column($(this).data('index'))
+                .search(this.value)
+                .draw();
+        });
+    }
+</script>
+

@@ -1,0 +1,106 @@
+﻿
+@model Nom.ViewModel.UploadFilesListDTO
+@{
+    ViewBag.Title = "Upload Nominations";
+}
+
+
+<script type="text/javascript">
+    $(function () {
+        Dropzone.autoDiscover = false;
+        $('#dropZone').filedrop({
+            url: '@Url.Action("UploadFiles")?Id=@ViewBag.ss',
+            paramname: 'files',
+            error: function (err, file) {
+                switch (err) {
+                    case 'BrowserNotSupported':
+                        alert('browser does not support HTML5 drag and drop')
+                        break;
+                    case 'TooManyFiles':
+                        alert('More than 1 file not allow to upload.')
+                        break;
+                    case 'FileTooLarge':
+                        alert('File size more than 5MB not allow to upload.')
+                        break;
+                    case 'FileTypeNotAllowed':
+                        break;
+                    case 'FileExtensionNotAllowed':
+                        alert('File extension with .xls and .xlsx are only allow to upload.')
+                        break;
+                    default:
+                        // 
+                        alert('Oops! Something went wrong.')
+                        break;
+                }
+            },
+            //autoDiscover=false,
+            allowedfileextensions: ['.xls', '.xlsx'],
+            maxfiles: 1,
+            maxfilesize: 5, 	// max file size in MBs
+            dragOver: function () {
+                $('#dropZone').css('background', 'gray');
+            },
+            dragLeave: function () {
+                $('#dropZone').css('background', 'gray');
+            },
+            drop: function () {
+                $('#dropZone').css('background', '#E6E5E5');
+            },
+            afterAll: function () {
+                $('#messageShow').html('The file(s) have been uploaded successfully!');
+                reloadUploadedFileGrid();
+                $("#loading").hide();
+            },
+            uploadStarted: function (i, file, len) {
+                $("#loading").show();               
+            },
+            uploadFinished: function (i, file, response, time) {                             
+                $('#dropZone').html(response);
+                $('#uploadResult').append('<li>' + file.name + '</li>');
+                toastr.success("", response);
+                @* 
+
+                if (response == "All files have been successfully stored.")
+                {
+                    redirect(@ViewBag.ss);
+                }*@
+            }
+        });
+        
+    });
+    
+
+    function redirect(id) {
+        var url = '@Url.Action("Redirection", "UploadNominations", new { PipelineId = "__id__" })';
+        window.location.href = url.replace('__id__', id);
+    }
+
+    function reloadUploadedFileGrid() {
+        $("#uploadFileTableDiv").load('@Url.Action("UploadedNominationFiles")');
+    }
+
+</script>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            @*<div class="ibox-title">
+                <h2>Select your Pipeline from the dropdown menu </h2>
+            </div>*@
+            <div class="ibox-content">
+                <div id="dropZone" class="dropzone dz-clickable h1 text-center"><b>Drop files to upload...</b></div>
+                @*<div class="dz-default dz-message"></div>*@
+                <div>
+                    <div class="m text-danger">
+                        Only 1 .xls(Excel) file upload allowed at one time.<br />
+                        Max size not to exceed 5MB.                             
+                        &nbsp;&nbsp;<a type="button" href="@Url.Action("DownloadSampleFile")" title="Click to Download">Download Sample</a>
+                    </div>
+                </div>
+                <div id="uploadFileTableDiv">
+                    @Html.Partial("_uploadedNominationFiles", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

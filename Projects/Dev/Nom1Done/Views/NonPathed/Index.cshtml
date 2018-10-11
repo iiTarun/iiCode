@@ -1,0 +1,1150 @@
+﻿@model Nom1Done.DTO.NonPathedDTO
+@{
+    ViewBag.Title = "Index";
+    Guid CurrentReceiptNomId = Guid.NewGuid();
+    Guid CurrentDeliveryNomId = Guid.NewGuid();
+
+}
+<style>
+    #ReceiptTable th {
+        min-width: 120px;
+    }
+
+    #DeliveryTable th {
+        min-width: 120px;
+    }
+
+    .cursor {
+        cursor: pointer;
+    }
+</style>
+@if (ViewBag.IsPermission != null && ViewBag.IsPermission == true)
+{
+
+    <div class="section clearfix object-non-visible" data-animation-effect="fadeIn">
+        <div class="container">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content" style="background-color:#f3f3f4 !important;">
+                    @using (Html.BeginForm("Index", "NonPathed", FormMethod.Post))
+                    {
+                        @Html.HiddenFor(a => a.PipelineDuns)
+                        @Html.Hidden("NotifierEntity", (object)ViewBag.NotifierEntity)
+                        <div class="row" id="top-search" style="margin:3px !important;">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-content" style="padding-top: 20px;">
+                                            <button id="AddNonPathedBtn" type="button" class="btn btn-w-m btn-success btn-outline" onclick="AddNonPathedNomRow('@Model.PipelineDuns')"><i class="glyphicon glyphicon-plus"></i> Add</button>
+                                            <button id="CopyNonPathedBtn" type="button" class="btn btn-w-m btn-success btn-outline" onclick="CopyNonPathedNom('@Model.PipelineDuns')"><i class="glyphicon glyphicon-duplicate"></i> Copy</button>
+                                            <button id="RemoveNonPathedBtn" type="button" class="btn btn-w-m btn-success btn-outline" onclick="removeNonPathedNom()"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+                                            <button onclick="window.location.reload()" type="button" class="btn btn-w-m btn-success btn-outline"><i class="glyphicon glyphicon-refresh"></i> Refresh</button>
+
+                                            <button id="ValidateNonPathedBtn" type="button" onclick="ValidateNonPathed()" class="btn btn-w-m btn-success btn-outline"><i class="fa fa-check-square-o"></i> Validate</button>
+                                            <button id="SendNonPathedBtn" type="button" name="Send" onclick="SendNonPathed();" class="btn btn-w-m btn-success btn-outline"><i class="fa fa-plane"></i> Send</button>
+                                            <button type="submit" name="Save" class="btn btn-w-m btn-success btn-outline"><i class="fa fa-save"></i> Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ibox-content m-b-sm border-bottom">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="control-label" for="status">StartDate</label>
+                                            @Html.TextBoxFor(a => a.StartDate, "{0:MM/dd/yyyy}", new { @class = "form-control dtpicker", @readonly = "true" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="control-label" for="status">EndDate</label>
+                                            @Html.TextBoxFor(a => a.EndDate, "{0:MM/dd/yyyy}", new { @class = "form-control dtpicker", @readonly = "true" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label class="control-label" for="status">Status</label>
+                                            @Html.DropDownListFor(a => a.StatusId, new SelectList(ViewBag.StatusID, "ID", "Name", Model.StatusId), "-Select-", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group" style="margin-top:22px;">
+                                            <button type="submit" style="background-color:#FF6C3A !important; border-color:#FF6C3A !important;" onclick="return validationOnSearch();" id="Search" name="Search" class="btn btn-primary"><i class="glyphicon glyphicons-refresh"></i>Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <br />
+                        <!--All Tabs Div-->
+
+                        <div id="NonPathedtableDiv" class="table-responsive">
+                            @Html.Partial("_RecDelTables", Model)
+                        </div>
+                        <!--All Tabs Div End-->
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="LocationPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+
+    </div>
+
+
+    <div class="modal inmodal" id="ContractPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+
+    </div>
+
+    <div class="modal inmodal" id="CounterPartyPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+
+    </div>
+
+    <div class="modal inmodal" id="TransactionTypePopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+    </div>
+
+    <div class="modal inmodal" id="RejectionReasonPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+}
+else
+{
+    <div>
+        <div style="padding-top:170px" class="dz-clickable h1 text-center"><b>You do not have access to this pipeline.</b></div>
+    </div>
+}
+
+
+<script>
+
+    $(document).ready(function () {
+
+        var value = "@ViewBag.Status";
+        var todaydate = new Date();
+
+        if (value != "") {
+            toastr.success("", "@ViewBag.Status");
+        }
+
+        $(function () {
+            $('.dtpicker').datepicker({ autoclose: true});
+        });
+
+    });
+
+
+    function ValidateNonPathed() {
+        $('#ValidateNonPathedBtn').blur();
+        var SelectedChkBox = $('.Receiptchkboxes:checkbox:checked,.Deliverychkboxes:checkbox:checked').length;
+        if (SelectedChkBox == 0) {
+            toastr.warning("", "Please select at least one nomination to validate");
+            return false;
+        }
+        else {
+            var flag = true;
+            var Delflag = true;
+            Delflag = DeliveryTable();
+            var Recflag = true;
+            Recflag = ReceiptTable();
+            if (Delflag == false || Recflag == false) { flag = false; }
+            if (flag == true) { toastr.success("Validation successfully completed."); }
+            return flag;
+        }
+
+    }
+
+    function DatesValidate(StartDateId, EndDateId) {
+        var flag = true;
+        var startDate = $(StartDateId).val();
+        var endDate = $(EndDateId).val();
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var sDate = new Date(startDate);
+        var eDate = new Date(endDate);
+        if (sDate < today) {
+            flag = false;
+            if (!$(StartDateId).parent("td").hasClass("danger")) {
+                $(StartDateId).parent("td").addClass("danger");
+            }
+        } else {
+            if ($(StartDateId).parent("td").hasClass("danger")) {
+                $(StartDateId).parent("td").removeClass("danger");
+            }
+        }
+
+
+        if (eDate < today) {
+            flag = false;
+            if (!$(EndDateId).parent("td").hasClass("danger")) {
+                $(EndDateId).parent("td").addClass("danger");
+            }
+        } else {
+            if ($(EndDateId).parent("td").hasClass("danger")) {
+                $(EndDateId).parent("td").removeClass("danger");
+            }
+        }
+        return flag;
+    }
+
+    function DeliveryTable() {
+        var flag = true;
+        var count = 0;
+       var dateMsgCount = 0;
+       var SouthernStartDuns = "007906233";
+
+        $('.Deliverychkboxes:checkbox:checked').each(function () {
+            var RowCount = $(this).attr("value");
+
+            var StartDateTime = "#DeliveryNoms_" + RowCount + "__StartDateTime";
+            var EndDateTime = "#DeliveryNoms_" + RowCount + "__EndDateTime";
+            var CycleId = "#DeliveryNoms_" + RowCount + "__CycleId";
+
+            var SrvReqContractCode = "#DeliveryNoms_" + RowCount + "__ServiceRequesterContractCode";
+            var LocProp = "#DeliveryNoms_" + RowCount + "__DeliveryLocProp";
+            var LocPropName = "#DeliveryNoms_" + RowCount + "__DeliveryLocName";
+            var LocPropId = "#DeliveryNoms_" + RowCount + "__DeliveryLocId";
+            var TT = "#DeliveryNoms_" + RowCount + "__TransactionType";
+            //var DnStreamK = "#DeliveryNoms_" + RowCount + "__DnstreamK";
+            var DownStreamIDProp = "#DeliveryNoms_" + RowCount + "__DnstreamProp";
+            var DownStreamIDName = "#DeliveryNoms_" + RowCount + "__DnstreamName";
+            var DownStreamId = "#DeliveryNoms_" + RowCount + "__DnstreamId";
+            var DelQty = "#DeliveryNoms_" + RowCount + "__DeliveryQty";
+            var Delrank = "#DeliveryNoms_" + RowCount + "__DeliveryRank";
+           // var PackageId = "#DeliveryNoms_" + RowCount + "__PackageId";
+
+
+            columnValidation(StartDateTime);
+            columnValidation(EndDateTime);
+            columnValidation(CycleId);
+
+            columnValidation(SrvReqContractCode);
+            columnValidation(LocProp);
+            columnValidation(LocPropName);
+            columnValidation(LocPropId);
+            columnValidation(TT);
+
+            columnValidation(DownStreamIDProp);
+            columnValidation(DownStreamIDName);
+            columnValidation(DownStreamId);
+            columnValidation(Delrank);
+            columnValidation(DelQty);
+            // columnValidation(PackageId);
+
+            @*if ('@Model.PipelineDuns' != SouthernStartDuns && ($(DnStreamK).val() == "")) {
+                flag = false;
+                columnValidation(DnStreamK);
+                count = count + 1;
+            }*@
+
+            if (($(StartDateTime).val() == "") || ($(EndDateTime).val() == "") || ($(CycleId).val() == "") || ($(SrvReqContractCode).val() == "") || ($(LocProp).val() == "") || ($(LocPropName).val() == "") || ($(LocPropId).val() == "") || ($(TT).val() == "") || ($(DownStreamId).val() == "") || ($(DownStreamIDProp).val() == "") || ($(DownStreamIDName).val() == "") || ($(Delrank).val() == "") || ($(DelQty).val() == "")) {
+                    flag = false;
+                    count = count + 1;
+
+            }
+            if (flag == false && count == 1) {
+                toastr.warning("Please fill all required data in Delivery(*).");
+            }
+
+            var isDateValidate = DatesValidate(StartDateTime, EndDateTime);
+            if (isDateValidate == false && dateMsgCount == 0) {
+                flag = false;
+                dateMsgCount++;
+                toastr.warning("Past date is not allowed in Start and End date.Please select valid dates");
+            }
+
+        })
+        return flag;
+    }
+
+
+
+    function ReceiptTable() {
+        var flag = true;
+        var count = 0;
+        var SouthernStartDuns = "007906233";
+        var dateMsgCount = 0;
+        $('.Receiptchkboxes:checkbox:checked').each(function () {
+            var RowCount = $(this).attr("value");
+            var StartDateTime = "#ReceiptNoms_" + RowCount + "__StartDateTime";
+            var EndDateTime = "#ReceiptNoms_" + RowCount + "__EndDateTime";
+            var CycleId = "#ReceiptNoms_" + RowCount + "__CycleId";
+
+            var SrvReqKCode = "#ReceiptNoms_" + RowCount + "__ServiceRequesterContractCode";
+            var LocProp = "#ReceiptNoms_" + RowCount + "__ReceiptLocProp";
+            var LocPropName = "#ReceiptNoms_" + RowCount + "__ReceiptLocName";
+            var LocPropId = "#ReceiptNoms_" + RowCount + "__ReceiptLocId";
+            var TT = "#ReceiptNoms_" + RowCount + "__TransactionType";
+          //  var UpStreamK = "#ReceiptNoms_" + RowCount + "__UpstreamK";
+            var UpStreamIDProp = "#ReceiptNoms_" + RowCount + "__UpstreamProp";
+            var UpStreamIDName = "#ReceiptNoms_" + RowCount + "__UpstreamName";
+            var UpStreamId = "#ReceiptNoms_" + RowCount + "__UpstreamId";
+            var recQty = "#ReceiptNoms_" + RowCount + "__ReceiptQty";
+            var recrank = "#ReceiptNoms_" + RowCount + "__ReceiptRank";
+            //var PackageId = "#ReceiptNoms_" + RowCount + "__PackageId";
+
+
+            columnValidation(StartDateTime);
+            columnValidation(EndDateTime);
+            columnValidation(CycleId);
+
+            columnValidation(SrvReqKCode);
+            columnValidation(LocProp);
+            columnValidation(LocPropName);
+            columnValidation(LocPropId);
+            columnValidation(TT);
+
+            columnValidation(UpStreamIDProp);
+            columnValidation(UpStreamIDName);
+            columnValidation(UpStreamId);
+            columnValidation(recrank);
+            columnValidation(recQty);
+            // columnValidation(PackageId);
+
+
+            @*if ('@Model.PipelineDuns' != SouthernStartDuns && ($(UpStreamK).val() == "")) {
+                flag = false;
+                columnValidation(UpStreamK);
+                count = count + 1;
+            }*@
+
+            if (($(StartDateTime).val() == "") || ($(EndDateTime).val() == "") || ($(CycleId).val() == "") || ($(SrvReqKCode).val() == "") || ($(LocProp).val() == "") || ($(LocPropName).val() == "") || ($(LocPropId).val() == "") || ($(TT).val() == "")  || ($(UpStreamId).val() == "") || ($(UpStreamIDProp).val() == "") || ($(UpStreamIDName).val() == "") || ($(recrank).val() == "") || ($(recQty).val() == "") ) {
+                flag = false;
+                count = count + 1;
+            }
+            if (flag == false && count == 1) {
+                toastr.warning("Please fill all required data in Receipt(*).");
+            }
+            var isDateValidate = DatesValidate(StartDateTime, EndDateTime);
+            if (isDateValidate == false && dateMsgCount == 0) {
+                flag = false;
+                dateMsgCount++;
+                toastr.warning("Past date is not allowed in Start and End date.Please select valid dates.");
+            }
+
+        })
+        return flag;
+    }
+
+    function columnValidation(column) {
+
+        var flag = false;
+        var columnID = $(column);
+        if ($(column).val() == "" || $(column).val() == "--Select--") {
+            flag = true;
+            if (!columnID.parent("td").hasClass("danger")) {
+                columnID.parent("td").addClass("danger");
+            }
+        } else {
+            if (columnID.parent("td").hasClass("danger")) {
+                columnID.parent("td").removeClass("danger");
+            }
+        }
+        return flag;
+    }
+
+
+    function ContractPopUpClick(RequestNo, RequestTypeID, FuelPercentage, RowCount, ContractFrom) {
+
+        if (ContractFrom == "Receipt") {
+            var SvcReqName = "#ReceiptNoms_" + RowCount + "__ServiceRequesterContractName";
+            var SvcReqNo = "#ReceiptNoms_" + RowCount + "__ServiceRequesterContractCode";
+            $('#ContractPopUpModal').modal('hide');
+            $(SvcReqName).val(RequestTypeID);
+            $(SvcReqNo).val(RequestNo); $(SvcReqNo).parent().find('span').html(RequestNo);
+        } else {
+            var SvcReqName = "#DeliveryNoms_" + RowCount + "__ServiceRequesterContractName";
+            var SvcReqNo = "#DeliveryNoms_" + RowCount + "__ServiceRequesterContractCode";
+            $('#ContractPopUpModal').modal('hide');
+            $(SvcReqName).val(RequestTypeID);
+            $(SvcReqNo).val(RequestNo); $(SvcReqNo).parent().find('span').html(RequestNo);
+        }
+
+    }
+
+    function CounterPartyPopUpSelect(Identifier, Name, PropCode, ForRow, PopUpFor) {
+
+        if (PopUpFor == "Receipt") {
+            var UpStreamProp = "#ReceiptNoms_" + ForRow + "__UpstreamProp";
+            var UpStreamIDName = "#ReceiptNoms_" + ForRow + "__UpstreamName";
+            var UpStreamId = "#ReceiptNoms_" + ForRow + "__UpstreamId";
+            $('#CounterPartyPopUpModal').modal('hide');
+            $(UpStreamProp).val(PropCode); $(UpStreamProp).parent().find('span').html(PropCode);
+            $(UpStreamIDName).val(Name); $(UpStreamIDName).parent().find('span').html(Name);
+            $(UpStreamId).val(Identifier); $(UpStreamId).parent().find('span').html(Identifier);
+        }
+        else if (PopUpFor == "Delivery") {
+            var DwStreamProp = "#DeliveryNoms_" + ForRow + "__DnstreamProp";
+            var DwStreamIDName = "#DeliveryNoms_" + ForRow + "__DnstreamName";
+            var DwStreamId = "#DeliveryNoms_" + ForRow + "__DnstreamId";
+            $('#CounterPartyPopUpModal').modal('hide');
+            $(DwStreamProp).val(PropCode); $(DwStreamProp).parent().find('span').html(PropCode);
+            $(DwStreamIDName).val(Name); $(DwStreamIDName).parent().find('span').html(Name);
+            $(DwStreamId).val(Identifier); $(DwStreamId).parent().find('span').html(Identifier);
+        }
+    }
+
+    function CntrTransactionPopUpSelect(transactionCode, TransactionDesc, RowNo, TransactionPopUpFrom, PathType, ttMapId) {
+
+        if (TransactionPopUpFrom == "Receipt") {
+            var TransactionTypeDesc = "#ReceiptNoms_" + RowNo + "__TransactionTypeDesc";
+            var TransactionType = "#ReceiptNoms_" + RowNo + "__TransactionType";
+            $('#TransactionTypePopUpModal').modal('hide');
+            $(TransactionTypeDesc).val(TransactionDesc);// $(TransactionTypeDesc).parent().find('span').html(TransactionDesc);
+            $(TransactionType).val(transactionCode); $(TransactionType).parent().find('span').html(transactionCode);
+        }
+        else if (TransactionPopUpFrom == "Delivery") {
+            var TransactionTypeDesc = "#DeliveryNoms_" + RowNo + "__TransactionTypeDesc";
+            var TransactionType = "#DeliveryNoms_" + RowNo + "__TransactionType";
+            $('#TransactionTypePopUpModal').modal('hide');
+            $(TransactionTypeDesc).val(TransactionDesc); //$(TransactionTypeDesc).parent().find('span').html(TransactionDesc);
+            $(TransactionType).val(transactionCode); $(TransactionType).parent().find('span').html(transactionCode);
+        }
+    }
+
+    function CntrLocationPopUpSelect(Name, Id, PropCode, RowNo, LocationPopUpFrom) {
+        if (LocationPopUpFrom == "Receipt") {
+                var LocProp = "#ReceiptNoms_" + RowNo + "__ReceiptLocProp";
+                var LocName = "#ReceiptNoms_" + RowNo + "__ReceiptLocName";
+                var LocId = "#ReceiptNoms_" + RowNo + "__ReceiptLocId";
+                $('#LocationPopUpModal').modal('hide');
+                $(LocProp).val(PropCode); $(LocProp).parent().find('span').html(PropCode);
+                $(LocName).val(Name); $(LocName).parent().find('span').html(Name);
+                $(LocId).val(Id); $(LocId).parent().find('span').html(Id);
+        }
+        else if (LocationPopUpFrom == "Delivery") {
+            var LocProp = "#DeliveryNoms_" + RowNo + "__DeliveryLocProp";
+            var LocName = "#DeliveryNoms_" + RowNo + "__DeliveryLocName";
+            var LocId = "#DeliveryNoms_" + RowNo + "__DeliveryLocId";
+            $('#LocationPopUpModal').modal('hide');
+            $(LocProp).val(PropCode); $(LocProp).parent().find('span').html(PropCode);
+            $(LocName).val(Name); $(LocName).parent().find('span').html(Name);
+            $(LocId).val(Id); $(LocId).parent().find('span').html(Id);
+        }
+
+    }
+
+
+    function OpenPopUp(partialName, ClickedRow, PopUpFor, pipelineDuns) {
+
+        $.ajax({
+            url: '/NonPathed/NotimationsPartials',
+            type: 'GET',
+            data: { partial: partialName, clickedRow: ClickedRow, popUpFor: PopUpFor, pipelineDuns: pipelineDuns },
+            dataType: 'html',
+            contentType: 'application/html;charset=utf-8'
+        })
+            .success(function (result) {
+
+                if (partialName == 'locations') {
+                    $('#LocationPopUpModal').html(result);
+                    $('#LocationPopUpModal').modal('show');
+                    //$('#locationModalTable').DataTable({
+                    //    pageLength: 4,
+                    //    "lengthMenu": [[4, 10, 25, 50, -1], ["Default", 10, 25, 50, "All"]]
+                    //});
+                }
+                else if (partialName == 'Contract') {
+                    $('#ContractPopUpModal').html(result);
+                    $('#ContractPopUpModal').modal('show');
+                    $('#ContactModalTable').DataTable();
+                }
+                else if (partialName == 'CounterParties') {
+                    $('#CounterPartyPopUpModal').html(result);
+                    $('#CounterPartyPopUpModal').modal('show');
+                    $('#CounterPartyModalTable').DataTable();
+                } else if (partialName == 'TransactionType') {
+                    $('#TransactionTypePopUpModal').html(result);
+                    $('#TransactionTypePopUpModal').modal('show');
+                    $('#TransactionTypeModalTable').DataTable();
+                } else if (partialName == 'StatusReason') {
+                    $('#RejectionReasonPopUpModal').html(result);
+                    $('#RejectionReasonPopUpModal').modal('show');
+                }
+            })
+            .error(function (xhr, status) {
+                alert(status);
+            })
+    }
+
+    function statusReasonBtnClick() {
+        $('#RejectionReasonPopUpModal').modal('hide');
+    }
+
+    function SendNonPathed() {
+        $('#SendNonPathedBtn').blur();
+        var SelectedChkBox = $('.Receiptchkboxes:checkbox:checked,.Deliverychkboxes:checkbox:checked').length;
+        if (SelectedChkBox == 0) {
+            toastr.warning("", "Please select at least one nomination.");
+        }
+        else {
+            var isValid = ValidateNonPathed();
+            var unsavedNom = true;
+            var notDraft = true;
+            var nomIdsToSend = [];
+
+            $('.Receiptchkboxes:checkbox:checked,.Deliverychkboxes:checkbox:checked').each(function () {
+
+                var currentIndex = $(this).attr("value");
+                $(this).attr('checked', false);
+                var statusTag = "#status_" + currentIndex;
+                var statusId = $(statusTag).attr("value");
+
+                if (statusId == 11) {
+                    if (isValid) {
+                        var transactionID = $(this).attr('rel');
+                        nomIdsToSend.push(transactionID);
+                    }
+                } else if (statusId == 0) {
+                    unsavedNom = false;
+                } else {
+                    notDraft = false;
+                }
+            });
+
+            if (nomIdsToSend.length > 0) {
+                $.ajax({
+                    url: '/NonPathed/SendNomination',
+                    data: { transactionIDs: nomIdsToSend },
+                    type: 'POST',
+                })
+                    .success(function (result) {
+
+                        if (result == "True") {
+                            toastr.success("", "Successfully sent");
+                            //location.reload();
+                        } else {
+                            toastr.error("", "Sending failed");
+                        }
+                    })
+                    .error(function (xhr, status) {
+                        alert(status);
+                    })
+
+            }
+            if (unsavedNom == false) {
+                toastr.warning("", "Please save your nom first.");
+            }
+            if (notDraft == false) {
+                toastr.warning("", "Submitted/ Accepted/ Exception/ Rejected nom can't resend.");
+            }
+            $(".selectall").prop("checked", false);
+        }
+
+    }
+
+
+
+    function AddDeliveryRow(pipelineDuns) {
+        $.ajax({
+            url: '/NonPathed/AddDeliveryRow',
+            data: { pipelineDuns: pipelineDuns },
+            type: 'GET',
+            success: function (html) {
+                $('#DeliveryTable > tbody').prepend(html);
+                //$('#DeliveryTable > tbody').append(html);
+            }
+        });
+    }
+    function AddReceiptRow(pipelineDuns) {
+        $.ajax({
+            url: '/NonPathed/AddReceiptRow',
+            data: { pipelineDuns: pipelineDuns },
+            type: 'GET',
+            success: function (html) {
+                $('#ReceiptTable > tbody').prepend(html);
+               // $('#ReceiptTable > tbody').append(html);
+            }
+        });
+    }
+
+    function CopyDeliveryNomRow(pipelineDuns) {
+        var SelectedChkBox = $('.Deliverychkboxes:checkbox:checked').length;
+        if (SelectedChkBox > 1) {
+            toastr.info("", "Please select only one nomination at a time.");
+        }
+        else if (SelectedChkBox == 0) {
+            toastr.warning("", "Please select one nomination.");
+        } else {
+            $.ajax({
+                url: '/NonPathed/AddDeliveryRow',
+                data: { pipelineDuns: pipelineDuns },
+                type: 'GET',
+                success: function (html) {
+                    $('#DeliveryTable > tbody').prepend(html);
+                    fillDataInDelivery();
+                }
+            });
+        }
+    }
+
+    function fillDataInDelivery() {
+        var rowIndex = $('#DeliveryTable tbody tr:first').attr('rel');
+        var RowCount = $('.Deliverychkboxes:checkbox:checked').attr("value");
+        $('.Deliverychkboxes:checkbox:checked').attr('checked', false);
+        var obj = {
+
+            StartDateTime: $("#DeliveryNoms_" + RowCount + "__StartDateTime").val(),
+            EndDateTime: $("#DeliveryNoms_" + RowCount + "__EndDateTime").val(),
+            CycleId: $("#DeliveryNoms_" + RowCount + "__CycleId").val(),
+            NomSubCycle: $("#DeliveryNoms_" + RowCount + "__NomSubCycle").val(),
+
+            SrvReqKCode: $("#DeliveryNoms_" + RowCount + "__ServiceRequesterContractCode").val(),
+            SrvReqKName: $("#DeliveryNoms_" + RowCount + "__ServiceRequesterContractName").val(),
+            DeliveryLocProp: $("#DeliveryNoms_" + RowCount + "__DeliveryLocProp").val(),
+            DeliveryLocName: $("#DeliveryNoms_" + RowCount + "__DeliveryLocName").val(),
+            DeliveryLocId: $("#DeliveryNoms_" + RowCount + "__DeliveryLocId").val(),
+            TransactionTypeDesc: $("#DeliveryNoms_" + RowCount + "__TransactionTypeDesc").val(),
+            TransactionType: $("#DeliveryNoms_" + RowCount + "__TransactionType").val(),
+            DnstreamProp: $("#DeliveryNoms_" + RowCount + "__DnstreamProp").val(),
+            DnstreamName: $("#DeliveryNoms_" + RowCount + "__DnstreamName").val(),
+            DnstreamId: $("#DeliveryNoms_" + RowCount + "__DnstreamId").val(),
+            DeliveryQty: $("#DeliveryNoms_" + RowCount + "__DeliveryQty").val(),
+            DeliveryRank: $("#DeliveryNoms_" + RowCount + "__DeliveryRank").val(),
+            PackageId: $("#DeliveryNoms_" + RowCount + "__PackageId").val(),
+            DnstreamK: $("#DeliveryNoms_" + RowCount + "__DnstreamK").val()
+        }
+        var tempValue = "--Select--";
+       //
+        var today = new Date();
+        var oldDate = new Date(obj.StartDateTime);
+        if (oldDate < today) {
+            var time = (obj.StartDateTime).split(' ')[1] == undefined ? "" : (obj.StartDateTime).split(' ')[1];
+            var ampm = (obj.StartDateTime).split(' ')[2] == undefined ? "" : (obj.StartDateTime).split(' ')[2];
+            $("#DeliveryNoms_" + rowIndex + "__StartDateTime").val(moment(today).format("MM/DD/YYYY") + ' ' + time + ' ' + ampm);
+        } else {
+            $("#DeliveryNoms_" + rowIndex + "__StartDateTime").val(obj.StartDateTime);
+        }
+
+        var newstartDate=new Date( $("#DeliveryNoms_" + rowIndex + "__StartDateTime").val());
+        var oldEndDate = new Date(obj.EndDateTime);
+        if (oldEndDate < today || oldEndDate<newstartDate ) {
+            if(oldEndDate<newstartDate){
+                var nextDay = newstartDate.setTime(newstartDate.getTime() + 1 * 86400000);
+            }else{
+                var nextDay = today.setTime(today.getTime() + 1 * 86400000);
+            }
+            var time1 = (obj.EndDateTime).split(' ')[1] == undefined ? "" : (obj.EndDateTime).split(' ')[1];
+            var ampm1 = (obj.EndDateTime).split(' ')[2] == undefined ? "" : (obj.EndDateTime).split(' ')[2];
+            $("#DeliveryNoms_" + rowIndex + "__EndDateTime").val(moment(nextDay).format("MM/DD/YYYY") + ' ' + time1 + ' ' + ampm1);
+        } else {
+            $("#DeliveryNoms_" + rowIndex + "__EndDateTime").val(obj.EndDateTime);
+        }
+
+       // var newEndDate=new Date($("#DeliveryNoms_" + rowIndex + "__EndDateTime").val());
+
+
+         //$("#DeliveryNoms_" + rowIndex + "__StartDateTime").val(obj.StartDateTime);
+        //$("#DeliveryNoms_" + rowIndex + "__EndDateTime").val(obj.EndDateTime);
+        $("#DeliveryNoms_" + rowIndex + "__CycleId").val(obj.CycleId);
+        $("#DeliveryNoms_" + rowIndex + "__NomSubCycle").val(obj.NomSubCycle);
+
+
+        $("#DeliveryNoms_" + rowIndex + "__TransactionType").val(obj.TransactionType);
+        if (obj.TransactionType == "") {
+            $("#DeliveryNoms_" + rowIndex + "__TransactionType").parent().find('span:first').text(tempValue);
+        } else {
+            $("#DeliveryNoms_" + rowIndex + "__TransactionType").parent().find('span:first').text(obj.TransactionType);
+        }
+
+        $("#DeliveryNoms_" + rowIndex + "__ServiceRequesterContractName").val(obj.SrvReqKName);
+        $("#DeliveryNoms_" + rowIndex + "__ServiceRequesterContractCode").val(obj.SrvReqKCode);
+        if (obj.SrvReqKCode == "") {
+            $("#DeliveryNoms_" + rowIndex + "__ServiceRequesterContractCode").parent().find('span:first').text(tempValue);
+        } else {
+            $("#DeliveryNoms_" + rowIndex + "__ServiceRequesterContractCode").parent().find('span:first').text(obj.SrvReqKCode);
+        }
+
+
+        var hiddenTTDes = $("#DeliveryNoms_" + rowIndex + "__TransactionTypeDesc");
+        hiddenTTDes.val(obj.TransactionTypeDesc);
+
+
+        $("#DeliveryNoms_" + rowIndex + "__DeliveryLocProp").val(obj.DeliveryLocProp);
+        if (obj.DeliveryLocProp == "") {
+            $("#DeliveryNoms_" + rowIndex + "__DeliveryLocProp").parent().find('span:first').text(tempValue);
+        } else {
+            $("#DeliveryNoms_" + rowIndex + "__DeliveryLocProp").parent().find('span:first').text(obj.DeliveryLocProp);
+        }
+
+        $("#DeliveryNoms_" + rowIndex + "__DeliveryLocName").val(obj.DeliveryLocName);
+        if (obj.DeliveryLocName == "") {
+            $("#DeliveryNoms_" + rowIndex + "__DeliveryLocName").parent().find('span:first').text(tempValue);
+        } else {
+            $("#DeliveryNoms_" + rowIndex + "__DeliveryLocName").parent().find('span:first').text(obj.DeliveryLocName);
+        }
+
+        $("#DeliveryNoms_" + rowIndex + "__DeliveryLocId").val(obj.DeliveryLocId);
+        if (obj.DeliveryLocId == "") {
+            $("#DeliveryNoms_" + rowIndex + "__DeliveryLocId").parent().find('span:first').text(tempValue);
+        } else {
+            $("#DeliveryNoms_" + rowIndex + "__DeliveryLocId").parent().find('span:first').text(obj.DeliveryLocId);
+        }
+
+
+        $("#DeliveryNoms_" + rowIndex + "__DnstreamProp").val(obj.DnstreamProp);
+        if (obj.DnstreamProp == "") {
+            $("#DeliveryNoms_" + rowIndex + "__DnstreamProp").parent().find('span:first').text(tempValue);
+        } else {
+            $("#DeliveryNoms_" + rowIndex + "__DnstreamProp").parent().find('span:first').text(obj.DnstreamProp);
+        }
+
+
+        $("#DeliveryNoms_" + rowIndex + "__DnstreamName").val(obj.DnstreamName);
+        if (obj.DnstreamName == "") {
+            $("#DeliveryNoms_" + rowIndex + "__DnstreamName").parent().find('span:first').text(tempValue);
+        } else {
+            $("#DeliveryNoms_" + rowIndex + "__DnstreamName").parent().find('span:first').text(obj.DnstreamName);
+        }
+
+
+        $("#DeliveryNoms_" + rowIndex + "__DnstreamId").val(obj.DnstreamId);
+        if (obj.DnstreamId == "") {
+            $("#DeliveryNoms_" + rowIndex + "__DnstreamId").parent().find('span:first').text(tempValue);
+        } else {
+            $("#DeliveryNoms_" + rowIndex + "__DnstreamId").parent().find('span:first').text(obj.DnstreamId);
+        }
+
+
+        $("#DeliveryNoms_" + rowIndex + "__DeliveryQty").val(obj.DeliveryQty);
+        $("#DeliveryNoms_" + rowIndex + "__DeliveryRank").val(obj.DeliveryRank);
+        $("#DeliveryNoms_" + rowIndex + "__PackageId").val(obj.PackageId);
+        $("#DeliveryNoms_" + rowIndex + "__DnstreamK").val(obj.DnstreamK);
+
+    }
+
+    function CopyReceiptNomRow(pipelineDuns) {
+        var SelectedChkBox = $('.Receiptchkboxes:checkbox:checked').length;
+        if (SelectedChkBox > 1) {
+            toastr.info("", "Please select only one nomination at a time.");
+        }
+        else if (SelectedChkBox == 0) {
+            toastr.warning("", "Please select one nomination.");
+        } else {
+            $.ajax({
+                url: '/NonPathed/AddReceiptRow',
+                data: { pipelineDuns: pipelineDuns },
+                type: 'GET',
+                success: function (html) {
+                    $('#ReceiptTable > tbody').prepend(html);
+                    fillDataInReceipt();
+                    //OnSupRecQtyChange();
+                    //OnSupDelQtyChange();
+                }
+            });
+        }
+    }
+
+    function fillDataInReceipt() {
+        var rowIndex = $('#ReceiptTable tbody tr:first').attr('rel');
+        var RowCount = $('.Receiptchkboxes:checkbox:checked').attr("value");
+        $('.Receiptchkboxes:checkbox:checked').attr('checked', false);
+        var obj = {
+
+            StartDateTime: $("#ReceiptNoms_" + RowCount + "__StartDateTime").val(),
+            EndDateTime: $("#ReceiptNoms_" + RowCount + "__EndDateTime").val(),
+            CycleId: $("#ReceiptNoms_" + RowCount + "__CycleId").val(),
+            NomSubCycle: $("#ReceiptNoms_" + RowCount + "__NomSubCycle").val(),
+
+
+            SrvReqKName: $("#ReceiptNoms_" + RowCount + "__ServiceRequesterContractName").val(),
+            SrvReqKCode: $("#ReceiptNoms_" + RowCount + "__ServiceRequesterContractCode").val(),
+
+            ReceiptLocProp: $("#ReceiptNoms_" + RowCount + "__ReceiptLocProp").val(),
+            ReceiptLocName: $("#ReceiptNoms_" + RowCount + "__ReceiptLocName").val(),
+            ReceiptLocId: $("#ReceiptNoms_" + RowCount + "__ReceiptLocId").val(),
+            TransactionTypeDesc: $("#ReceiptNoms_" + RowCount + "__TransactionTypeDesc").val(),
+            TransactionType: $("#ReceiptNoms_" + RowCount + "__TransactionType").val(),
+            UpstreamProp: $("#ReceiptNoms_" + RowCount + "__UpstreamProp").val(),
+            UpstreamName: $("#ReceiptNoms_" + RowCount + "__UpstreamName").val(),
+            UpstreamId: $("#ReceiptNoms_" + RowCount + "__UpstreamId").val(),
+            ReceiptQty: $("#ReceiptNoms_" + RowCount + "__ReceiptQty").val(),
+            NomSubCycleName: $("#ReceiptNoms_" + RowCount + "__NomSubCycleName").val(),
+            ReceiptRank: $("#ReceiptNoms_" + RowCount + "__ReceiptRank").val(),
+            MaxRateIndicator: $("#ReceiptNoms_" + RowCount + "__MaxRateIndicator").val(),
+            NomTrackingId: $("#ReceiptNoms_" + RowCount + "__NomTrackingId").val(),
+            PackageId: $("#ReceiptNoms_" + RowCount + "__PackageId").val(),
+            UpstreamK: $("#ReceiptNoms_" + RowCount + "__UpstreamK").val(),
+            UpPkgId: $("#ReceiptNoms_" + RowCount + "__UpPkgId").val()
+        }
+        var tempValue = "--Select--";
+       //
+        var today = new Date();
+        var oldDate = new Date(obj.StartDateTime);
+        if (oldDate < today) {
+            var time = (obj.StartDateTime).split(' ')[1] == undefined ? "" : (obj.StartDateTime).split(' ')[1];
+            var ampm = (obj.StartDateTime).split(' ')[2] == undefined ? "" : (obj.StartDateTime).split(' ')[2];
+            $("#ReceiptNoms_" + rowIndex + "__StartDateTime").val(moment(today).format("MM/DD/YYYY") +' ' +time+' ' + ampm);
+        } else {
+            $("#ReceiptNoms_" + rowIndex + "__StartDateTime").val(obj.StartDateTime);
+        }
+        var newstartDate=new Date( $("#ReceiptNoms_" + rowIndex + "__StartDateTime").val());
+        var oldEndDate = new Date(obj.EndDateTime);
+        if (oldEndDate < today || oldEndDate<newstartDate ) {
+            if(oldEndDate<newstartDate){
+                var nextDay = newstartDate.setTime(newstartDate.getTime() + 1 * 86400000);
+            }else{
+                var nextDay = today.setTime(today.getTime() + 1 * 86400000);
+            }
+            var time1 = (obj.EndDateTime).split(' ')[1] == undefined ? "" : (obj.EndDateTime).split(' ')[1];
+            var ampm1 = (obj.EndDateTime).split(' ')[2] == undefined ? "" : (obj.EndDateTime).split(' ')[2];
+            $("#ReceiptNoms_" + rowIndex + "__EndDateTime").val(moment(nextDay).format("MM/DD/YYYY") + ' ' + time1 + ' ' + ampm1);
+        } else {
+            $("#ReceiptNoms_" + rowIndex + "__EndDateTime").val(obj.EndDateTime);
+        }
+        $("#ReceiptNoms_" + rowIndex + "__CycleId").val(obj.CycleId);
+        $("#ReceiptNoms_" + rowIndex + "__NomSubCycle").val(obj.NomSubCycle);
+
+        $("#ReceiptNoms_" + rowIndex + "__ServiceRequesterContractName").val(obj.SrvReqKName);
+        $("#ReceiptNoms_" + rowIndex + "__ServiceRequesterContractCode").val(obj.SrvReqKCode);
+        if (obj.SrvReqKCode == "") {
+            $("#ReceiptNoms_" + rowIndex + "__ServiceRequesterContractCode").parent().find('span:first').text(tempValue);
+        } else {
+            $("#ReceiptNoms_" + rowIndex + "__ServiceRequesterContractCode").parent().find('span:first').text(obj.SrvReqKCode);
+        }
+
+        $("#ReceiptNoms_" + rowIndex + "__TransactionTypeDesc").val(obj.TransactionTypeDesc);
+        var hiddenTT = $("#ReceiptNoms_" + rowIndex + "__TransactionType");
+        hiddenTT.val(obj.TransactionType);
+        if (obj.TransactionType == "") {
+            hiddenTT.parent().find('span:first').text(tempValue);
+        } else {
+            hiddenTT.parent().find('span:first').text(obj.TransactionType);
+        }
+
+        $("#ReceiptNoms_" + rowIndex + "__ReceiptLocProp").val(obj.ReceiptLocProp);
+        if (obj.ReceiptLocProp == "") {
+            $("#ReceiptNoms_" + rowIndex + "__ReceiptLocProp").parent().find('span:first').text(tempValue);
+        } else {
+            $("#ReceiptNoms_" + rowIndex + "__ReceiptLocProp").parent().find('span:first').text(obj.ReceiptLocProp);
+        }
+
+        $("#ReceiptNoms_" + rowIndex + "__ReceiptLocName").val(obj.ReceiptLocName);
+        if (obj.ReceiptLocName == "") {
+            $("#ReceiptNoms_" + rowIndex + "__ReceiptLocName").parent().find('span:first').text(tempValue);
+        } else {
+            $("#ReceiptNoms_" + rowIndex + "__ReceiptLocName").parent().find('span:first').text(obj.ReceiptLocName);
+        }
+
+        $("#ReceiptNoms_" + rowIndex + "__ReceiptLocId").val(obj.ReceiptLocId);
+        if (obj.ReceiptLocId == "") {
+            $("#ReceiptNoms_" + rowIndex + "__ReceiptLocId").parent().find('span:first').text(tempValue);
+        } else {
+            $("#ReceiptNoms_" + rowIndex + "__ReceiptLocId").parent().find('span:first').text(obj.ReceiptLocId);
+        }
+
+
+        $("#ReceiptNoms_" + rowIndex + "__UpstreamProp").val(obj.UpstreamProp);
+        if (obj.UpstreamProp == "") {
+            $("#ReceiptNoms_" + rowIndex + "__UpstreamProp").parent().find('span:first').text(tempValue);
+        } else {
+            $("#ReceiptNoms_" + rowIndex + "__UpstreamProp").parent().find('span:first').text(obj.UpstreamProp);
+        }
+
+
+        $("#ReceiptNoms_" + rowIndex + "__UpstreamName").val(obj.UpstreamName);
+        if (obj.UpstreamName == "") {
+            $("#ReceiptNoms_" + rowIndex + "__UpstreamName").parent().find('span:first').text(tempValue);
+        } else {
+            $("#ReceiptNoms_" + rowIndex + "__UpstreamName").parent().find('span:first').text(obj.UpstreamName);
+        }
+
+
+        $("#ReceiptNoms_" + rowIndex + "__UpstreamId").val(obj.UpstreamId);
+        if (obj.UpstreamId == "") {
+            $("#ReceiptNoms_" + rowIndex + "__UpstreamId").parent().find('span:first').text(tempValue);
+        } else {
+            $("#ReceiptNoms_" + rowIndex + "__UpstreamId").parent().find('span:first').text(obj.UpstreamId);
+        }
+
+
+        $("#ReceiptNoms_" + rowIndex + "__ReceiptQty").val(obj.ReceiptQty);
+        $("#ReceiptNoms_" + rowIndex + "__ReceiptRank").val(obj.ReceiptRank);
+        $("#ReceiptNoms_" + rowIndex + "__PackageId").val(obj.PackageId);
+        $("#ReceiptNoms_" + rowIndex + "__UpstreamK").val(obj.UpstreamK);
+
+
+    }
+
+
+    function removeDelivery() {
+        var SelectedChkBox = $('.Deliverychkboxes:checkbox:checked').length;
+        if (SelectedChkBox == 0) {
+            toastr.remove();
+            toastr.warning("", "Please select one nomination.");
+        } else {
+            var nomIdsToDeleteList = [];
+            var IsDeleted = true;
+             var notDraft=true;
+            var newNom=true;
+            $('#DeliveryTable tbody input:checkbox:checked').each(function () {
+                var row = $(this).parent().parent();
+                if (row.hasClass('newDeliveryRow')) {
+                   // jQuery('#DeliveryTable tbody input:checkbox:checked').parents("tr").remove();
+                    row.remove();
+                    newNom=false;
+                } else {
+                    var currentIndex = $(this).attr("value");
+                    var statusTag = "#status_" + currentIndex;
+                    var statusId = $(statusTag).attr("value");
+                    if (statusId == 11) {
+                            var transactionID = $(this).attr('rel');
+                            nomIdsToDeleteList.push(transactionID);
+                    }else{
+                        $(this).attr('checked', false);
+                        notDraft=false;
+                    }
+                   // var transactionId = row.find('input[type="checkbox"]').attr('rel');
+                   // nomIdsToDeleteList.push(transactionId);
+                }
+            });
+            if (nomIdsToDeleteList.length > 0) {
+                $.ajax({
+                    url: '/NonPathed/DeleteNonPathedNoms',
+                    type: 'POST',
+                    data: { transactionIDs: nomIdsToDeleteList },
+                })
+               .success(function (result) {
+                   if (result == "True") {
+                       jQuery('#DeliveryTable tbody input:checkbox:checked').parents("tr").remove();
+                   } else {
+                       IsDeleted = false;
+                   }
+                   if (IsDeleted == true) {
+                       toastr.success("", "Data deleted successfully");
+                   } else {
+                       toastr.error("", "Deletion failed");
+                   }
+                    if(notDraft==false){
+                        toastr.warning("", "You may only delete a Nom in ‘Draft’ or ‘Unsubmitted’ status.");
+                   }
+               })
+              .error(function (xhr, status) {
+                  alert(status);
+                  toastr.error("", "Deletion failed");
+              })
+            } else if(notDraft==false){
+                toastr.warning("", "You may only delete a Nom in ‘Draft’ or ‘Unsubmitted’ status.");
+            }else if(newNom==false) {
+                toastr.success("", "Data deleted successfully");
+            }
+            $(".selectall").prop("checked", false);
+        }
+    }
+
+
+    function removeReceipt() {
+        var SelectedChkBox = $('.Receiptchkboxes:checkbox:checked').length;
+        if (SelectedChkBox == 0) {
+            toastr.remove();
+            toastr.warning("", "Please select one nomination.");
+        } else {
+
+            var nomIdsToDeleteList = [];
+            var IsDeleted = true;
+            var notDraft=true;
+            var newNom=true;
+
+            $('#ReceiptTable tbody input:checkbox:checked').each(function () {
+                var row = $(this).parent().parent();
+                if (row.hasClass('newReceiptRow')) {
+                    row.remove();
+                    newNom=false;
+                   // jQuery('#ReceiptTable tbody input:checkbox:checked').parents("tr").remove();
+                } else {
+                    var currentIndex = $(this).attr("value");
+                    var statusTag = "#status_" + currentIndex;
+                    var statusId = $(statusTag).attr("value");
+                    if (statusId == 11) {
+                        var transactionID = $(this).attr('rel');
+                        nomIdsToDeleteList.push(transactionID);
+                    }else{
+                        $(this).attr('checked', false);
+                        notDraft=false;
+                    }
+                  //  var transactionId = row.find('input[type="checkbox"]').attr('rel');
+                   // nomIdsToDeleteList.push(transactionId);
+                }
+            });
+            if (nomIdsToDeleteList.length > 0) {
+                $.ajax({
+                    url: '/NonPathed/DeleteNonPathedNoms',// + '?transactionID=' + transactionId,
+                    type: 'POST',
+                    data: { transactionIDs: nomIdsToDeleteList },
+                })
+               .success(function (result) {
+                   if (result == "True") {
+                       jQuery('#ReceiptTable tbody input:checkbox:checked').parents("tr").remove();
+                   } else {
+                       IsDeleted = false;
+                   }
+                   if (IsDeleted == true) {
+                       toastr.success("", "Data deleted successfully");
+                   } else {
+                       toastr.error("", "Deletion failed");
+                   }
+                   if(notDraft==false){
+                       toastr.warning("", "You may only delete a Nom in ‘Draft’ or ‘Unsubmitted’ status.");
+                   }
+               })
+              .error(function (xhr, status) {
+                  alert(status);
+                  toastr.error("", "Deletion failed");
+              })
+            } else if(notDraft==false){
+                toastr.warning("", "You may only delete a Nom in ‘Draft’ or ‘Unsubmitted’ status.");
+            }else if(newNom==false) {
+                toastr.success("", "Data deleted successfully");
+            }
+            $(".selectall").prop("checked", false);
+        }
+    }
+
+
+
+    function ReceiptchkboxesOnChange() {
+        if ($(".Receiptchkboxes:checked").length == $(".Receiptchkboxes").length) {
+            $(".selectallReceipt").prop("checked", true);
+        } else {
+            $(".selectallReceipt").prop("checked", false);
+        }
+    }
+
+    function DeliverychkboxesOnChange() {
+        if ($(".Deliverychkboxes:checked").length == $(".Deliverychkboxes").length) {
+            $(".selectallDelivery").prop("checked", true);
+        } else {
+            $(".selectallDelivery").prop("checked", false);
+        }
+    }
+
+    function FuelValidationReceipt(RowIndex) {
+
+    }
+
+
+    function validationOnSearch() {
+        var flag = true;
+        var end = $('#EndDate');
+        var start = $('#StartDate');
+        var status = $('#StatusId');
+        var statusVal = status.val();
+        var enddate = end.val();
+        var startdate = start.val();
+        if (enddate == "") {
+            toastr.warning("Please Fill End Date.");
+            flag = false;
+        }
+        if (startdate == "") {
+            toastr.warning("Please Fill Start Date.");
+            flag = false;
+        }
+        return flag;
+    }
+
+</script>
+
+<script>
+
+    function AddNonPathedNomRow(pipelineDuns) {
+        $('#AddNonPathedBtn').blur();
+        var activeTab = localStorage.getItem('activeTabNonPathed');
+        if (activeTab == "#DeliveryTab") {
+            AddDeliveryRow(pipelineDuns);
+        } else {
+            AddReceiptRow(pipelineDuns);
+        }
+    }
+
+    function CopyNonPathedNom(pipelineDuns) {
+        $('#CopyNonPathedBtn').blur();
+        var activeTab = localStorage.getItem('activeTabNonPathed');
+        if (activeTab == "#DeliveryTab") {
+            CopyDeliveryNomRow(pipelineDuns);
+        } else {
+            CopyReceiptNomRow(pipelineDuns);
+        }
+    }
+
+    function removeNonPathedNom() {
+        $('#RemoveNonPathedBtn').blur();
+        var activeTab = localStorage.getItem('activeTabNonPathed');
+        if (activeTab == "#DeliveryTab") {
+            removeDelivery();
+        } else {
+            removeReceipt();
+        }
+    }
+
+</script>
+
+@section scripts {
+
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+
+    <script type="text/javascript">
+        var signalRHubInitialized = false;
+
+        $(function () {
+            InitializeSignalRHubStore();
+        });
+
+        function InitializeSignalRHubStore() {
+
+
+            if (signalRHubInitialized)
+                return;
+
+            try {
+                var clientHub = $.connection.nomDoneHub;
+
+                clientHub.client.broadcastMessage = function (message) {
+
+                    if (message === "Refresh")
+                        ReloadIndexPartial();
+                };
+
+                $.connection.hub.start().done(function () {
+
+                    clientHub.server.initializeNomTable($("#NotifierEntity").val());
+                    signalRHubInitialized = true;
+                });
+
+            } catch (err) {
+                signalRHubInitialized = false;
+            }
+        };
+
+        function ReloadIndexPartial() {
+
+
+            $.ajax({
+                url: "NonPathed/GetData",
+                type: "post",
+                data: $("form").serialize(),
+                success: function (result) {
+                    $("#NonPathedtableDiv").html(result);
+                    var activeTab = localStorage.getItem('activeTabNonPathed');
+                    if (activeTab) {
+                        $('#tabList a[href="' + activeTab + '"]').tab('show');
+                    }
+                    if (!signalRHubInitialized)
+                        InitializeSignalRHubStore();
+                }
+            });
+
+        };
+
+
+    </script>
+}
+
+
+
+

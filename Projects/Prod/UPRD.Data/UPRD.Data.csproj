@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{93C2AB5D-974C-4B3B-82FC-7D1F2496D967}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UPRD.Data</RootNamespace>
+    <AssemblyName>UPRD.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Enums\NomEnums.cs" />
+    <Compile Include="Infrastructure\DbFactory.cs" />
+    <Compile Include="Infrastructure\Disposable.cs" />
+    <Compile Include="Infrastructure\IDbFactory.cs" />
+    <Compile Include="Infrastructure\IRepository.cs" />
+    <Compile Include="Infrastructure\IUnitOfWork.cs" />
+    <Compile Include="Infrastructure\RepositoryBase.cs" />
+    <Compile Include="Infrastructure\UnitOfWork.cs" />
+    <Compile Include="Migrations\201803300730154_initial-create.cs" />
+    <Compile Include="Migrations\201803300730154_initial-create.Designer.cs">
+      <DependentUpon>201803300730154_initial-create.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804021239225_addUprdNamespace.cs" />
+    <Compile Include="Migrations\201804021239225_addUprdNamespace.Designer.cs">
+      <DependentUpon>201804021239225_addUprdNamespace.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804030645557_addSendAndReceiveFunctionality.cs" />
+    <Compile Include="Migrations\201804030645557_addSendAndReceiveFunctionality.Designer.cs">
+      <DependentUpon>201804030645557_addSendAndReceiveFunctionality.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804030802311_addMetadataDatasetTable.cs" />
+    <Compile Include="Migrations\201804030802311_addMetadataDatasetTable.Designer.cs">
+      <DependentUpon>201804030802311_addMetadataDatasetTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804060706581_add_metadataErrorCode.cs" />
+    <Compile Include="Migrations\201804060706581_add_metadataErrorCode.Designer.cs">
+      <DependentUpon>201804060706581_add_metadataErrorCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804060710353_add_metadataErrorCode2.cs" />
+    <Compile Include="Migrations\201804060710353_add_metadataErrorCode2.Designer.cs">
+      <DependentUpon>201804060710353_add_metadataErrorCode2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806151543102_FileSysIncomingDataTable.cs" />
+    <Compile Include="Migrations\201806151543102_FileSysIncomingDataTable.Designer.cs">
+      <DependentUpon>201806151543102_FileSysIncomingDataTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806160547594_WatchliatTables.cs" />
+    <Compile Include="Migrations\201806160547594_WatchliatTables.Designer.cs">
+      <DependentUpon>201806160547594_WatchliatTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806180820568_Add_Email_watchlist.cs" />
+    <Compile Include="Migrations\201806180820568_Add_Email_watchlist.Designer.cs">
+      <DependentUpon>201806180820568_Add_Email_watchlist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807161026484_Location_CounterParty_Table.cs" />
+    <Compile Include="Migrations\201807161026484_Location_CounterParty_Table.Designer.cs">
+      <DependentUpon>201807161026484_Location_CounterParty_Table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807240623227_UpperRuleinWatchlist.cs" />
+    <Compile Include="Migrations\201807240623227_UpperRuleinWatchlist.Designer.cs">
+      <DependentUpon>201807240623227_UpperRuleinWatchlist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808071307353_watchlistmappingand sqtsreductionreason.cs" />
+    <Compile Include="Migrations\201808071307353_watchlistmappingand sqtsreductionreason.Designer.cs">
+      <DependentUpon>201808071307353_watchlistmappingand sqtsreductionreason.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Repositories\UprdFileSysIncomingDataRepository.cs" />
+    <Compile Include="Repositories\UprdmetadataErrorCodeRepository.cs" />
+    <Compile Include="Repositories\UPRDApplicationLogRepository.cs" />
+    <Compile Include="Repositories\UprdEmailQueueRepository.cs" />
+    <Compile Include="Repositories\UprdEmailTemplateRepository.cs" />
+    <Compile Include="Repositories\UprdGISBInboxRepository.cs" />
+    <Compile Include="Repositories\UprdGISBOutboxRepository.cs" />
+    <Compile Include="Repositories\UprdInboxRepository.cs" />
+    <Compile Include="Repositories\UprdIncomingDataRepository.cs" />
+    <Compile Include="Repositories\UprdJobStackErrorLogRepository.cs" />
+    <Compile Include="Repositories\UprdJobWorkflowRepository.cs" />
+    <Compile Include="Repositories\UprdmetadataDatasetRepository.cs" />
+    <Compile Include="Repositories\UprdmetadataPipelineEncKeyInfoRepository.cs" />
+    <Compile Include="Repositories\UprdNoticesRepository.cs" />
+    <Compile Include="Repositories\UprdOACYRepository.cs" />
+    <Compile Include="Repositories\UprdOutboxRepository.cs" />
+    <Compile Include="Repositories\UprdOutbox_MultipartFormRepository.cs" />
+    <Compile Include="Repositories\UprdPipelineEDISettingRepository.cs" />
+    <Compile Include="Repositories\UprdPipelineRepository.cs" />
+    <Compile Include="Repositories\UprdSettingRepository.cs" />
+    <Compile Include="Repositories\UprdShipperCompanyRepository.cs" />
+    <Compile Include="Repositories\UprdStatuRepository.cs" />
+    <Compile Include="Repositories\UprdSWNTPerTransactionRepository.cs" />
+    <Compile Include="Repositories\UprdTaskMgrJobsRepository.cs" />
+    <Compile Include="Repositories\UprdTaskMgrXmlRepository.cs" />
+    <Compile Include="Repositories\UprdTradingPartnerWorksheetRepository.cs" />
+    <Compile Include="Repositories\UprdTransactionLogRepository.cs" />
+    <Compile Include="Repositories\UprdTransportationServiceProviderRepository.cs" />
+    <Compile Include="Repositories\UPRDUNSCRepository.cs" />
+    <Compile Include="UPRDEntities.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nom1Done.DTO\Nom1Done.DTO.csproj">
+      <Project>{8e55d568-caf6-43c6-ac9f-e14fcf19e32f}</Project>
+      <Name>Nom1Done.DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UPRD.Models\UPRD.Models.csproj">
+      <Project>{2cf37ed1-f860-4786-9531-0ec44f008729}</Project>
+      <Name>UPRD.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201803300730154_initial-create.resx">
+      <DependentUpon>201803300730154_initial-create.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804021239225_addUprdNamespace.resx">
+      <DependentUpon>201804021239225_addUprdNamespace.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804030645557_addSendAndReceiveFunctionality.resx">
+      <DependentUpon>201804030645557_addSendAndReceiveFunctionality.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804030802311_addMetadataDatasetTable.resx">
+      <DependentUpon>201804030802311_addMetadataDatasetTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804060706581_add_metadataErrorCode.resx">
+      <DependentUpon>201804060706581_add_metadataErrorCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804060710353_add_metadataErrorCode2.resx">
+      <DependentUpon>201804060710353_add_metadataErrorCode2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806151543102_FileSysIncomingDataTable.resx">
+      <DependentUpon>201806151543102_FileSysIncomingDataTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806160547594_WatchliatTables.resx">
+      <DependentUpon>201806160547594_WatchliatTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806180820568_Add_Email_watchlist.resx">
+      <DependentUpon>201806180820568_Add_Email_watchlist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807161026484_Location_CounterParty_Table.resx">
+      <DependentUpon>201807161026484_Location_CounterParty_Table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807240623227_UpperRuleinWatchlist.resx">
+      <DependentUpon>201807240623227_UpperRuleinWatchlist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808071307353_watchlistmappingand sqtsreductionreason.resx">
+      <DependentUpon>201808071307353_watchlistmappingand sqtsreductionreason.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

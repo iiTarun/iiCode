@@ -1,0 +1,318 @@
+﻿@model Nom1Done.DTO.DashboardModel
+    @using Nom.ViewModel
+@{
+    ViewBag.Title = "Dashboard";
+
+    PipelineDTO pipeline = ViewBag.objPipeline;
+}
+
+<style>
+    .noticebox {
+        display: block;
+        width: 100%;
+        height: 400px !important;
+        overflow: auto;
+        overflow-x: hidden;
+    }
+
+    .noticebox1 {
+        display: block;
+        width: 100%;
+        height: 360px !important;
+        overflow: auto;
+        overflow-x: hidden;
+    }
+
+    .VerticalCenter {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+</style>
+
+
+<div class="row">
+
+    <div class="col-md-4">
+        <div class="box box-danger box-solid box-fsize box-height">
+            <div class="box-header with-border">
+                <h3 class="box-title">Rejected Nominations</h3>
+                <div class="box-tools pull-right">
+                </div>
+            </div>
+            <div class="box-body noticebox">
+
+                <div id="dvRejectedNom">
+                    @if (Model.RejectedNomList == null)
+                    {
+                        Model.RejectedNomList = new List<Nom1Done.DTO.RejectedNomModel>();
+                    }
+
+                    @if (pipeline != null && pipeline.IsNoms == true)
+                    {
+
+                        if (Model.RejectedNomList.Count > 0)
+                        {
+                            <table class="table table-hover">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th>Pipeline</th>
+                                        <th>FlowDate</th>
+                                        <th>Rejection Reason</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.RejectedNomList)
+                                    {
+                                        <tr>
+                                            @Html.Hidden(item.NMQR_ID)
+                                            <td>@item.PipelineName</td>
+                                            <td>@item.FlowDate</td>
+                                            <td><a onclick="openPopup('@item.NMQR_ID');">Click here</a></td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <div class="well">
+                                <div class="row text-center" style="height:275px;">
+                                    <div class="col-md-12 result-notfound-text text-center VerticalCenter">
+                                        <img src="~/Images/TickDashboard.png" width="22" height="22" />
+                                        @*<i class="glyphicon glyphicon-book result-notfound-icon"></i>*@
+                                        <br>No nominations found
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else {
+                         <div class="well">
+                                <div class="row text-center" style="height:275px;">
+                                    <div class="col-md-12 result-notfound-text text-center VerticalCenter">
+                                        <img src="~/Images/TickDashboard.png" width="22" height="22" />
+                                        @*<i class="glyphicon glyphicon-book result-notfound-icon"></i>*@
+                                        <br>You do not have access to this pipeline.
+                                    </div>
+                                </div>
+                            </div>
+                    }
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+
+    <div class="col-md-4">
+        <div class="box box-danger box-solid box-fsize">
+            <div class="box-header with-border">
+                <h3 class="box-title">Critical Notices</h3>
+                <div class="box-tools pull-right">
+                </div>
+            </div>
+            <div class="box-body noticebox1">
+
+                <div id="dvCritical">
+                    @if (Model.BONoticeCriteriaList == null)
+                    {
+                        Model.BONoticeCriteriaList = new List<Nom1Done.Nom.ViewModel.BONotice>();
+                    }
+
+                    @if (pipeline != null && pipeline.IsUPRD == true)
+                    {
+
+
+                        if (Model.BONoticeCriteriaList.Count > 0)
+                        {
+
+                            <table class="table table-hover">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Posted Date</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.BONoticeCriteriaList)
+                                    {
+                                        <tr>
+                                            <td><a href="/Notices/Detail?ID=@item.ID&pipelineDuns=@item.PipelineDuns">@item.subject</a></td>
+                                            <td>@item.CreatedDate</td>
+
+                                        </tr>}
+
+                                </tbody>
+                            </table>
+
+                        }
+                        else
+                        {
+                            <div class="well">
+                                <div class="row text-center" style="height:275px;">
+                                    <div class="col-md-12 result-notfound-text text-center VerticalCenter">
+                                        <i class="glyphicon glyphicon-book result-notfound-icon">
+                                        </i><br>No Notices received in the last 30 days
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else {
+                         <div class="well">
+                                <div class="row text-center" style="height:275px;">
+                                    <div class="col-md-12 result-notfound-text text-center VerticalCenter">
+                                        <i class="glyphicon glyphicon-book result-notfound-icon">
+                                        </i><br>You do not have access to this pipeline.
+                                    </div>
+                                </div>
+                            </div>
+                    }
+                </div>
+
+           </div>          
+
+            <div style="position: relative;
+                bottom: 0;
+                width: 100%;
+                height: 40px;
+
+                text-align: center;background-color:white">
+                @if ((Model.BONonNoticeCriteriaList.Count > 0) || (Model.BONoticeCriteriaList.Count > 0))
+                {
+                    <br />
+                    <a href="/Notices/Index?pipelineId=@ViewBag.pipelineID&IsCritical=true" id="NoticeCritical" class="text-right">All Notices</a>
+                }
+            </div>       
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+
+    <div class="col-md-4">
+        <div class="box box-success box-solid box-fsize ">
+            <div class="box-header with-border">
+                <h3 class="box-title">Non Critical Notices</h3>
+                <div class="box-tools pull-right">
+                </div>
+                <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body noticebox1">
+
+                <div id="dvNonCritical">
+
+                    @if (pipeline != null && pipeline.IsUPRD == true)
+                    {
+
+                        if (Model.BONonNoticeCriteriaList == null)
+                        {
+                            Model.BONonNoticeCriteriaList = new List<Nom1Done.Nom.ViewModel.BONotice>();
+                        }
+                        if (Model.BONonNoticeCriteriaList.Count > 0)
+                        {
+
+                            <table class="table table-hover">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Posted Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.BONonNoticeCriteriaList)
+                                    {
+                                        <tr>
+                                            <td><a href="/Notices/Detail?ID=@item.ID&pipelineDuns=@item.PipelineDuns"> @item.subject</a></td>
+                                            <td>@item.CreatedDate</td>
+
+                                        </tr>}
+
+                                </tbody>
+                            </table>
+
+                        }
+                        else
+                        {
+                    <div class="well">
+                        <div class="row text-center" style="height:275px;">
+                            <div class="col-md-12 result-notfound-text text-center VerticalCenter">
+                                <i class="glyphicon glyphicon-book result-notfound-icon">
+                                </i>
+                                <br>No Notices received in the last 30 days
+                            </div>
+                        </div>
+                    </div>
+                        }
+                    }
+                    else {
+                        <div class="well">
+                        <div class="row text-center" style="height:275px;">
+                            <div class="col-md-12 result-notfound-text text-center VerticalCenter">
+                                <i class="glyphicon glyphicon-book result-notfound-icon">
+                                </i>
+                                <br>You do not have access to this pipeline.
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                @*<div class="text-right"><a href="/Notices?pipelineId=@ViewBag.pipelineID&Type=NonCritical" id="NoticeNonCritical" class="text-right">all notices</a></div>*@
+            </div>
+            <!-- /.box-body -->
+            <div style="position: relative;
+                bottom: 0;
+                width: 100%;
+                height: 40px;
+
+                text-align: center;background-color:white">
+            @if ((Model.BONonNoticeCriteriaList.Count > 0) || (Model.BONoticeCriteriaList.Count > 0))
+                {
+                <br />
+                <a href="/Notices/Index?pipelineId=@ViewBag.pipelineID&IsCritical=false" id="NoticeCritical" class="text-right">All Notices</a>
+                } 
+             </div>        
+         </div>
+
+        <!-- /.box -->
+    </div>
+
+
+</div>
+<div class="modal inmodal" id="RejectionReasonPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+</div>
+
+<script>
+
+    function statusReasonBtnClick()
+    {
+        $('#RejectionReasonPopUpModal').modal('hide');
+    }
+
+    function openPopup(NMQRID) {       
+        
+            $.ajax({
+                url: '/Dashboard/NotimationsPartials',
+                type: 'GET',
+                data: { NMQRid: NMQRID},
+                dataType: 'html',
+                contentType: 'application/html;charset=utf-8'
+            })
+                   .success(function (result) {
+                      
+                           $('#RejectionReasonPopUpModal').html(result);
+                           $('#RejectionReasonPopUpModal').modal('show');
+                      
+                   })
+                   .error(function (xhr, status) {
+                       alert(status);
+                   })
+    }
+</script>
+
+

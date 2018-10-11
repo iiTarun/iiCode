@@ -1,0 +1,377 @@
+﻿@*@using PagedList.Mvc*@
+@model IEnumerable<Nom1Done.DTO.SummaryDTO>
+@using System.Linq;
+@using System;
+@using Nom1Done.DTO;
+@{
+    bool sqtsForLoc = ViewBag.IsSqtsForLoc;
+    var sumaryNomNew = new List<SummaryDTO>();
+    int daysInMonth = DateTime.DaysInMonth(DateTime.Now.Year, ViewBag.Month);
+    DateTime dtFrom = new DateTime(DateTime.Now.Year, ViewBag.Month, 1);
+    List<DateTime> dates = Enumerable.Range(0, daysInMonth)
+     .Select(offset => dtFrom.AddDays(offset))
+     .ToList();
+    int DateVal = 0;
+    var pathType = ViewBag.PathType;
+    var pipelineDuns = ViewBag.PipelineDuns;
+    var isSqtsQty = ViewBag.IsSqtsQty;
+}
+
+
+<div class="row">
+    <div id="SqtsOrphanPartialTableDiv" class="table-responsive">
+        <table class="table stripe row-border order-column table-bordered table-striped" id="SqtsOrphanPartialTable">
+            <thead>
+                <tr>
+                    @if (sqtsForLoc)
+                    {
+                        if (pathType != "D")
+                        {
+                            <th class="MinimumWidth">Rec Loc</th>
+                        }
+                        if (pathType != "R")
+                        {
+                            <th class="MinimumWidth">Del Loc</th>
+                        }
+                        <th class="MinimumWidth">Svc Req K</th>
+                    }
+                    else
+                    {
+                        <th class="MinimumWidth">Svc Req K</th>
+                        if (pathType != "D")
+                        {
+                            <th class="MinimumWidth">Rec Loc</th>
+                        }
+                        if (pathType != "R")
+                        {
+                            <th class="MinimumWidth">Del Loc</th>
+                        }
+
+                    }
+                    <th class="MinimumWidth">Cycle</th>
+                    @if (pathType == "R" || pathType == "P")
+                    {
+                        <th class="MinimumWidthLargeCol">Up Name</th>
+                    }
+                    @if (pathType == "D" || pathType == "P")
+                    {
+                        <th class="MinimumWidthLargeCol">Dn Name</th>
+                    }
+                    <th class="MinimumWidth">Pkg Id</th>
+                    <th class="MinimumWidth">Nom Tracking Id</th>
+                    <th class="MinimumWidth">Statement Date</th>
+                    @if (isSqtsQty == "true")
+                    {
+                        <th class="MinimumWidth">User</th>
+                    }
+
+                    @if (Model.Count() > 0)
+                    {
+                        foreach (var CurrentMonthDates in dates)
+                        {
+                            <th class="nosort dates" colspan="2">@CurrentMonthDates.Day</th>
+                        }
+
+                    }
+                    <th class="MinimumWidth dates" colspan="2">Total</th>
+                </tr>
+                <tr id="filterTR">
+                    @if (sqtsForLoc)
+                    {
+                        if (pathType != "D")
+                        {
+                            <th class="">@*<input style="color:black;" type="text" id="searchRecLoc" placeholder="Rec Loc" data-index="1" />*@</th>
+                        }
+                        if (pathType != "R")
+                        {
+                            <th class="">@*<input style="color:black;" type="text" id="searchDelLoc" placeholder="Del Loc" data-index="2" />*@</th>
+                        }
+                        <th class="">@*<input style="color:black;" type="text" id="searchSvcReq" placeholder="Svc Req K" data-index="3" />*@</th>
+                    }
+                    else
+                    {
+                        <th class="">@*<input style="color:black;" type="text" id="searchSvcReq" placeholder="Svc Req K" data-index="4" />*@</th>
+                        if (pathType != "D")
+                        {
+                            <th class="">@*<input style="color:black;" type="text" id="searchRecLoc" placeholder="Rec Loc" data-index="5" />*@</th>
+                        }
+                        if (pathType != "R")
+                        {
+                            <th class="">@*<input style="color:black;" type="text" id="searchDelLoc" placeholder="Del Loc" data-index="6" />*@</th>
+                        }
+
+                    }
+                    <th class="">@*<input style="color:black;" type="text" id="searchCycle" placeholder="Cycle" data-index="7" />*@</th>
+                    @if (pathType == "R" || pathType == "P")
+                    {
+                        <th class="">@*<input style="color:black;" type="text" id="searchDelLoc" placeholder="Up Name" />*@</th>
+                    }
+                    @if (pathType == "D" || pathType == "P")
+                    {
+                        <th class="">@*<input style="color:black;" type="text" id="searchDelLoc" placeholder="Dn Name" />*@</th>
+                    }
+                    <th class="">@*<input style="color:black;" type="text" id="searchDelLoc" placeholder="Pkg Id" />*@</th>
+                    <th class="">@*<input style="color:black;" type="text" id="searchDelLoc" placeholder="Nom Tracking Id" />*@</th>
+                    <th class="">@*<input style="color:black;" type="text" id="searchDelLoc" placeholder="Statement Date" />*@</th>
+                    @if (isSqtsQty == "true")
+                    {
+                        <th class="">
+                            @*<input style="color:black;" type="text" id="searchDelLoc" placeholder="User" />*@
+                        </th>
+                    }
+                    @if (Model.Count() > 0)
+                    {
+                        foreach (var CurrentMonthDates in dates)
+                        {
+                            <th class="nosort Rdates">Rec</th>
+                            <th class="nosort Ddates">Del</th>
+                        }
+                    }
+                    <th class="nosort Rdates">Rec</th>
+                    <th class="nosort Ddates">Del</th>
+                </tr>
+            </thead>
+
+
+
+            <tbody>
+                @Html.Partial("_sqtsOrphanData", Model)
+            </tbody>
+            <tfoot>
+                <tr></tr>
+            </tfoot>
+        </table>
+        <ul class="pager">
+            @*<li id="loadmoreBtn">                
+                <button id="NonPathedBtn" type="button" class="btn btn-w-m btn-success btn-outline" onclick="PagingClick()">Load More</button>
+            </li>*@
+            <li id="DownloadExcel">
+                <iframe id="txtArea1" style="display:none"></iframe>
+                <button id="DownloadExcelBtn" type="button" class="btn btn-w-m btn-success btn-outline" onclick="DownloadExcelFromServer()">Download Excel</button>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+
+
+<script>
+    var count = 1;
+    var scrollCheck = 0;
+    var endPaging = 0;
+
+
+
+    function PagingClick() {
+        count++;
+        var month = $("#selectedMonth").val();
+        var pathType = "P";
+        if ($("#currentMode").val() == "PntDelivery") {
+            pathType = "D";
+        } else if ($("#currentMode").val() == "Pathed") {
+            pathType = "P";
+        } else if ($("#currentMode").val() == "PntReceipt") {
+            pathType = "R";
+        }
+        else if ($("#currentMode").val() == "PntContract") {
+            pathType = "T";
+        }
+        var showMine = $('#showminecheckbox').val();
+        var showZero = $('#showzerocheckbox').val();
+        //var Nodata = $("#NoDataAvailable").val();
+       // if (Nodata == undefined) {
+            $.ajax({
+                url: "/SQTSSummary/GetDataSqtsOrphan",
+                data: { page: count, pipelineDuns: '@pipelineDuns', month: month, pathType: pathType, sqtsType: '@sqtsForLoc', IsSqtsQty: '@isSqtsQty', showMine: showMine, showZero: showZero },   // pipelineduns: selectedPipe
+                datatype: "JSON",
+                type: "GET",
+                success: function (data) {
+                    //debugger;
+                    if (data.length > 10) {
+                        ($("#SqtsOrphanPartialTable tbody")).append(data);
+                        CalculateRows();
+                      //  CallForTotal();
+                        scrollCheck = 0;
+                    }
+                    else {
+                        endPaging = 1;
+                        scrollCheck = 1;
+                     }
+
+                }
+            });
+
+        //}
+        //else {
+        //   // $("#loadmoreBtn").hide();
+        //    endPaging = 1;
+        //    CalculateRows();
+        //    CallForTotal();
+        //}
+    }
+
+
+    //function CallForTotal() {
+
+    //    var result = [];
+    //    $('#SqtsOrphanPartialTable tbody tr').each(function () {
+    //        $('td.countable', this).each(function (index, val) {
+    //            if (!result[index]) result[index] = 0;
+    //            var combat = $(val).text();
+    //            if (combat.length !== 0) {
+    //                result[index] += parseInt(combat.replace(/\,/g, ''), 10);
+    //            }
+
+    //        });
+    //    });
+
+    //    var totalColmns = $('#SqtsOrphanPartialTable tbody tr').first().find('td').length;
+    //    var CountableColmns = $('#SqtsOrphanPartialTable tbody tr').first().find('td.countable').length;
+
+    //    $('#SqtsOrphanPartialTable tfoot tr').remove();
+    //    $('#SqtsOrphanPartialTable tfoot').append('<tr><td colspan="' + parseInt(totalColmns - CountableColmns) + '"></td></tr>');
+    //    $(result).each(function () {
+    //        $('#SqtsOrphanPartialTable tfoot tr').last().append('<td>' + this + '</td>')
+    //    });
+
+    //}
+
+    function CalculateRows() {
+        $('tr').each(function () {
+            var sum = 0
+            $(this).find('.Rsum').each(function () {
+                var combat = $(this).text();
+                if (combat.length !== 0) {
+                    sum += parseInt(combat.replace(/\,/g, ''), 10);
+                }
+            });
+
+            $('.Rtotal-combat', this).html(sum);
+            $('.Rtotal-combat', this).digits();
+        });
+
+        $('tr').each(function () {
+            var sum = 0
+            $(this).find('.Dsum').each(function () {
+                var combat = $(this).text();
+                if (combat.length !== 0) {
+                    sum += parseInt(combat.replace(/\,/g, ''), 10);
+                }
+            });
+            $('.Dtotal-combat', this).html(sum);
+            $('.Dtotal-combat', this).digits();
+        });
+    }
+
+    $(document).ready(function () {
+
+        if (@Model.Count() > 0) {
+            TableConfig();
+            $('#SqtsOrphanPartialTable_filter:first').hide(); 
+        }
+        CalculateRows();
+       // CallForTotal();
+        $('.dataTables_scrollBody').bind('scroll', function () {
+            var scrollValue = ($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').innerHeight()) - ($('.dataTables_scrollBody')[0].scrollHeight);
+
+            var disableScrollLogic = 0;
+            $(".filterTextBox").each(function () {
+                if ($(this).val() != "") {
+                    disableScrollLogic = 1;
+                    count = 1;
+                }                
+            });
+
+
+            //var Nodata = $("#NoDataAvailable").val();
+            if (scrollValue >= -70 && scrollCheck == 0 && endPaging != 1 && disableScrollLogic == 0) {
+                scrollCheck = 1;
+                //console.log("got it");
+                PagingClick();
+               // scrollCheck = 0;
+            }
+        });
+    })
+
+    function TableConfig() {
+        // Setup - add a text input to each footer cell
+        var totalColmns = $('#SqtsOrphanPartialTable tbody tr').first().find('td').length;
+        var CountableColmns = $('#SqtsOrphanPartialTable tbody tr').first().find('td.countable').length;
+        var loopCount = parseInt(totalColmns - CountableColmns) - 1;
+
+        $('#filterTR th').each(function (i) {
+            if (i <= loopCount) {
+                //var title = $('#filterTR th').eq($(this).index()).text();
+                $(this).html('<input class="filterTextBox" style="color:black;" type="text" placeholder="Search" data-index="' + i + '" />');
+            }
+        });
+
+        // DataTable
+        var table = $('#SqtsOrphanPartialTable').DataTable({
+            scrollY: "300px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: false,
+            fixedColumns: true,
+            ordering: true,
+            info: false,
+            bSortCellsTop: true
+        });
+
+        // Filter event handler
+       $(table.table().container()).on('keyup', 'thead input', function () {
+           table
+               .column($(this).data("index"))
+               .search(this.value)
+               .draw();
+      });
+    }
+
+    function DownloadExcelFromServer() {
+        var month = $("#selectedMonth").val();
+        var pathType = "P";
+        if ($("#currentMode").val() == "PntDelivery") {
+            pathType = "D";
+        } else if ($("#currentMode").val() == "Pathed") {
+            pathType = "P";
+        } else if ($("#currentMode").val() == "PntReceipt") {
+            pathType = "R";
+        }
+        else if ($("#currentMode").val() == "PntContract") {
+            pathType = "T";
+        }
+        var showMine = $('#showminecheckbox').val();
+        var showZero = $('#showzerocheckbox').val();
+        window.location.href = '@Url.Action("DownloadExcel", "SQTSSummary")' + "?pipelineDuns=" + '@pipelineDuns' + "&month=" + month + "&pathType=" + pathType + "&IsSqtsQty=" +@isSqtsQty+"&showMine=" + showMine + "&showZero=" + showZero;
+    }
+
+    function DownloadExcel() {
+        var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+        var tab = document.getElementById('SqtsOrphanPartialTable');
+        for (var j = 0; j < tab.rows.length; j++) {
+            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+        }
+        //console.log(tab_text);
+        tab_text = tab_text + "</table>";
+        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");
+        tab_text = tab_text.replace(/<img[^>]*>/gi, "");
+        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, "");
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+        //console.log(encodeURIComponent(tab_text));
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))
+        {
+            txtArea1.document.open("txt/html", "replace");
+            txtArea1.document.write(tab_text);
+            txtArea1.document.close();
+            txtArea1.focus();
+            sa = txtArea1.document.execCommand("SaveAs", true, "download.xls");
+        }
+        else                 //other browser not tested on IE 11
+            sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+
+        return (sa);
+    }
+</script>

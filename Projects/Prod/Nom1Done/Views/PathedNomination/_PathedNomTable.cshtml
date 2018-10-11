@@ -1,0 +1,652 @@
+﻿@model Nom.ViewModel.PathedDTO
+@{ 
+    Guid CurrentRowIndex = Guid.NewGuid();
+    string RowStatusClass = "label-warning";
+}
+
+@Html.HiddenFor(a => a.SortingPagingInfo.SortField)
+@Html.HiddenFor(a => a.SortingPagingInfo.SortDirection)
+
+    <table id="PathedNomTable" class="table table-bordered table-hover" style="margin-top:0px!important;">
+        <thead>
+            <tr class="bg-color">
+                <th style="min-width: 100px;"><input type="checkbox" class="selectall" style="margin-top:0px !important;" value="0" onclick="selectallClick(this);" />&nbsp;&nbsp;<label>Select All</label></th>
+                <th style="min-width: 100px;">Status</th>
+                <th style="min-width: 100px;">Sched Qty</th>
+                <th style="min-width: 200px;">*Trans Type</th>
+                <th style="min-width: 200px;">*Start Date</th>
+                <th style="min-width: 200px;">*End Date</th>
+                <th style="min-width: 200px;">Created Date</th>
+                <th style="min-width: 200px;">*Cycle</th>
+                <th style="min-width: 200px;">*K#</th>
+                <th style="min-width: 200px;">*Roll Nom</th>
+                <th style="min-width: 200px;">*Rec Location</th>
+                <th style="min-width: 200px;">*Rec Loc Prop</th>
+                <th style="min-width: 200px;">*Rec Loc ID</th>
+                <th style="min-width: 200px;">*Up Name</th>
+                <th style="min-width: 200px;">Up ID Prop</th>
+                <th style="min-width: 200px;">*Up ID</th>
+                <th style="min-width: 200px;">Up K#</th>
+                <th style="min-width: 200px;">*Rec Qty</th>
+                <th style="min-width: 200px;">*Rec Rank</th>
+                <th style="min-width: 200px;">*Del Loc</th>
+                <th style="min-width: 200px;">*Del Loc Prop</th>
+                <th style="min-width: 200px;">*Del Loc ID</th>
+                <th style="min-width: 200px;">*Down Name</th>
+                <th style="min-width: 200px;">Down ID Prop</th>
+                <th style="min-width: 200px;">*Down ID</th>
+                <th style="min-width: 200px;">Down K#</th>
+                <th style="min-width: 200px;">*Del Quantity</th>
+                <th style="min-width: 200px;">*Del Rank</th>
+                <th style="min-width: 200px;">Pkg ID</th>
+                <th style="min-width: 200px;">Fuel %</th>
+                <th style="min-width: 200px;">CreatedBy</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.PathedNomsList != null && Model.PathedNomsList.Count > 0)
+            {
+                foreach (var item in Model.PathedNomsList)
+                {
+                    string contract = "--Select--";
+                    string Transtype = "--Select--";
+                    string recLoc = "--Select--";
+                    string recLoc1 = "";
+                    string recLocProp = "--Select--";
+                    string recLocId = "--Select--";
+                    string upName = "--Select--";
+                    string upName1 = "";
+                    string upIdProp = "--Select--";
+                    string upId = "--Select--";
+                    string delLoc = "--Select--";
+                    string delLoc1 = "";
+                    string delLocProp = "--Select--";
+                    string delLocId = "--Select--";
+                    string downName = "--Select--";
+                    string downName1 = "";
+                    string downIdProp = "--Select--";
+                    string downId = "--Select--";
+
+                    if (item.StatusID == 1 || item.StatusID == 2 || item.StatusID == 3 || item.StatusID == 4)
+                    {
+                        RowStatusClass = "label-info";
+                        item.Status = "In-Process";
+                    }
+                    else if (item.StatusID == 5 || item.StatusID == 6)
+                    {
+                        RowStatusClass = "label-success";
+                        item.Status = "Submitted";
+                    }
+                    else if (item.StatusID == 7)
+                    {
+                        RowStatusClass = "label-success";
+                        item.Status = "Accepted";
+                    }
+                    else if (item.StatusID == 8 || item.StatusID == 9)
+                    {
+                        RowStatusClass = "label-warning";
+                        item.Status = "Exception Occured";
+                    }
+                    else if (item.StatusID == 10)
+                    {
+                        RowStatusClass = "label-warning";
+                        item.Status = "Rejected";
+                    }
+                    else if (item.StatusID == 11)
+                    {
+                        RowStatusClass = "label-warning";
+                        item.Status = "Draft";
+                    }
+                    else if (item.StatusID == 12)
+                    {
+                        RowStatusClass = "label-info";
+                        item.Status = "Replaced";
+                    }
+                    else if (item.StatusID == 0)
+                    {
+                        RowStatusClass = "label-warning";
+                        item.Status = "GISB Unprocessed";
+                    }
+
+                    if (item.StatusID == 11)
+                    {
+
+            <tr class="gradeX" id="PathedNomTable_@CurrentRowIndex" rel="@CurrentRowIndex" onclick="ModifyRow('@CurrentRowIndex')">
+                @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].TransactionId", item.TransactionId, new { rel = CurrentRowIndex })
+                @Html.Hidden("PathedNomsList.Index", CurrentRowIndex.ToString())
+                @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].IsModify", item.IsModify, new { rel = CurrentRowIndex })
+                <td><input type="checkbox" onclick="ChkBoxClick(this,@item.StatusID)" class="chkboxes" rel="@item.TransactionId" value="@CurrentRowIndex" onchange="chkboxesOnchange()"></td>
+                <td style="text-align:left;" class="cursor">
+                    @if (item.StatusID == 8 || item.StatusID == 9 || item.StatusID == 10)
+        {
+            <span class="label @RowStatusClass" id="status_@CurrentRowIndex" value="@item.StatusID" onclick="OpenPopUp('StatusReason','@CurrentRowIndex','@item.TransactionId',@Model.PipelineID)">@item.Status</span>
+}
+else
+{
+            <span class="label @RowStatusClass" id="status_@CurrentRowIndex" value="@item.StatusID">@item.Status</span>
+}
+                    @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].StatusID", item.StatusID, new { @rel = CurrentRowIndex })
+                    @*@Html.LabelFor(a => a.PathedNomsList[CurrentRowIndex].Status, new { @class = "form-control label label-warning pull-right", @rel = CurrentRowIndex})*@
+                </td>
+                <td>
+                    <span></span>
+                    @*<a href="javascript:void(0)" onclick="ShowStsPopUp('@item.TransactionId','@item.NomTrackingId')">view sqts</a>*@
+                </td>
+                <td class="cursor">
+                    <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentRowIndex','P',@Model.PipelineID)">
+                        @if (item.TransType != null && item.TransType!="")
+                     {
+                      Transtype = item.TransType;
+                      }
+                        @Transtype
+                    </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].TransType", item.TransType, new { @rel = CurrentRowIndex })
+                    @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].PathedHybridNonpathedType", item.PathedHybridNonpathedType, new { @rel = CurrentRowIndex })
+                    @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].TransTypeMapId", item.TransTypeMapId, new { @rel = CurrentRowIndex })
+
+                </td>
+
+                <td>
+                    @Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].StartDate", string.Format("{0:d}", item.StartDate) , new { @class = "form-control dtpicker", @rel = CurrentRowIndex, @readonly = "true", placeholder = "Start Date Time... " })
+
+                    @*@Html.TextBox(a => a.PathedNomsList[CurrentRowIndex].StartDate,  new { @class = "form-control dtpicker", @rel = CurrentRowIndex  })*@
+                </td>
+                <td>
+                    @Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].EndDate", string.Format("{0:d}", item.EndDate), new { @class = "form-control dtpicker", @rel = CurrentRowIndex, @readonly = "true", placeholder = "End Date Time... " })
+
+
+                    @*@Html.TextBox(a => a.PathedNomsList[CurrentRowIndex].EndDate,new { @class = "form-control dtpicker", @rel = CurrentRowIndex })*@
+                </td>
+
+
+                <td>
+                    @Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].CreatedDate", item.CreatedDate, new { @class = "form-control", @rel = CurrentRowIndex, @readonly = "true" })
+
+
+                    @*@Html.TextBox(a => a.PathedNomsList[CurrentRowIndex].EndDate,new { @class = "form-control dtpicker", @rel = CurrentRowIndex })*@
+                </td>
+
+
+                <td>
+                    @*@Html.DropDownList("PathedNomsList[" + CurrentRowIndex + "].CycleID", (IEnumerable<SelectListItem>)ViewBag.Cycles, "--Select Cycle--", new { @class = "form-control" })*@
+
+                    @Html.DropDownList("PathedNomsList[" + CurrentRowIndex + "].CycleID", new SelectList(ViewBag.Cycles, "CycleID", "Name", item.CycleID), "-Select Cycle-", new { @class = "form-control", rel = CurrentRowIndex })
+                </td>
+                <td class="cursor">
+                    <span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentRowIndex','',@Model.PipelineID)">
+
+                        @if (item.Contract != null && item.Contract!="") { contract = item.Contract; }
+                        @contract
+                    </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].Contract", item.Contract, new { @rel = CurrentRowIndex })
+                    @*<span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentRowIndex','',@Model.PipelineID)">@item.Contract</span>@Html.Hidden(a => a.PathedNomsList[CurrentRowIndex].Contract, new { @rel = CurrentRowIndex })*@
+                </td>
+                <td>
+
+                    @Html.DropDownList("PathedNomsList[" + CurrentRowIndex + "].NomSubCycle", new SelectList(
+new List<Object>{
+       new { value = "Y" , text = "Yes"  },
+       new { value = "N" , text = "No" }
+}, "value", "text", item.NomSubCycle), new { @class = "form-control" })
+
+                    @*@Html.DropDownListFor(model => model.PathedNomsList[CurrentRowIndex].NomSubCycle, new SelectList(
+            new List<Object>{
+                 new { value = "Y" , text = "Yes"  },
+                 new { value = "N" , text = "No" }
+              }, "value", "text", item.NomSubCycle), new { @class = "form-control" })*@
+                </td>
+
+
+                <td class="cursor">
+                    <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowIndex','RecLoc',@Model.PipelineID)">
+                        @if (item.RecLocation != null && item.RecLocation != "")
+            {
+                recLoc = item.RecLocation;
+            }
+                        @recLoc
+                    </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].RecLocation", item.RecLocation, new { @rel = CurrentRowIndex })
+                </td>
+                <td class="cursor">
+                    <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowIndex','RecLoc',@Model.PipelineID)">
+                        @if (item.RecLocProp != null)
+                       {
+                         recLocProp = item.RecLocProp;
+                       }
+                        @recLocProp
+                    </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].RecLocProp", item.RecLocProp, new { @rel = CurrentRowIndex })
+                </td>
+                <td class="cursor">
+                    <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowIndex','RecLoc',@Model.PipelineID)">
+                        @if (item.RecLocID != null)
+                         {
+                            recLocId = item.RecLocID;
+                         }
+                        @recLocId
+                    </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].RecLocID", item.RecLocID, new { @rel = CurrentRowIndex })
+                </td>
+
+                <td class="cursor">
+                    <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowIndex','Up',@Model.PipelineID)">
+                        @if (item.UpName != null && item.UpName != "")
+            {
+                upName = item.UpName;
+            }
+                        @upName
+                    </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].UpName", item.UpName, new { @rel = CurrentRowIndex })
+                </td>
+                <td class="cursor">
+                    <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowIndex','Up',@Model.PipelineID)">
+                        @if (item.UpIDProp != null)
+            {
+                upIdProp = item.UpIDProp;
+            }
+                        @upIdProp
+                    </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].UpIDProp", item.UpIDProp, new { @rel = CurrentRowIndex })
+                </td>
+                <td class="cursor">
+                    <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowIndex','Up',@Model.PipelineID)">
+                        @if (item.UpID != null)
+            {
+                upId = item.UpID;
+            }
+                        @upId
+                    </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].UpID", item.UpID, new { @rel = CurrentRowIndex })
+                </td>
+
+                <td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].UpKContract", item.UpKContract, new { @class = "form-control", @rel = CurrentRowIndex })</td>
+                <td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].RecQty", item.RecQty, new { @class = "form-control", @type = "number", @max = "100000000", @rel = CurrentRowIndex, @min = "0", @oninput = "FuelValidation(" + "'" + CurrentRowIndex + "'" + ")", @onkeyup = "FuelValidation(" + "'" + CurrentRowIndex + "'" + ")" })</td>
+                <td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].RecRank", item.RecRank, new { @class = "form-control rank", @rel = CurrentRowIndex, maxlength = "3" })</td>
+
+                @*@if (Model.PipelineModelType == "PathedNonPathedHybrid")
+        {
+         <td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].PkgIDRec", item.PkgIDRec, new { @class = "form-control", @rel = CurrentRowIndex })</td>
+        }*@
+
+                <td class="cursor">
+                    <span data-toggle="modal" onclick="OpenPopUpSpecialDelLocation('@CurrentRowIndex','DelLoc','@Model.PipelineID')">
+                        @if (item.DelLoc != null && item.DelLoc != "")
+            {
+                delLoc = item.DelLoc;
+            }
+                        @delLoc
+                    </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].DelLoc", item.DelLoc, new { @rel = CurrentRowIndex })
+                </td>
+                <td class="cursor">
+                    <span data-toggle="modal" onclick="OpenPopUpSpecialDelLocation('@CurrentRowIndex','DelLoc','@Model.PipelineID')">
+                        @if (item.DelLocProp != null)
+            {
+                delLocProp = item.DelLocProp;
+            }
+                        @delLocProp
+                    </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].DelLocProp", item.DelLocProp, new { @rel = CurrentRowIndex })
+                </td>
+                <td class="cursor">
+                    <span data-toggle="modal" onclick="OpenPopUpSpecialDelLocation('@CurrentRowIndex','DelLoc','@Model.PipelineID')">
+                        @if (item.DelLocID != null)
+            {
+                delLocId = item.DelLocID;
+            }
+                        @delLocId
+                    </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].DelLocID", item.DelLocID, new { @rel = CurrentRowIndex })
+                </td>
+                <td class="cursor">
+                    <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowIndex','Down',@Model.PipelineID)">
+                        @if (item.DownName != null && item.DownName != "")
+            {
+                downName = item.DownName;
+            }
+                        @downName
+                    </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].DownName", item.DownName, new { @rel = CurrentRowIndex })
+                </td>
+                <td class="cursor">
+                    <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowIndex','Down',@Model.PipelineID)">
+                        @if (item.DownIDProp != null)
+            {
+                downIdProp = item.DownIDProp;
+            }
+                        @downIdProp
+                    </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].DownIDProp", item.DownIDProp, new { @rel = CurrentRowIndex })
+                </td>
+                <td class="cursor">
+                    <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowIndex','Down',@Model.PipelineID)">
+                        @if (item.DownID != null)
+            {
+                downId = item.DownID;
+            }
+                        @downId
+                    </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].DownID", item.DownID, new { @rel = CurrentRowIndex })
+                </td>
+
+                <td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].DownContract", item.DownContract, new { @class = "form-control", @rel = CurrentRowIndex })</td>
+                <td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].DelQuantity", Convert.ToInt32(item.DelQuantity), new { @type = "number", @class = "form-control", @rel = CurrentRowIndex, @max = "100000000", @min = "0", @oninput = "DelQtyFuelValidation(" + "'" + CurrentRowIndex + "'" + ")", @onkeyup = "DelQtyFuelValidation(" + "'" + CurrentRowIndex + "'" + ")" })</td>
+                <td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].DelRank", item.DelRank, new { @class = "form-control rank", @rel = CurrentRowIndex, maxlength = "3" })</td>
+
+                <td>
+                    @Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].PkgID", item.PkgID, new { @class = "form-control", @rel = CurrentRowIndex })
+                    @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].NomTrackingId", item.NomTrackingId, new { @rel = CurrentRowIndex })
+                </td>
+                <td class="cursor">
+                    @*<span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentRowIndex','',@Model.PipelineID)">
+                @Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].FuelPercentage", item.FuelPercentage, new { @class = "form-control", @rel = CurrentRowIndex, @readonly = "true" })
+            </span>*@
+                    @Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].FuelPercentage", item.FuelPercentage, new { @class = "form-control", @rel = CurrentRowIndex, @onblur = "FuelValidation(" + "'" + CurrentRowIndex + "'" + ")" })
+                </td>
+                @*<td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].ReductionReason", item.ReductionReason, new { @class = "form-control", @rel = CurrentRowIndex, @readonly = "true" })</td>*@
+                @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].QuantityType", item.QuantityType, new { rel = CurrentRowIndex })
+                <td>
+                    @Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].createrName", item.createrName, new { @class = "form-control  ", @rel = CurrentRowIndex, @readonly = "true" })
+                </td>
+            </tr>
+                       
+                    }
+                    else
+                    {
+
+                        <tr class="gradeX" id="PathedNomTable_@CurrentRowIndex" rel="@CurrentRowIndex">
+                            @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].TransactionId", item.TransactionId, new { rel = CurrentRowIndex })
+                            @Html.Hidden("PathedNomsList.Index", CurrentRowIndex.ToString())
+                            <td><input type="checkbox" onclick="ChkBoxClick(this,@item.StatusID)" class="chkboxes" rel="@item.TransactionId" value="@CurrentRowIndex" onchange="chkboxesOnchange()"></td>
+                            <td style="text-align:left;" class="cursor">
+                                @if (item.StatusID == 8 || item.StatusID == 9 || item.StatusID == 10)
+                                {
+                                    <span class="label @RowStatusClass" id="status_@CurrentRowIndex" value="@item.StatusID" onclick="OpenPopUp('StatusReason','@CurrentRowIndex','@item.TransactionId',@Model.PipelineID)">@item.Status</span>
+                                }
+                                else
+                                {
+                                    <span class="label @RowStatusClass" id="status_@CurrentRowIndex" value="@item.StatusID">@item.Status</span>
+                                }
+                                @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].StatusID", item.StatusID, new { @rel = CurrentRowIndex })
+                                @*@Html.LabelFor(a => a.PathedNomsList[CurrentRowIndex].Status, new { @class = "form-control label label-warning pull-right", @rel = CurrentRowIndex})*@
+                            </td>
+                            <td>                               
+                                @if (item.StatusID == 7)
+                                {
+                                    <a href="javascript:void(0)" style="color:#FF6C3A !important;" onclick="ShowStsPopUp('@item.TransactionId','@item.NomTrackingId')">View Sched Qty</a>
+                                }
+                                else
+                                {
+                                    <span></span>
+                                }
+                            </td>
+                            <td>
+                                <span data-toggle="modal">
+                                    @if (item.TransType != null)
+                                    {
+                                        Transtype = item.TransType;
+                                    }
+                                    @Transtype
+                                </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].TransType", item.TransType, new { @rel = CurrentRowIndex })
+                                @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].TransTypeName", item.TransTypeName, new { @rel = CurrentRowIndex })
+                                @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].PathedHybridNonpathedType", item.PathedHybridNonpathedType, new { @rel = CurrentRowIndex })
+                                @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].TransTypeMapId", item.TransTypeMapId, new { @rel = CurrentRowIndex })
+
+
+                            </td>
+                            
+                            
+                              <td>
+                                @Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].StartDate", string.Format("{0:d}", item.StartDate), new { @class = "form-control", @rel = CurrentRowIndex, @readonly = "true", placeholder = "Start Date Time... " })
+
+                                @*@Html.TextBox(a => a.PathedNomsList[CurrentRowIndex].StartDate,  new { @class = "form-control dtpicker", @rel = CurrentRowIndex  })*@
+                            </td>
+                            <td>
+                                @Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].EndDate", string.Format("{0:d}", item.EndDate), new { @class = "form-control", @rel = CurrentRowIndex, @readonly = "true", placeholder = "End Date Time... " })
+
+
+                                @*@Html.TextBox(a => a.PathedNomsList[CurrentRowIndex].EndDate,new { @class = "form-control dtpicker", @rel = CurrentRowIndex })*@
+                            </td>
+
+
+                            <td>
+                                @Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].CreatedDate", item.CreatedDate, new { @class = "form-control  ", @rel = CurrentRowIndex, @readonly = "true" })
+
+
+                                @*@Html.TextBox(a => a.PathedNomsList[CurrentRowIndex].EndDate,new { @class = "form-control dtpicker", @rel = CurrentRowIndex })*@
+                            </td>
+
+
+                            <td>
+                                @*@Html.DropDownList("PathedNomsList[" + CurrentRowIndex + "].CycleID", (IEnumerable<SelectListItem>)ViewBag.Cycles, "--Select Cycle--", new { @class = "form-control" })*@
+
+                                @Html.DropDownList("PathedNomsList[" + CurrentRowIndex + "].CycleID", new SelectList(ViewBag.Cycles, "CycleID", "Name", item.CycleID), "-Select Cycle-", new { @class = "form-control", @disabled = "disabled", rel = CurrentRowIndex })
+                                @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].CycleID", item.CycleID, new { @rel = CurrentRowIndex })
+                             </td>
+                            <td>
+                                <span data-toggle="modal">
+
+                                    @if (item.Contract != null) { contract = item.Contract; }
+                                    @contract
+                                </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].Contract", item.Contract, new { @rel = CurrentRowIndex })
+                                @*<span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentRowIndex','',@Model.PipelineID)">@item.Contract</span>@Html.Hidden(a => a.PathedNomsList[CurrentRowIndex].Contract, new { @rel = CurrentRowIndex })*@
+                            </td>
+                            <td>
+
+                                @Html.DropDownList("PathedNomsList[" + CurrentRowIndex + "].NomSubCycle", new SelectList(
+new List<Object>{
+                       new { value = "Y" , text = "Yes"  },
+                       new { value = "N" , text = "No" }
+}, "value", "text", item.NomSubCycle), new { @class = "form-control", @disabled = "disabled" })
+                                @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].NomSubCycle", item.NomSubCycle, new { @rel = CurrentRowIndex })
+                                @*@Html.DropDownListFor(model => model.PathedNomsList[CurrentRowIndex].NomSubCycle, new SelectList(
+                                    new List<Object>{
+                                         new { value = "Y" , text = "Yes"  },
+                                         new { value = "N" , text = "No" }
+                                      }, "value", "text", item.NomSubCycle), new { @class = "form-control" })*@
+                            </td>
+                            
+
+                            <td>
+                                <span data-toggle="modal">
+                                    @if (item.RecLocation != null && item.RecLocation != "")
+                                    {
+                                        recLoc1 = item.RecLocation;
+                                    }
+                                    @recLoc1
+                                </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].RecLocation", item.RecLocation, new { @rel = CurrentRowIndex })
+                            </td>
+                            <td>
+                                <span data-toggle="modal">
+                                    @if (item.RecLocProp != null)
+                                    {
+                                        recLocProp = item.RecLocProp;
+                                    }
+                                    @recLocProp
+                                </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].RecLocProp", item.RecLocProp, new { @rel = CurrentRowIndex })
+                            </td>
+                            <td>
+                                <span data-toggle="modal">
+                                    @if (item.RecLocID != null)
+                                    {
+                                        recLocId = item.RecLocID;
+                                    }
+                                    @recLocId
+                                </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].RecLocID", item.RecLocID, new { @rel = CurrentRowIndex })
+                            </td>
+
+                            <td>
+                                <span data-toggle="modal">
+                                    @if (item.UpName != null && item.UpName != "")
+                                    {
+                                        upName1 = item.UpName;
+                                    }
+                                    @upName1
+                                </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].UpName", item.UpName, new { @rel = CurrentRowIndex })
+                            </td>
+                            <td>
+                                <span data-toggle="modal">
+                                    @if (item.UpIDProp != null)
+                                    {
+                                        upIdProp = item.UpIDProp;
+                                    }
+                                    @upIdProp
+                                </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].UpIDProp", item.UpIDProp, new { @rel = CurrentRowIndex })
+                            </td>
+                            <td>
+                                <span data-toggle="modal">
+                                    @if (item.UpID != null)
+                                    {
+                                        upId = item.UpID;
+                                    }
+                                    @upId
+                                </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].UpID", item.UpID, new { @rel = CurrentRowIndex })
+                            </td>
+
+                            <td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].UpKContract", item.UpKContract, new { @class = "form-control", @readonly = "readonly", @rel = CurrentRowIndex })</td>
+                            <td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].RecQty", item.RecQty, new { @class = "form-control", @type = "number", @readonly = "readonly", @max = "100000000", @rel = CurrentRowIndex, @min = "0", @oninput = "FuelValidation(" + "'" + CurrentRowIndex + "'" + ")", @onkeyup = "FuelValidation(" + "'" + CurrentRowIndex + "'" + ")" })</td>
+                            <td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].RecRank", item.RecRank, new { @class = "form-control rank", @readonly = "readonly", @rel = CurrentRowIndex, maxlength = "3" })</td>
+                          
+                            <td>
+                                <span data-toggle="modal">
+                                    @if (item.DelLoc != null && item.DelLoc != "")
+                                    {
+                                        delLoc1 = item.DelLoc;
+                                    }
+                                    @delLoc1
+                                </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].DelLoc", item.DelLoc, new { @rel = CurrentRowIndex })
+                            </td>
+                            <td>
+                                <span data-toggle="modal">
+                                    @if (item.DelLocProp != null)
+                                    {
+                                        delLocProp = item.DelLocProp;
+                                    }
+                                    @delLocProp
+                                </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].DelLocProp", item.DelLocProp, new { @rel = CurrentRowIndex })
+                            </td>
+                            <td>
+                                <span data-toggle="modal">
+                                    @if (item.DelLocID != null)
+                                    {
+                                        delLocId = item.DelLocID;
+                                    }
+                                    @delLocId
+                                </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].DelLocID", item.DelLocID, new { @rel = CurrentRowIndex })
+                            </td>
+                            <td>
+                                <span data-toggle="modal">
+                                    @if (item.DownName != null && item.DownName != "")
+                                    {
+                                        downName1 = item.DownName;
+                                    }
+                                    @downName1
+                                </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].DownName", item.DownName, new { @rel = CurrentRowIndex })
+                            </td>
+                            <td>
+                                <span data-toggle="modal">
+                                    @if (item.DownIDProp != null)
+                                    {
+                                        downIdProp = item.DownIDProp;
+                                    }
+                                    @downIdProp
+                                </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].DownIDProp", item.DownIDProp, new { @rel = CurrentRowIndex })
+                            </td>
+                            <td>
+                                <span data-toggle="modal">
+                                    @if (item.DownID != null)
+                                    {
+                                        downId = item.DownID;
+                                    }
+                                    @downId
+                                </span>@Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].DownID", item.DownID, new { @rel = CurrentRowIndex })
+                            </td>
+
+                            <td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].DownContract", item.DownContract, new { @class = "form-control", @readonly = "readonly", @rel = CurrentRowIndex })</td>
+                            <td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].DelQuantity", Convert.ToInt32(item.DelQuantity), new { @type = "number", @class = "form-control", @readonly = "readonly", @rel = CurrentRowIndex, @max = "100000000", @min = "0", @oninput = "DelQtyFuelValidation(" + "'" + CurrentRowIndex + "'" + ")", @onkeyup = "DelQtyFuelValidation(" + "'" + CurrentRowIndex + "'" + ")" })</td>
+                            <td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].DelRank", item.DelRank, new { @class = "form-control rank", @rel = CurrentRowIndex, @readonly = "readonly", maxlength = "3" })</td>
+                            <td>
+                                @Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].PkgID", item.PkgID, new { @class = "form-control", @readonly = "readonly", @rel = CurrentRowIndex })
+                                @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].NomTrackingId", item.NomTrackingId, new { @rel = CurrentRowIndex })
+                            </td>                           
+                            <td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].FuelPercentage", item.FuelPercentage, new { @class = "form-control", @rel = CurrentRowIndex, @readonly = "true" })</td>
+                            @*<td>@Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].ReductionReason", item.ReductionReason, new { @class = "form-control", @rel = CurrentRowIndex, @readonly = "true" })</td>*@
+                            
+
+                            @Html.Hidden("PathedNomsList[" + CurrentRowIndex + "].QuantityType", item.QuantityType, new { rel = CurrentRowIndex })
+                            <td>
+                                @Html.TextBox("PathedNomsList[" + CurrentRowIndex + "].createrName", item.createrName, new { @class = "form-control  ", @rel = CurrentRowIndex, @readonly = "true" })
+                            </td>
+                        </tr>
+
+                    }
+                    CurrentRowIndex = Guid.NewGuid();
+                }
+
+            }
+
+        </tbody>
+
+    </table>
+
+    <script>
+
+    $(document).ready(function () {
+
+        $(function () {
+            $('.dtpicker').datepicker({ dateFormat: 'dd/mm/yyyy', autoclose: true }).on('changeDate', function (selected) {
+                var id = $(this).attr("id");
+                var rowId = $(this).attr("rel");
+                //var setVal = $(this).val();
+                if (id.indexOf("__StartDate") != -1) {
+                    var minDate = new Date(selected.date.valueOf());
+                    var getId = "#PathedNomsList_" + rowId + "__EndDate";
+                    $(getId).datepicker('setStartDate', minDate);
+                }
+                if (id.indexOf("__EndDate") != -1) {
+                    var maxDate = new Date(selected.date.valueOf());
+                    var getId = "#PathedNomsList_" + rowId + "__StartDate";
+                    $(getId).datepicker('setEndDate', maxDate);
+                }
+            });
+
+        });
+       
+        var PathedTable = $("#PathedNomTable").DataTable({          
+            "bSort": true,
+            "retrieve": true,
+            "bPaginate": false,
+            "bDeferRender": true,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bInfo": false,
+            "searching": false,
+            "deferLoading": 0,
+            "order": [],
+            "columnDefs": [{
+                "targets": [0, 1, 2, 3],
+                "orderable": false
+            }],
+        });
+       
+
+        $("input:text").attr("autocomplete", "off");
+
+        $('.rank').keypress(function (e) {
+            var regex = new RegExp("^[0-9]+$");
+
+            var charCode = e.which;
+
+            if (charCode == 8 || charCode == 0) {
+                return;
+            }
+            else {
+                var keyChar = String.fromCharCode(charCode);
+                if (regex.test(keyChar)) {
+                    return true;
+                }
+            }
+            e.preventDefault();
+            return false;
+        });
+
+    });
+
+   
+  </script>
+
+
+
+
+
+
+
+
+
+

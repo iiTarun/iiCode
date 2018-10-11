@@ -1,0 +1,46 @@
+﻿@model  Nom.ViewModel.NominationPartialDTO
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">Select TransactionTypes</h4>
+        </div>
+        <div class="modal-body">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>No of Contracts: @Model.TransactionTypes.Count()</h5>
+                </div>
+                <div class="ibox-content">
+                    <table class="table table-striped table-bordered table-hover" id="TransactionTypeModalTable">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>TransactionCode</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.TransactionTypes)
+                            {
+                                <tr class="gradeX">
+                                    <td><button type="button"  style="background-color:#FF6C3A !important; border-color:#FF6C3A !important;" onclick="CntrTransactionPopUpSelect('@item.Identifier','@item.Name','@Model.ForRow','@Model.PopUpFor','@item.PathType','@item.ID')" class="btn btn-primary">Select</button></td>
+                                    <td>@item.Identifier</td>
+                                    <td>
+                                        @item.Name
+                                        <input type="hidden" value="@item.PathType" name="pathType_@item.ID">
+                                        <input type="hidden" value="@item.ID" name="TTid_@item.ID">
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,119 @@
+﻿@model Nom.ViewModel.PipelineStatusListDTO
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/_SiteLayout.cshtml";
+    var count = 1;
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">             
+                <h4>Pipeline Status</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox-content m-b-sm border-bottom">
+            <div class="ibox-content">
+
+                <div class="row">
+                    <div class="col-sm-3">
+                        @*<div class="form-group">
+                            <label class="control-label" for="status">Select Date</label>
+                            @Html.TextBoxFor(a => a.OnDate, new { @class = "form-control dtpicker", @readonly = "true" })
+                        </div>*@
+                    </div>
+                    <div class="col-sm-3">
+                        @*<div class="form-group" style="margin-top:22px;">
+                            <input type="submit" onclick="return validationOnSearch();" name="Search" class="btn btn-primary" value="Search" />
+                        </div>*@
+                    </div>
+                </div>
+
+
+
+
+
+
+                            <div class="row">
+                                <table class="table table-bordered table-hover" id="pipelineStatus">
+                                    <thead>
+                                        <tr>
+                                            <th style="min-width: 60px;">Sr.No.</th>
+                                            <th style="min-width: 120px;">OnDate</th>
+                                            <th style="min-width: 120px;">IsBrowserTestSuccess</th>
+                                            <th style="min-width: 120px;">IsOacyReceive</th>
+                                            <th style="min-width: 120px;">IsUnscReceive</th>
+                                            <th style="min-width: 120px;">IsNoticeReceive</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                       
+                                        @foreach (var item in Model.PipelineStatusList)
+                                        {
+                                            
+                                            <tr class="gradeX">
+                                                <td>@count</td>
+                                                <td>@item.onDate.ToString("MMMM dd, yyyy")</td>
+                                                @if (item.IsBrowserTestSuccess)
+                                                {
+                                                    <td><font color="green">Yes</font></td>
+                                                }
+                                                else
+                                                {
+                                                    <td><font color="red">No</font></td>
+                                                }
+                                                @if (item.IsOacyReceive)
+                                                {
+                                                    <td><font color="green">Yes</font></td>
+                                                }
+                                                else
+                                                {
+                                                    <td><font color="red">No</font></td>
+                                                }
+                                                @if (item.IsUnscReceive)
+                                                {
+                                                    <td><font color="green">Yes</font></td>
+                                                }
+                                                else
+                                                {
+                                                    <td><font color="red">No</font></td>
+                                                }
+                                                @if (item.IsNoticeReceive)
+                                                {
+                                                    <td><font color="green">Yes</font></td>
+                                                }
+                                                else
+                                                {
+                                                    <td><font color="red">No</font></td>
+                                                }
+                                            </tr>
+                                            count++;
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<script>
+
+    $(function () {
+        $('.dtpicker').datepicker({ autoclose: true, clearBtn: true });
+
+    });
+</script>
+

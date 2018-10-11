@@ -1,0 +1,127 @@
+﻿@model Nom1Done.Nom.ViewModel.BONotice
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var NA = "NA";
+    var isCritical = "No";
+}
+
+<div class="section clearfix" style="background-color:white; min-height:568px !important">
+
+    @*<div class="container">*@        
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-6"><b>TSP Name/TSP DUNS</b></div>
+                <div class="col-md-6">@Model.TSP</div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-6"><b>Critical</b></div>
+                <div class="col-md-6">@if (Model.IsCritical) {
+                    isCritical = "Yes";
+                }
+                @isCritical</div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-6"><b>Notice Type Desc(1) :</b></div>
+                <div class="col-md-6">@Model.NoticeTypeDesc1</div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-6"><b>Notice Type Desc(2) :</b></div>
+                <div class="col-md-6">@Model.NoticeTypeDesc2</div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-6"><b>Notice Eff Date :</b></div>
+                <div class="col-md-6">
+                @if (!String.IsNullOrEmpty(Model.NoticeEffectiveDate))
+                {
+                    @Model.NoticeEffectiveDate
+                }
+                else
+                {
+                    @NA
+                }</div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-6"><b>Notice End Date :</b></div>
+                <div class="col-md-6">
+                @if (!String.IsNullOrEmpty(Model.NoticeEndDate))
+                {
+                    @Model.NoticeEndDate
+                }
+                else
+                {
+                    @NA
+                }</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-6"><b>Post Date:</b></div>
+                <div class="col-md-6">
+                @if (!String.IsNullOrEmpty(Model.PostingDate))
+                {
+                    @Model.PostingDate
+                }
+                else
+                {
+                    @NA
+                }</div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-6"><b>Notice Id:</b></div>
+                <div class="col-md-6">@Model.NoticeId</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-6"><b>Reqrd Resp:</b></div>
+                <div class="col-md-6">@Model.ReqrdResp</div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-6"><b>Notice Status Desc:</b></div>
+                <div class="col-md-6">@Model.NoticeStatusDescription</div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top:10px !important;">
+            <div class="col-md-10">
+                <div class="col-md-2"><b>Subject:</b></div>
+                <div class="col-md-8"><b>@Model.subject</b></div>
+            </div>            
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="col-md-6"><b>Notice Text:</b></div>
+            </div>
+        </div><br />
+
+        <div class="row" style="margin-left:1px;margin-right:55px;">
+            <div id="NoticeText" class="col-md-12">
+               @Html.Raw(Model.Message)
+            </div>
+        </div>
+     @*</div>*@
+</div>
+<script>
+    $(document).ready(function () {
+        var anrtable = $("#NoticeText table");        
+        if (anrtable != null) {           
+            anrtable.addClass("col-md-12");
+        }
+    });
+   
+</script>

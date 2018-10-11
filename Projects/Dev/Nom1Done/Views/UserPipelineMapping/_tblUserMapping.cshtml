@@ -1,0 +1,111 @@
+﻿@model  Nom1Done.DTO.UserPipelineDTO
+
+@using (Html.BeginForm("SaveUserPermissions", "UserPipelineMapping", FormMethod.Post, new { id = "PermissionForm", name = "PermissionForm" }))
+{
+    @Html.HiddenFor(a => a.ShipperId, new { @id = "hdnShipperId" })
+    @Html.HiddenFor(a => a.UserId, new { @id = "hdnUserId" })
+
+    <div id="UsermappingPartialDiv" class="row border-bottom white-bg">
+        <div id="NomPartialTableDiv" class="table-responsive" style="padding:10px;">
+            <div class="col-md-4">
+                <button type="submit" id="btnSave" class="btn btn-w-m btn-success btn-outline"><i class="glyphicon glyphicon-save"></i> Save</button>
+            </div>
+            <div class="col-md-4">
+           
+
+            </div>
+            <div class="col-md-2">
+                <input type="text" name="SearchText" class="form-control" id="txtsearch">
+
+            </div>
+            <div class="col-md-2">
+
+                <button type="submit" id="btnSearch" name="btnSearch" class="btn btn-w-m btn-success btn-outline"><i class="glyphicon glyphicon-search"></i> Search</button>
+
+            </div>
+            <table id="NomPartialTable" class="table stripe row-border order-column table-bordered table-striped display">
+                <thead>
+                    <tr>
+                        <th>Shipper Name</th>
+                        <th>Pipeline Name </th>
+                        <th><input id="select_all3" value="" type="checkbox"> IsNom</th>
+                        <th><input id="select_all4" value="" type="checkbox"> IsUprd</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.userPipelineMappingDTO.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(x => x.userPipelineMappingDTO[i].ShipperName)
+                                @Html.HiddenFor(x => x.userPipelineMappingDTO[i].ShipperName)
+                                @Html.HiddenFor(x => x.userPipelineMappingDTO[i].ShipperId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => x.userPipelineMappingDTO[i].PipeName)
+                                @Html.HiddenFor(x => x.userPipelineMappingDTO[i].PipeName)
+                                @Html.HiddenFor(x => x.userPipelineMappingDTO[i].PipeDuns)
+                            </td>
+                            <td>
+                                @Html.CheckBoxFor(x => x.userPipelineMappingDTO[i].IsNoms, new { @class = "chkIsNoms" })
+                            </td>
+                            <td>
+                                @Html.CheckBoxFor(x => x.userPipelineMappingDTO[i].IsUPRD, new { @class = "chkIsUPRD" })
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+                <tfoot>
+
+                </tfoot>
+            </table>
+
+
+        </div>
+    </div>
+}
+
+<script>
+
+    $("#txtsearch").keyup(function (event) {
+        if (event.keyCode === 13) {
+            $("#btnSearch").click();
+        }
+    });
+
+    $(document).ready(function () {
+        $("#NomPartialTable").DataTable(
+            {
+                "order": [[1, "asc"]],
+                "scrollY": '50vh',
+                "scrollCollapse": true,
+                "paging": false,
+                "searching": false,
+                columnDefs: [{ orderable: false, targets: [0,2,3] }]
+              
+            });
+
+
+
+
+
+    });
+
+    $('#select_all2').click(function (e) {
+        var table = $("#NomPartialTable");
+        $('td input.chkPipename', table).prop('checked', this.checked);
+    });
+    $('#select_all3').click(function (e) {
+        var table = $("#NomPartialTable");
+        $('td input.chkIsNoms', table).prop('checked', this.checked);
+    });
+    $('#select_all4').click(function (e) {
+        var table = $("#NomPartialTable");
+        $('td input.chkIsUPRD', table).prop('checked', this.checked);
+    });
+
+
+
+  
+</script>

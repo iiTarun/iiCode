@@ -1,0 +1,42 @@
+﻿@model Nom1Done.Model.metadataPipelineEncKeyInfo
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>metadataPipelineEncKeyInfo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PipelineId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PipelineId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KeyName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KeyName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PipeDuns)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PipeDuns)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

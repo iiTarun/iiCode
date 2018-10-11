@@ -1,0 +1,339 @@
+﻿@model Nom.ViewModel.PathedDTO
+@{
+    /**/
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Pathed Nominations";
+    Guid CurrentRowIndex = Guid.NewGuid();
+    string RowStatusClass = "label-warning";
+}
+<script>
+    function CheckValidation() {
+        var validationCheck = false;
+        toastr.warning("Checking validations");
+
+        return validationCheck;
+    }
+</script>
+<style>
+
+    ul li {
+        display: inline-block;
+    }
+
+    .cursor {
+        cursor: pointer;
+    }
+
+    .unselectable {
+        background-color: #ddd;
+        cursor: not-allowed;
+    }
+</style>
+@if (ViewBag.IsPermission != null && ViewBag.IsPermission == true)
+{
+    if (Model.PipelineNomType == Nom1Done.DTO.NomType.HyPathedNonPathed)
+    {
+        <div class="row border-bottom white-bg page-heading">
+            <button id="PathedBtn" type="button" onclick="pathedBtnClick()" class="active hover btn btn-w-m btn-success btn-outline">Pathed</button>
+            <button id="NonPathedBtn" type="button" onclick="NonPathedbtnClick();" class="btn btn-w-m btn-success btn-outline">NonPathed</button>
+        </div>
+    }
+
+    @Html.Hidden("NotifierEntity", (object)ViewBag.NotifierEntity)
+    <div id="MainPartialDiv" class="row border-bottom white-bg">
+        @Html.Partial("_PathedNoms", Model)
+    </div>
+
+    <div id="lookupModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div id="LookupPartialResult" class="modal-content">
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="ContractPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+    </div>
+
+    <div class="modal inmodal" id="LocationPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+
+    </div>
+    <div class="modal inmodal" id="CounterPartyPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+    </div>
+    <div class="modal inmodal" id="TransactionTypePopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+
+    <div class="modal inmodal" id="RejectionReasonPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+    </div>
+}
+      else
+                {
+                    <div style="padding-top:170px" >
+                        <div class="dz-clickable h1 text-center"><b>You do not have access to this pipeline.</b></div>
+                    </div>
+                }
+<script>
+
+    $(function () {
+        var activeBtnPNTHybrid = localStorage.getItem('activeTabpathedNonPathed');
+        if (activeBtnPNTHybrid=="#NonPathedBtn") {
+            $(activeBtnPNTHybrid).click();
+        }
+    });
+
+    function pathedBtnClick() {
+        localStorage.setItem('activeTabpathedNonPathed', "#PathedBtn");
+        $("#PathedBtn").addClass("active hover");
+        $("#NonPathedBtn").removeClass("active hover");
+        var mainDiv = $("#MainPartialDiv");
+        $.ajax({
+            url: '/PathedNomination/LoadPartialPathed?pipelineDuns=@Model.PipelineDuns',
+            type: 'Get',
+        })
+       .success(function (result) {
+           mainDiv.empty();
+           mainDiv.html(result);
+       });
+
+    }
+
+    function NonPathedbtnClick() {
+        localStorage.setItem('activeTabpathedNonPathed', "#NonPathedBtn");
+        $("#NonPathedBtn").addClass("active hover");
+        $("#PathedBtn").removeClass("active hover");
+        var mainDiv = $("#MainPartialDiv");
+        $.ajax({
+            url: '/PathedNomination/LoadNonPathedPartial?pipelineDuns=@Model.PipelineDuns',
+            type: 'Get',
+        })
+       .success(function (result) {
+           mainDiv.empty();
+           mainDiv.html(result);
+       });
+
+    }
+
+</script>
+
+@section scripts {
+
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+
+    <script type="text/javascript">
+        var signalRHubInitialized = false;
+
+        $(function () {
+            InitializeSignalRHubStore();
+        });
+
+        function InitializeSignalRHubStore() {
+            if (signalRHubInitialized)
+                return;
+            try {
+                var clientHub = $.connection.nomDoneHub;
+                clientHub.client.broadcastMessage = function (message) {
+
+                    if (message === "Refresh") {
+                        //debugger;
+                        //UpdateNominationStatus();
+                        ReloadIndexPartial();
+                    }
+                };
+                $.connection.hub.start().done(function () {
+                    clientHub.server.initializeNomTable($("#NotifierEntity").val());
+                    signalRHubInitialized = true;
+                });
+            } catch (err) {
+                signalRHubInitialized = false;
+            }
+        };
+
+
+        function ReloadIndexPartial() {
+            var URL = " ";
+            var divId="";
+            var postType="";
+            var datavalue="";
+            if ( $("#NonPathedBtn").hasClass("active hover")) {
+                URL = '/PathedNomination/LoadNonPathedPartial?pipelineDuns=@Model.PipelineDuns';
+                divId="#MainPartialDiv";
+                postType="Get";
+                datavalue="";
+            } else {
+                URL = "PathedNomination/GetData";
+                divId="#DivMainContent";  //"#PathedtableDiv";
+                postType="post";
+                datavalue= $("form").serialize();
+            }
+            var mainDiv = $(divId);
+            if (URL != " ") {
+                $.ajax({
+                    url: URL,
+                    type: postType,
+                    data: datavalue,
+                    success: function (result) {
+                        mainDiv.empty();
+                        mainDiv.html(result);
+                        if (!signalRHubInitialized)
+                            InitializeSignalRHubStore();
+                    }
+                });
+            }
+
+        };
+
+        //function UpdateNominationStatus() {
+        //    try {
+        //        var activeBtnPNTHybrid = localStorage.getItem('activeTabpathedNonPathed');
+        //        if (activeBtnPNTHybrid == "#PathedBtn") {
+        //            var rows = $("#PathedNomTable").children('tbody').children('tr');
+        //            var hasRow = false;
+        //            var objList = [];
+        //            for (var i = 0; i < rows.length; i++) {
+        //                var rel = $(rows[i]).attr('rel');
+        //                var rowId = "#PathedNomsList_" + rel + "__TransactionId";
+        //                var statusId = "#PathedNomsList_" + rel + "__StatusID";
+        //                var status = $(statusId).val();
+        //                if ( status != 0 && status != 8 && status != 9 && status != 7) {
+        //                    hasRow = true;
+        //                    var rowTranId = $(rowId).val();
+        //                    obj = { Key: rel, value: rowTranId, StatusId: 0 };
+        //                    objList.push(obj);
+        //                }
+        //            }
+        //            if (hasRow) {
+        //                objList = JSON.stringify({ 'objList': objList });
+        //                URL = '/PathedNomination/GetStatusOnTransactionId';
+        //                if (URL != " ") {
+        //                    $.ajax({
+        //                        contentType: 'application/json; charset=utf-8',
+        //                        url: URL,
+        //                        dataType: 'json',
+        //                        type: "Post",
+        //                        data: objList,
+        //                        success: function (result) {
+        //                            console.log(result);
+        //                            if (result != null) {
+        //                                for (var i = 0; i < result.length; i++) {
+        //                                    UpdateStatusOfNomination(result[i].StatusId, result[i].Key, isRecRow, false);
+        //                                }
+        //                            }
+        //                        }
+        //                    });
+        //                }
+        //            }
+        //        } else if (activeBtnPNTHybrid == "#NonPathedBtn") {
+        //            var isRecRow = false;
+        //            var recRows = $("#ReceiptTable").children('tbody').children('tr');
+        //            var objList = [];
+
+        //            for (var i = 0; i < recRows.length; i++) {
+        //                var rel = $(recRows[i]).attr('rel');
+        //                var rowId = "#ReceiptNoms_" + rel + "__TransactionId";
+        //                var statusId = "#ReceiptNoms_" + rel + "__StatusId";
+        //                var status = $(statusId).val();
+        //                if ( status != 0 && status != 8 && status != 9 && status != 7) {
+        //                    hasRow = true;
+        //                    isRecRow = true;
+        //                    var rowTranId = $(rowId).val();
+        //                    obj = { Key: rel, value: rowTranId, StatusId: 0 };
+        //                    objList.push(obj);
+        //                }
+        //            }
+
+        //            var delRows = $("#DeliveryTable").children('tbody').children('tr');
+        //            for (var i = 0; i < delRows.length; i++) {
+        //                var rel = $(delRows[i]).attr('rel');
+        //                var rowId = "#DeliveryNoms_" + rel + "__TransactionId";
+        //                var statusId = "#DeliveryNoms_" + rel + "__StatusId";
+        //                var status = $(statusId).val();
+        //                if ( status != 0 && status != 8 && status != 9 && status != 7) {
+        //                    hasRow = true;
+        //                    isRecRow = false;
+        //                    var rowTranId = $(rowId).val();
+        //                    obj = { Key: rel, value: rowTranId, StatusId: 0 };
+        //                    objList.push(obj);
+        //                }
+        //            }
+        //            if (hasRow) {
+        //                objList = JSON.stringify({ 'objList': objList });
+        //                URL = '/PathedNomination/GetStatusOnTransactionId';
+        //                if (URL != " ") {
+        //                    $.ajax({
+        //                        contentType: 'application/json; charset=utf-8',
+        //                        url: URL,
+        //                        dataType:'json',
+        //                        type: "Post",
+        //                        data: objList,
+        //                        success: function (result) {
+        //                            if (result != null) {
+        //                                for (var i = 0; i < result.length; i++) {
+        //                                    UpdateStatusOfNomination(result[i].StatusId, result[i].Key, isRecRow, false);
+        //                                }
+        //                            }
+        //                        }
+        //                    });
+        //                }
+        //            }
+        //        }
+        //        if (!signalRHubInitialized) {
+        //            InitializeSignalRHubStore();
+        //        }
+        //    } catch (ex) {
+        //        signalRHubInitialized = false;
+        //    }
+        //}
+        //function UpdateStatusOfNomination(StatusID, rel, IsRecRows, IsPathedRows) {
+        //    var statusRowId = '';
+        //    var statusTextId = '';
+        //    var Status = '';
+        //    if (IsPathedRows) {
+        //        statusRowId = "#PathedNomsList_" + rel + "__StatusID";
+        //        statusTextId = "#status_" + rel;
+        //    }
+        //    else if (IsRecRows) {
+        //        statusRowId = "#ReceiptNoms_" + rel + "__StatusId";
+        //        statusTextId = "#status_" + rel;
+        //    } else {
+        //        statusRowId = "#DeliveryNoms_" + rel + "__StatusId";
+        //        statusTextId = "#status_" + rel;
+        //    }
+        //    var RowStatusClass = "label label-warning";
+        //    if (StatusID == 1 || StatusID == 2 || StatusID == 3 || StatusID == 4) {
+        //        RowStatusClass = "label label-info";
+        //        Status = "In-Process";
+        //    }
+        //    else if (StatusID == 5 || StatusID == 6) {
+        //        RowStatusClass = "label label-success";
+        //        Status = "Submitted";
+        //    }
+        //    else if (StatusID == 7) {
+        //        RowStatusClass = "label label-success";
+        //        Status = "Accepted";
+        //    }
+        //    else if (StatusID == 8 || StatusID == 9) {
+        //        RowStatusClass = "label label-warning";
+        //        Status = "Exception Occured";
+        //    }
+        //    else if (StatusID == 10) {
+        //        RowStatusClass = "label label-warning";
+        //        Status = "Rejected";
+        //    }
+        //    else if (StatusID == 11) {
+        //        RowStatusClass = "label label-warning";
+        //        Status = "Draft";
+        //    }
+        //    $(statusRowId).val(StatusID);
+        //    $(statusTextId).removeClass();
+        //    $(statusTextId).addClass(RowStatusClass);
+        //    $(statusTextId).html(Status);
+
+        //}
+
+    </script>
+}
+

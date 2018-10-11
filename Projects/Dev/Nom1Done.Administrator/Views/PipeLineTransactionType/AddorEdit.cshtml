@@ -1,0 +1,95 @@
+﻿@*@model UPRD.DTO.TransactionTypesDTO*@
+@model UPRD.DTO.Pipeline_TransactionType_MapDTO
+
+@{
+    Layout = "";
+}
+<style>
+    span.field-validation-error {
+        color: red;
+    }
+</style>
+
+<head>
+
+
+</head>
+
+
+
+<!DOCTYPE html>
+
+@using (Html.BeginForm("AddorEdit", "PipeLineTransactionType", FormMethod.Post, new { onsubmit = "return SubmitForm(this)" }))
+{
+
+
+
+    <div style="width:90%; margin:0 auto">
+        @Html.HiddenFor(Model => Model.ID, new { @id = "frmCounterId" })
+
+
+        <input type="hidden" id="pipelineDuns" />
+        <div class="row">
+            <div class="col-sm-3">
+                @Html.LabelFor(model => model.Name, new { @class = "control-label" })
+            </div>
+            <div class="col-sm-6">
+
+                @*@Html.DropDownListFor(s => s.TransactionTypeID, new SelectList(Model.MetaDataTransactionTypesDTO, "ID", "Name"), new { id = "pipeLinetransType" })*@
+
+                @*@Html.ListBox("Transtype", Model.MetaDataTransactionTypesDTO as SelectList, new { @class = "pipeline-dropdown form-control", id = "pipeLinetransType" })*@
+
+                @*@Html.DropDownListFor(M => M.TransactionTypeID, new SelectList(Model.MetaDataTransactionTypesDTO, "ID", "Name"), new { @class = "pipeline-dropdown form-control" })*@
+
+                @Html.ListBoxFor(s => s.Name,
+                      new SelectList(Model.MetaDataTransactionTypesDTO, "ID", "Name", new { @class = "pipeline-dropdown form-control", id = "listbox"}))
+            </div>
+        </div>
+        <div class="col-sm-3">
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-sm-3">
+                @Html.LabelFor(model => model.PathType, new { @class = "control-label" })
+            </div>
+            <div class="col-sm-6">
+                @Html.DropDownList("ddlPathType", ViewBag.PathType as SelectList, new { @class = "pipeline-dropdown form-control", id = "pipelinePathtype" })
+            </div>
+            <div class="col-sm-3">
+                @Html.ValidationMessageFor(model => model.PathType)
+            </div>
+        </div>
+        <br />
+
+
+        <br />
+        <div class="row">
+            <div class="col-sm-3">
+
+            </div>
+            <div class="col-sm-6">
+                <input type="submit" value="Submit" class="btn btn-save" />
+            </div>
+            <div class="col-sm-3">
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+}
+
+
+
+
+<script src="~/Scripts/jQuery-2.1.4.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

@@ -1,0 +1,61 @@
+﻿@model Nom1Done.DTO.UserPipelineDTO
+@{
+    /**/
+
+    ViewBag.Title = "Index";
+    Guid CurrentRowIndex = Guid.NewGuid();
+}
+
+
+
+
+<div class="row">
+    <div class="col-md-4">
+        <label for="user">Select User:</label>
+        @Html.DropDownList("id", ViewBag.UsersDropdown as SelectList, "Select User", new { @class = "pipeline-dropdown form-control", @onchange = "ChangeUsers(true)", id = "user" })
+    </div>
+</div>
+<br />
+<br />
+
+<div id="partialDiv">
+    @if (!string.IsNullOrEmpty(Model.UserId))
+    {
+        @Html.Partial("_tblUserMapping", Model)
+    }
+
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        var userID = $("#user").val();
+        $("#hdnUserId").val(userID);
+
+    });
+
+    $("#hdnUserId").val(userID);
+    function ChangeUsers(IsUser) {
+        var userId = $("#user").val();
+
+        if (userId != "") {
+            $("#partialDiv").show();
+            $.ajax({
+                url: '/UserPipelineMapping/GetPermissionByUserId',
+                type: "Post",
+                data: { userID: userId },
+                success: function (data) {
+                    $("#partialDiv").html(data);
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+        else {
+            $("#partialDiv").hide();
+        }
+    }
+
+</script>
+

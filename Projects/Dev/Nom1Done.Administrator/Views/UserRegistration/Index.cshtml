@@ -1,0 +1,135 @@
+﻿@model UPRD.DTO.UserRegistrationDTO
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    span.field-validation-error {
+        color: red;
+    }
+</style>
+
+<h2>User Registration</h2>
+<div class="ibox float-e-margins">
+    <a class="btn btn-add-edit" onclick="PopupForm('@Url.Action("AddOrEditData", "UserRegistration")')"><i class="glyphicon glyphicon-plus"></i>Add New </a>
+</div>
+<br />
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("Index", "DashNomStatus"))
+        {
+            <table id="UserDetails" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="min-width: 100px;">User Name</th>
+                        <th style="min-width: 100px;">Email</th>
+                        <th style="min-width: 100px;">Shipper</th>
+                        <th style="min-width: 100px;">IsActive</th>
+                        <th style="min-width: 140px;">Edit/Delete</th>
+                    </tr>
+                </thead>
+            </table>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    //-----------**// Function to display data in data table **//------------
+      var Popup, dataTable;
+        $(document).ready(function () {
+            dataTable = $("#UserDetails").DataTable({
+                "scrollX": true,
+                "scrollY": 400,
+                "ajax" : {
+                    "url": "/UserRegistration/GetData",
+                    "type": "POST",
+                    "dataType": "json"
+                },
+                "columns": [
+                    { "data": "UserName", "autoWidth": true },
+                    { "data": "Email", "autoWidth": true },
+                    { "data": "Shipper", "autoWidth": true },
+                    { "data": "IsActive", "autoWidth": true },
+                  {
+                      "data": "Id", "render": function (data, type, row) {
+                           if (row.IsActive === true) {
+                              return "<a class='btn btn-add-edit btn-sm' onclick=PopupForm('@Url.Action("AddOrEditData", "UserRegistration")/" + data + "')><i class='fa fa-pencil'></i> Edit</a><a class='btn btn-delete btn-sm' style='margin-left:5px' onclick=DeleteUser('" + data + "')><i class='fa fa-trash'></i> De-Activate</a>";
+                          }
+                          else {
+                              return "<a class='btn btn-delete btn-sm' style='margin-left:5px' onclick=DeleteUser('" + data + "')><i class='fa fa-trash'></i> Activate</a>";
+                          }
+                      },
+                      "orderable": true,
+                      "searchable": true,
+                      "info": true,
+                      "Paging": true,
+                      "searching": true,
+                      "width": "150px",
+                    }
+                ],
+                "language": { "emptyTable": "No data found" }
+            })
+    });
+
+    //------**// Function to display popup to add new records **//---
+    function PopupForm(url) {
+        var formDiv = $('<div/>');
+        $.get(url)
+            .done(function (response) {
+                formDiv.html(response);
+                Popup = formDiv.dialog({
+                    autopen: true,
+                    resizable: false,
+                    title: "Add New User",
+                    height: 400,
+                    width: 600,
+                    close: function () {
+                        Popup.dialog('destroy').remove();
+                    },
+                    open: function () {
+                        $(this).closest(".ui-dialog")
+                            .find(".ui-dialog-titlebar-close")
+                            .removeClass("ui-dialog-titlebar-close")
+                            .html("<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>");
+                    }
+                });
+            });
+    }
+    //-------------**// Function to save records **//-----------
+    function SubmitForm(form) {
+        $.validator.unobtrusive.parse(form);
+        if ($(form).valid()) {
+            $.ajax({
+                type: "POST",
+                url: form.action,
+                data: $(form).serialize(),
+                success: function (data) {
+                    if (data.success) {
+                        Popup.dialog('close');
+                        dataTable.ajax.reload();
+                        alert(data.message);
+                    }
+                }
+            });
+        }
+        return false;
+    }
+    async function DeleteUser(Id) {
+            if(confirm('Are You Sure to De-Activate/Activate this User ?'))
+            {
+                await $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("DeleteUser", "UserRegistration")',
+                    data: { userId: Id },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.success) {
+                            dataTable.ajax.reload();
+                            alert(data.message);
+                        }
+                    }
+                });
+            }
+    }
+</script>
+

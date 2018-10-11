@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B7883BF1-C766-44F9-91D6-92577A65357D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EdiTools</RootNamespace>
+    <AssemblyName>EdiTools</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EdiComponent.cs" />
+    <Compile Include="EdiDocument.cs" />
+    <Compile Include="EdiElement.cs" />
+    <Compile Include="EDIGenerator\NMST_GN.cs" />
+    <Compile Include="EDIGenerator\UPRD_GN.cs" />
+    <Compile Include="EdiMapping.cs" />
+    <Compile Include="EdiOptions.cs" />
+    <Compile Include="EdiRepetition.cs" />
+    <Compile Include="EdiSegment.cs" />
+    <Compile Include="EdiTransactionSet.cs" />
+    <Compile Include="EDITranslation\EDIDataLookups.cs" />
+    <Compile Include="EDITranslation\EDIWrapperBase.cs" />
+    <Compile Include="EDITranslation\NMQR_DS.cs" />
+    <Compile Include="EDITranslation\OACY_DS.cs" />
+    <Compile Include="EDITranslation\RURD_DS.cs" />
+    <Compile Include="EDITranslation\SQTSOP_DS.cs" />
+    <Compile Include="EDITranslation\SQTS_DS.cs" />
+    <Compile Include="EDITranslation\SWNT_DS.cs" />
+    <Compile Include="EDITranslation\UNSC_DS.cs" />
+    <Compile Include="EDITranslation\UPRD_DS.cs" />
+    <Compile Include="EdiValue.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nom1Done.DTO\Nom1Done.DTO.csproj">
+      <Project>{8E55D568-CAF6-43C6-AC9F-E14FCF19E32F}</Project>
+      <Name>Nom1Done.DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nom1Done.Model\Nom1Done.Model.csproj">
+      <Project>{4d07088e-2018-492c-b14e-d39c4987247d}</Project>
+      <Name>Nom1Done.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

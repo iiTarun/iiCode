@@ -1,0 +1,624 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BCFFFCEC-3B96-465C-9132-8F1CDD6C9FFC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nom1Done.Data</RootNamespace>
+    <AssemblyName>Nom1Done.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.106.3.1\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Extensions\DbContextExtensions.cs" />
+    <Compile Include="Extensions\ObjectQueryExtensions.cs" />
+    <Compile Include="Infrastructure\DbFactory.cs" />
+    <Compile Include="Infrastructure\Disposable.cs" />
+    <Compile Include="Infrastructure\IDbFactory.cs" />
+    <Compile Include="Infrastructure\IRepository.cs" />
+    <Compile Include="Infrastructure\IUnitOfWork.cs" />
+    <Compile Include="Infrastructure\RepositoryBase.cs" />
+    <Compile Include="Infrastructure\UnitOfWork.cs" />
+    <Compile Include="Migrations\201710101221290_InitialCreate.cs" />
+    <Compile Include="Migrations\201710101221290_InitialCreate.Designer.cs">
+      <DependentUpon>201710101221290_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710161225234_PipelineEdiSetting.cs" />
+    <Compile Include="Migrations\201710161225234_PipelineEdiSetting.designer.cs">
+      <DependentUpon>201710161225234_PipelineEdiSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710300637215_TransactionTb.cs" />
+    <Compile Include="Migrations\201710300637215_TransactionTb.designer.cs">
+      <DependentUpon>201710300637215_TransactionTb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710300810254_addsqtspertransaction_Table.cs" />
+    <Compile Include="Migrations\201710300810254_addsqtspertransaction_Table.designer.cs">
+      <DependentUpon>201710300810254_addsqtspertransaction_Table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710301433446_addcolumnsinSQTSPerTransactions.cs" />
+    <Compile Include="Migrations\201710301433446_addcolumnsinSQTSPerTransactions.designer.cs">
+      <DependentUpon>201710301433446_addcolumnsinSQTSPerTransactions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711011201240_ModifyTransactionReportModel.cs" />
+    <Compile Include="Migrations\201711011201240_ModifyTransactionReportModel.designer.cs">
+      <DependentUpon>201711011201240_ModifyTransactionReportModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711130722579_AddTransDescColumnToNom.cs" />
+    <Compile Include="Migrations\201711130722579_AddTransDescColumnToNom.designer.cs">
+      <DependentUpon>201711130722579_AddTransDescColumnToNom.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711131321369_fuelpercentcolumninNoms.cs" />
+    <Compile Include="Migrations\201711131321369_fuelpercentcolumninNoms.designer.cs">
+      <DependentUpon>201711131321369_fuelpercentcolumninNoms.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711140936357_columninpipeedisetting.cs" />
+    <Compile Include="Migrations\201711140936357_columninpipeedisetting.designer.cs">
+      <DependentUpon>201711140936357_columninpipeedisetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711210703279_addcolumnISA08EDISetting.cs" />
+    <Compile Include="Migrations\201711210703279_addcolumnISA08EDISetting.designer.cs">
+      <DependentUpon>201711210703279_addcolumnISA08EDISetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711210719287_addcolumnISA06.cs" />
+    <Compile Include="Migrations\201711210719287_addcolumnISA06.designer.cs">
+      <DependentUpon>201711210719287_addcolumnISA06.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711221102478_WatchlistTbls.cs" />
+    <Compile Include="Migrations\201711221102478_WatchlistTbls.designer.cs">
+      <DependentUpon>201711221102478_WatchlistTbls.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711221212081_ModifiySWNTModelAddDateTimeType.cs" />
+    <Compile Include="Migrations\201711221212081_ModifiySWNTModelAddDateTimeType.designer.cs">
+      <DependentUpon>201711221212081_ModifiySWNTModelAddDateTimeType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711240619133_ModifiedWatchListModels.cs" />
+    <Compile Include="Migrations\201711240619133_ModifiedWatchListModels.designer.cs">
+      <DependentUpon>201711240619133_ModifiedWatchListModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711300938412_DataTypesChangesofUPRD.cs" />
+    <Compile Include="Migrations\201711300938412_DataTypesChangesofUPRD.designer.cs">
+      <DependentUpon>201711300938412_DataTypesChangesofUPRD.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712011538383_addSummaryColumnInUprdStatus.cs" />
+    <Compile Include="Migrations\201712011538383_addSummaryColumnInUprdStatus.designer.cs">
+      <DependentUpon>201712011538383_addSummaryColumnInUprdStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712011629385_addcolumnInUPRDStatusDatasetRequested.cs" />
+    <Compile Include="Migrations\201712011629385_addcolumnInUPRDStatusDatasetRequested.designer.cs">
+      <DependentUpon>201712011629385_addcolumnInUPRDStatusDatasetRequested.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712041245225_addWatchlistPipelineMapping.cs" />
+    <Compile Include="Migrations\201712041245225_addWatchlistPipelineMapping.designer.cs">
+      <DependentUpon>201712041245225_addWatchlistPipelineMapping.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712131043305_TitleInLogOpeTb.cs" />
+    <Compile Include="Migrations\201712131043305_TitleInLogOpeTb.Designer.cs">
+      <DependentUpon>201712131043305_TitleInLogOpeTb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712191153164_AddAlertFrequencyInWatchlist.cs" />
+    <Compile Include="Migrations\201712191153164_AddAlertFrequencyInWatchlist.Designer.cs">
+      <DependentUpon>201712191153164_AddAlertFrequencyInWatchlist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712260750292_ChangeNoticeIDDatatypeInSWNT.cs" />
+    <Compile Include="Migrations\201712260750292_ChangeNoticeIDDatatypeInSWNT.Designer.cs">
+      <DependentUpon>201712260750292_ChangeNoticeIDDatatypeInSWNT.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712270935379_AddPgpKeyColumnInMetadataPipelineEncKeyInfo.cs" />
+    <Compile Include="Migrations\201712270935379_AddPgpKeyColumnInMetadataPipelineEncKeyInfo.Designer.cs">
+      <DependentUpon>201712270935379_AddPgpKeyColumnInMetadataPipelineEncKeyInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801011137485_add_TransactionTypeInLocation_PackageIdInV4Nomination.cs" />
+    <Compile Include="Migrations\201801011137485_add_TransactionTypeInLocation_PackageIdInV4Nomination.Designer.cs">
+      <DependentUpon>201801011137485_add_TransactionTypeInLocation_PackageIdInV4Nomination.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801051142541_CofigDataSetSetting.cs" />
+    <Compile Include="Migrations\201801051142541_CofigDataSetSetting.Designer.cs">
+      <DependentUpon>201801051142541_CofigDataSetSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801051156468_AddedCronJobFieldinConfigSettings.cs" />
+    <Compile Include="Migrations\201801051156468_AddedCronJobFieldinConfigSettings.Designer.cs">
+      <DependentUpon>201801051156468_AddedCronJobFieldinConfigSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801160939300_NomSubsequentCycle_Add_in_Batch.cs" />
+    <Compile Include="Migrations\201801160939300_NomSubsequentCycle_Add_in_Batch.Designer.cs">
+      <DependentUpon>201801160939300_NomSubsequentCycle_Add_in_Batch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801190609069_IsSpecialCaseForLoc_Add_In_PipeTransTypeMapeTable.cs" />
+    <Compile Include="Migrations\201801190609069_IsSpecialCaseForLoc_Add_In_PipeTransTypeMapeTable.Designer.cs">
+      <DependentUpon>201801190609069_IsSpecialCaseForLoc_Add_In_PipeTransTypeMapeTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802071111397_ChangePercentageFromYesterdayInUNSC.cs" />
+    <Compile Include="Migrations\201802071111397_ChangePercentageFromYesterdayInUNSC.Designer.cs">
+      <DependentUpon>201802071111397_ChangePercentageFromYesterdayInUNSC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802190850394_WatchlistModifications.cs" />
+    <Compile Include="Migrations\201802190850394_WatchlistModifications.Designer.cs">
+      <DependentUpon>201802190850394_WatchlistModifications.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802220709550_Add_WatchListMailAlertUPRDMapping.cs" />
+    <Compile Include="Migrations\201802220709550_Add_WatchListMailAlertUPRDMapping.Designer.cs">
+      <DependentUpon>201802220709550_Add_WatchListMailAlertUPRDMapping.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802281117528_RateScheduledInContract.cs" />
+    <Compile Include="Migrations\201802281117528_RateScheduledInContract.Designer.cs">
+      <DependentUpon>201802281117528_RateScheduledInContract.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804051249061_AddRouteTableforPipeline.cs" />
+    <Compile Include="Migrations\201804051249061_AddRouteTableforPipeline.Designer.cs">
+      <DependentUpon>201804051249061_AddRouteTableforPipeline.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804180800371_NavigationalPropInNomsAndEngineUpgrade.cs" />
+    <Compile Include="Migrations\201804180800371_NavigationalPropInNomsAndEngineUpgrade.Designer.cs">
+      <DependentUpon>201804180800371_NavigationalPropInNomsAndEngineUpgrade.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804191103241_RemoveFKinWatchListRule.cs" />
+    <Compile Include="Migrations\201804191103241_RemoveFKinWatchListRule.Designer.cs">
+      <DependentUpon>201804191103241_RemoveFKinWatchListRule.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804251023505_AddPipeDunsInSwntPerTransactions.cs" />
+    <Compile Include="Migrations\201804251023505_AddPipeDunsInSwntPerTransactions.Designer.cs">
+      <DependentUpon>201804251023505_AddPipeDunsInSwntPerTransactions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804251655528_DuplicateCheckPropertyUprd.cs" />
+    <Compile Include="Migrations\201804251655528_DuplicateCheckPropertyUprd.Designer.cs">
+      <DependentUpon>201804251655528_DuplicateCheckPropertyUprd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805150917344_addTableForFileSystemFiles.cs" />
+    <Compile Include="Migrations\201805150917344_addTableForFileSystemFiles.Designer.cs">
+      <DependentUpon>201805150917344_addTableForFileSystemFiles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805210735335_addSQTSOPforOperator.cs" />
+    <Compile Include="Migrations\201805210735335_addSQTSOPforOperator.Designer.cs">
+      <DependentUpon>201805210735335_addSQTSOPforOperator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805220523135_addPakageIdinSQTSOP.cs" />
+    <Compile Include="Migrations\201805220523135_addPakageIdinSQTSOP.Designer.cs">
+      <DependentUpon>201805220523135_addPakageIdinSQTSOP.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806040617024_UserPipelineMappingTb.cs" />
+    <Compile Include="Migrations\201806040617024_UserPipelineMappingTb.Designer.cs">
+      <DependentUpon>201806040617024_UserPipelineMappingTb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807051117337_ShipperCompSubShipperComp.cs" />
+    <Compile Include="Migrations\201807051117337_ShipperCompSubShipperComp.Designer.cs">
+      <DependentUpon>201807051117337_ShipperCompSubShipperComp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807111224027_AddNameForLocCounterpartiesInNomTable.cs" />
+    <Compile Include="Migrations\201807111224027_AddNameForLocCounterpartiesInNomTable.Designer.cs">
+      <DependentUpon>201807111224027_AddNameForLocCounterpartiesInNomTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807171513587_TblPasswordHistories.cs" />
+    <Compile Include="Migrations\201807171513587_TblPasswordHistories.Designer.cs">
+      <DependentUpon>201807171513587_TblPasswordHistories.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808021129449_addSQTSReductionReason.cs" />
+    <Compile Include="Migrations\201808021129449_addSQTSReductionReason.Designer.cs">
+      <DependentUpon>201808021129449_addSQTSReductionReason.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808080644436_RemoveWatchListModelsOACYModels.cs" />
+    <Compile Include="Migrations\201808080644436_RemoveWatchListModelsOACYModels.Designer.cs">
+      <DependentUpon>201808080644436_RemoveWatchListModelsOACYModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808090554583_removeUNSCfromTradingPart.cs" />
+    <Compile Include="Migrations\201808090554583_removeUNSCfromTradingPart.Designer.cs">
+      <DependentUpon>201808090554583_removeUNSCfromTradingPart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808090639151_removeSWNTfromTradingPart.cs" />
+    <Compile Include="Migrations\201808090639151_removeSWNTfromTradingPart.Designer.cs">
+      <DependentUpon>201808090639151_removeSWNTfromTradingPart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808090719447_removeUPRDrelatedUnwantedTablesfromTradingPart.cs" />
+    <Compile Include="Migrations\201808090719447_removeUPRDrelatedUnwantedTablesfromTradingPart.Designer.cs">
+      <DependentUpon>201808090719447_removeUPRDrelatedUnwantedTablesfromTradingPart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808220901525_AddPipelineDunsInBatchNOutboxNUploadFile.cs" />
+    <Compile Include="Migrations\201808220901525_AddPipelineDunsInBatchNOutboxNUploadFile.Designer.cs">
+      <DependentUpon>201808220901525_AddPipelineDunsInBatchNOutboxNUploadFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808220954548_add_PipeDuns_in_TaskMgrXmls.cs" />
+    <Compile Include="Migrations\201808220954548_add_PipeDuns_in_TaskMgrXmls.Designer.cs">
+      <DependentUpon>201808220954548_add_PipeDuns_in_TaskMgrXmls.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809111428508_AddLocNamesInContract.cs" />
+    <Compile Include="Migrations\201809111428508_AddLocNamesInContract.Designer.cs">
+      <DependentUpon>201809111428508_AddLocNamesInContract.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="NomEntities.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ApplicationLogRepository.cs" />
+    <Compile Include="Repositories\BatchRepository.cs" />
+    <Compile Include="Repositories\ContractRepository.cs" />
+    <Compile Include="Repositories\CounterPartyRepository.cs" />
+    <Compile Include="Repositories\EmailQueueRepository.cs" />
+    <Compile Include="Repositories\EmailTemplateRepository.cs" />
+    <Compile Include="Repositories\ErrorCodeRepository.cs" />
+    <Compile Include="Repositories\FileSysIncomingDataRepository.cs" />
+    <Compile Include="Repositories\GISBInboxRepository.cs" />
+    <Compile Include="Repositories\GISBOutboxRepository.cs" />
+    <Compile Include="Repositories\IdentityUsersRepo.cs" />
+    <Compile Include="Repositories\InboxRepository.cs" />
+    <Compile Include="Repositories\IncomingDataRepository.cs" />
+    <Compile Include="Repositories\JobStackErrorLogRepository.cs" />
+    <Compile Include="Repositories\JobWorkflowRepository.cs" />
+    <Compile Include="Repositories\LocationRepository.cs" />
+    <Compile Include="Repositories\metadataBidUpIndicatorRepository.cs" />
+    <Compile Include="Repositories\metadataCapacityTypeIndicatorRepository.cs" />
+    <Compile Include="Repositories\metadataCycleRepository.cs" />
+    <Compile Include="Repositories\metadataDatasetRepository.cs" />
+    <Compile Include="Repositories\metadataErrorCodeRepository.cs" />
+    <Compile Include="Repositories\metadataExportDeclarationRepository.cs" />
+    <Compile Include="Repositories\metadataFileStatusRepository.cs" />
+    <Compile Include="Repositories\metadataPipelineEncKeyInfoRepository.cs" />
+    <Compile Include="Repositories\metadataQuantityTypeIndicatorRepository.cs" />
+    <Compile Include="Repositories\metadataRequestTypeRepository.cs" />
+    <Compile Include="Repositories\metadataTransactionTypeRepository.cs" />
+    <Compile Include="Repositories\NMQRPerTransactionRepository.cs" />
+    <Compile Include="Repositories\NMQR_HeaderRepository.cs" />
+    <Compile Include="Repositories\NMQR_InformationRepository.cs" />
+    <Compile Include="Repositories\NMQR_NameHeadRepository.cs" />
+    <Compile Include="Repositories\NMQR_ReferenceIdentification_N9Repository.cs" />
+    <Compile Include="Repositories\NMQR_RefIdentificationRepository.cs" />
+    <Compile Include="Repositories\NMQR_SublineItemDetailRepository.cs" />
+    <Compile Include="Repositories\NominationsRepository.cs" />
+    <Compile Include="Repositories\NominationStatusRepository.cs" />
+    <Compile Include="Repositories\OutboxMultipartFormRepository.cs" />
+    <Compile Include="Repositories\OutboxRepository.cs" />
+    <Compile Include="Repositories\Outbox_MultipartFormRepository.cs" />
+    <Compile Include="Repositories\PasswordHistoryRepository.cs" />
+    <Compile Include="Repositories\PipelineEDISettingRepository.cs" />
+    <Compile Include="Repositories\PipelineRepository.cs" />
+    <Compile Include="Repositories\PipelineTransactionTypeMapRepository.cs" />
+    <Compile Include="Repositories\PNTNominationRepository.cs" />
+    <Compile Include="Repositories\ReceivingStageRepository.cs" />
+    <Compile Include="Repositories\RouteRepository.cs" />
+    <Compile Include="Repositories\RURDRepository.cs" />
+    <Compile Include="Repositories\RURD_DateTime_HeadRepository.cs" />
+    <Compile Include="Repositories\RURD_LINDetailSegmentRepository.cs" />
+    <Compile Include="Repositories\RURD_LINDetail_RefrenceNumberRepository.cs" />
+    <Compile Include="Repositories\RURD_Name_HeadRepository.cs" />
+    <Compile Include="Repositories\SendingStageRepository.cs" />
+    <Compile Include="Repositories\SettingRepository.cs" />
+    <Compile Include="Repositories\ShipperCompanyRepository.cs" />
+    <Compile Include="Repositories\ShipperCompany_Pipeline_ConfigRepository.cs" />
+    <Compile Include="Repositories\ShipperCompany_Pipeline_MapRepository.cs" />
+    <Compile Include="Repositories\ShipperCompany_Pipeline_UPRD_MapRepository.cs" />
+    <Compile Include="Repositories\ShipperCompSubShipperCompRepository.cs" />
+    <Compile Include="Repositories\ShipperRepository.cs" />
+    <Compile Include="Repositories\SQTSFileRepository.cs" />
+    <Compile Include="Repositories\SQTSOPPerTransactionRepository.cs" />
+    <Compile Include="Repositories\SQTSPerTransactionRepository.cs" />
+    <Compile Include="Repositories\SQTSRepository.cs" />
+    <Compile Include="Repositories\SQTSTrackOnNomRepository.cs" />
+    <Compile Include="Repositories\TaskMgrJobsRepository.cs" />
+    <Compile Include="Repositories\TaskMgrReceiveMultipuleFileRepository.cs" />
+    <Compile Include="Repositories\TaskMgrXmlRepository.cs" />
+    <Compile Include="Repositories\TestedXMLFileRepository.cs" />
+    <Compile Include="Repositories\TPWBrowserTestResultRepository.cs" />
+    <Compile Include="Repositories\TradingPartnerWorksheetRepository.cs" />
+    <Compile Include="Repositories\TransactionalReportingRepository.cs" />
+    <Compile Include="Repositories\TransactionLogRepository.cs" />
+    <Compile Include="Repositories\TransportationServiceProviderRepository.cs" />
+    <Compile Include="Repositories\UploadedFileRepository.cs" />
+    <Compile Include="Repositories\UploadNominationRepository.cs" />
+    <Compile Include="Repositories\UPRDStatuRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="SeedData\CounterPartySeed.cs" />
+    <Compile Include="SeedData\EmailTemplateSeed.cs" />
+    <Compile Include="SeedData\FileStatusSeed.cs" />
+    <Compile Include="SeedData\LocationsSeed.cs" />
+    <Compile Include="SeedData\MetadataDataSetSeed.cs" />
+    <Compile Include="SeedData\metadataErrorCodeSeed.cs" />
+    <Compile Include="SeedData\PipelineEncKeyInfoSeed.cs" />
+    <Compile Include="SeedData\PipelineSeed.cs" />
+    <Compile Include="SeedData\PipelineTransactionTypeMapSeed.cs" />
+    <Compile Include="SeedData\SeedPathHelper.cs" />
+    <Compile Include="SeedData\SettingSeed.cs" />
+    <Compile Include="SeedData\TradingPartnerWorksheetSeed.cs" />
+    <Compile Include="SeedData\TransactionTypesSeed.cs" />
+    <Compile Include="SeedData\TransportationServiceProviderSeed.cs" />
+    <Compile Include="SQLServerNotifier\ConnectionMapping.cs" />
+    <Compile Include="SQLServerNotifier\NotifierEntity.cs" />
+    <Compile Include="SQLServerNotifier\NotifierEntityExtentions.cs" />
+    <Compile Include="SQLServerNotifier\PushSqlDependency.cs" />
+    <Compile Include="SQLServerNotifier\SqlDependencyRegister.cs" />
+    <Compile Include="SQLServerNotifier\SqlNotificationEventHandler.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nom1Done.DTO\Nom1Done.DTO.csproj">
+      <Project>{8e55d568-caf6-43c6-ac9f-e14fcf19e32f}</Project>
+      <Name>Nom1Done.DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nom1Done.Model\Nom1Done.Model.csproj">
+      <Project>{4d07088e-2018-492c-b14e-d39c4987247d}</Project>
+      <Name>Nom1Done.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="SeedFiles\Contracts.xls" />
+    <None Include="SeedFiles\CounterParty.xls" />
+    <None Include="SeedFiles\EnEmailTemplate.xls" />
+    <None Include="SeedFiles\EnFileStatus.xls" />
+    <None Include="SeedFiles\EnMetadataDataSet.xls" />
+    <None Include="SeedFiles\EnPipelineEncKeyInfo.xls" />
+    <None Include="SeedFiles\EnReceivingStage.xls" />
+    <None Include="SeedFiles\EnSendingStage.xls" />
+    <None Include="SeedFiles\Ensetting.xls" />
+    <None Include="SeedFiles\Locations.xls" />
+    <None Include="SeedFiles\metadataErrorCode.xls" />
+    <None Include="SeedFiles\NewContracts.xls" />
+    <None Include="SeedFiles\NewLocations.xls" />
+    <None Include="SeedFiles\Pipelines.xls" />
+    <None Include="SeedFiles\PipelinesEcryptionKeyInfo.xls" />
+    <None Include="SeedFiles\PipelinesTransactionMap.xls" />
+    <None Include="SeedFiles\TPW.xls" />
+    <None Include="SeedFiles\TransactionTypes.xls" />
+    <None Include="SeedFiles\TSP.xls" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201710101221290_InitialCreate.resx">
+      <DependentUpon>201710101221290_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710161225234_PipelineEdiSetting.resx">
+      <DependentUpon>201710161225234_PipelineEdiSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710300637215_TransactionTb.resx">
+      <DependentUpon>201710300637215_TransactionTb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710300810254_addsqtspertransaction_Table.resx">
+      <DependentUpon>201710300810254_addsqtspertransaction_Table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710301433446_addcolumnsinSQTSPerTransactions.resx">
+      <DependentUpon>201710301433446_addcolumnsinSQTSPerTransactions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711011201240_ModifyTransactionReportModel.resx">
+      <DependentUpon>201711011201240_ModifyTransactionReportModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711130722579_AddTransDescColumnToNom.resx">
+      <DependentUpon>201711130722579_AddTransDescColumnToNom.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711131321369_fuelpercentcolumninNoms.resx">
+      <DependentUpon>201711131321369_fuelpercentcolumninNoms.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711140936357_columninpipeedisetting.resx">
+      <DependentUpon>201711140936357_columninpipeedisetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711210703279_addcolumnISA08EDISetting.resx">
+      <DependentUpon>201711210703279_addcolumnISA08EDISetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711210719287_addcolumnISA06.resx">
+      <DependentUpon>201711210719287_addcolumnISA06.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711221102478_WatchlistTbls.resx">
+      <DependentUpon>201711221102478_WatchlistTbls.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711221212081_ModifiySWNTModelAddDateTimeType.resx">
+      <DependentUpon>201711221212081_ModifiySWNTModelAddDateTimeType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711240619133_ModifiedWatchListModels.resx">
+      <DependentUpon>201711240619133_ModifiedWatchListModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711300938412_DataTypesChangesofUPRD.resx">
+      <DependentUpon>201711300938412_DataTypesChangesofUPRD.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712011538383_addSummaryColumnInUprdStatus.resx">
+      <DependentUpon>201712011538383_addSummaryColumnInUprdStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712011629385_addcolumnInUPRDStatusDatasetRequested.resx">
+      <DependentUpon>201712011629385_addcolumnInUPRDStatusDatasetRequested.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712041245225_addWatchlistPipelineMapping.resx">
+      <DependentUpon>201712041245225_addWatchlistPipelineMapping.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712131043305_TitleInLogOpeTb.resx">
+      <DependentUpon>201712131043305_TitleInLogOpeTb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712191153164_AddAlertFrequencyInWatchlist.resx">
+      <DependentUpon>201712191153164_AddAlertFrequencyInWatchlist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712260750292_ChangeNoticeIDDatatypeInSWNT.resx">
+      <DependentUpon>201712260750292_ChangeNoticeIDDatatypeInSWNT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712270935379_AddPgpKeyColumnInMetadataPipelineEncKeyInfo.resx">
+      <DependentUpon>201712270935379_AddPgpKeyColumnInMetadataPipelineEncKeyInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801011137485_add_TransactionTypeInLocation_PackageIdInV4Nomination.resx">
+      <DependentUpon>201801011137485_add_TransactionTypeInLocation_PackageIdInV4Nomination.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801051142541_CofigDataSetSetting.resx">
+      <DependentUpon>201801051142541_CofigDataSetSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801051156468_AddedCronJobFieldinConfigSettings.resx">
+      <DependentUpon>201801051156468_AddedCronJobFieldinConfigSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801160939300_NomSubsequentCycle_Add_in_Batch.resx">
+      <DependentUpon>201801160939300_NomSubsequentCycle_Add_in_Batch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801190609069_IsSpecialCaseForLoc_Add_In_PipeTransTypeMapeTable.resx">
+      <DependentUpon>201801190609069_IsSpecialCaseForLoc_Add_In_PipeTransTypeMapeTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802071111397_ChangePercentageFromYesterdayInUNSC.resx">
+      <DependentUpon>201802071111397_ChangePercentageFromYesterdayInUNSC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802190850394_WatchlistModifications.resx">
+      <DependentUpon>201802190850394_WatchlistModifications.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802220709550_Add_WatchListMailAlertUPRDMapping.resx">
+      <DependentUpon>201802220709550_Add_WatchListMailAlertUPRDMapping.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802281117528_RateScheduledInContract.resx">
+      <DependentUpon>201802281117528_RateScheduledInContract.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804051249061_AddRouteTableforPipeline.resx">
+      <DependentUpon>201804051249061_AddRouteTableforPipeline.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804180800371_NavigationalPropInNomsAndEngineUpgrade.resx">
+      <DependentUpon>201804180800371_NavigationalPropInNomsAndEngineUpgrade.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804191103241_RemoveFKinWatchListRule.resx">
+      <DependentUpon>201804191103241_RemoveFKinWatchListRule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804251023505_AddPipeDunsInSwntPerTransactions.resx">
+      <DependentUpon>201804251023505_AddPipeDunsInSwntPerTransactions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804251655528_DuplicateCheckPropertyUprd.resx">
+      <DependentUpon>201804251655528_DuplicateCheckPropertyUprd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805150917344_addTableForFileSystemFiles.resx">
+      <DependentUpon>201805150917344_addTableForFileSystemFiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805210735335_addSQTSOPforOperator.resx">
+      <DependentUpon>201805210735335_addSQTSOPforOperator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805220523135_addPakageIdinSQTSOP.resx">
+      <DependentUpon>201805220523135_addPakageIdinSQTSOP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806040617024_UserPipelineMappingTb.resx">
+      <DependentUpon>201806040617024_UserPipelineMappingTb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807051117337_ShipperCompSubShipperComp.resx">
+      <DependentUpon>201807051117337_ShipperCompSubShipperComp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807111224027_AddNameForLocCounterpartiesInNomTable.resx">
+      <DependentUpon>201807111224027_AddNameForLocCounterpartiesInNomTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807171513587_TblPasswordHistories.resx">
+      <DependentUpon>201807171513587_TblPasswordHistories.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808021129449_addSQTSReductionReason.resx">
+      <DependentUpon>201808021129449_addSQTSReductionReason.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808080644436_RemoveWatchListModelsOACYModels.resx">
+      <DependentUpon>201808080644436_RemoveWatchListModelsOACYModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808090554583_removeUNSCfromTradingPart.resx">
+      <DependentUpon>201808090554583_removeUNSCfromTradingPart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808090639151_removeSWNTfromTradingPart.resx">
+      <DependentUpon>201808090639151_removeSWNTfromTradingPart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808090719447_removeUPRDrelatedUnwantedTablesfromTradingPart.resx">
+      <DependentUpon>201808090719447_removeUPRDrelatedUnwantedTablesfromTradingPart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808220901525_AddPipelineDunsInBatchNOutboxNUploadFile.resx">
+      <DependentUpon>201808220901525_AddPipelineDunsInBatchNOutboxNUploadFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808220954548_add_PipeDuns_in_TaskMgrXmls.resx">
+      <DependentUpon>201808220954548_add_PipeDuns_in_TaskMgrXmls.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809111428508_AddLocNamesInContract.resx">
+      <DependentUpon>201809111428508_AddLocNamesInContract.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\PagedList.css" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,312 @@
+﻿@model Nom1Done.DTO.BatchDetailDTO
+@{
+    Guid CurrentRowId = Guid.NewGuid();
+
+    var Contract = "--Select--";
+
+    var TransType = "--Select--";
+    var RecLocation = "--Select--";
+    var RecLocProp = "--Select--";
+    var RecLocID = "--Select--";
+    var UpName = "--Select--";
+    var UpIDProp = "--Select--";
+    var UpID = "--Select--";
+
+    var DelLoc = "--Select--";
+    var DelLocID = "--Select--";
+    var DelLocProp = "--Select--";
+    var DownID = "--Select--";
+    var DownIDProp = "--Select--";
+    var DownName = "--Select--";
+
+}
+
+<tr class="gradeX newPathedRow" id="PathedNomTable_@CurrentRowId" rel="@CurrentRowId">
+    @Html.Hidden("PathedNomsList.Index", CurrentRowId.ToString())
+    <td><input type="checkbox" onclick="ChkBoxClick(this,0)" class="chkboxes" value="@CurrentRowId" onchange="chkboxesOnchange()"></td>
+
+    <td style="text-align:left;" class="cursor">
+        <span class="label label-info" id="status_@CurrentRowId" value="0">Unsubmitted</span>
+        @*@Html.TextBox("PathedNomsList[" + CurrentRowId + "].StatusID", "", new { @class = "form-control label-info", @rel = CurrentRowId, @readonly = "readonly", @Value = "Unsubmitted" })*@
+        @Html.Hidden("PathedNomsList[" + CurrentRowId + "].StatusID", 0, new { @rel = CurrentRowId })
+    </td>
+    <td>
+        <span></span>
+    </td>
+    <td>
+        @Html.TextBox("PathedNomsList[" + CurrentRowId + "].StartDate", string.Format("{0:d}", Model.PathedNomsList[0].StartDate), new { @class = "form-control Startdtpicker", @rel = CurrentRowId, @readonly = "true", placeholder = "Start Date Time... " })
+    </td>
+
+    <td>
+        @Html.TextBox("PathedNomsList[" + CurrentRowId + "].EndDate", string.Format("{0:d}", Model.PathedNomsList[0].EndDate), new { @class = "form-control Enddtpicker", @rel = CurrentRowId, @readonly = "true", placeholder = "End Date Time... " })
+
+    </td>
+
+
+    <td>
+        @Html.TextBox("PathedNomsList[" + CurrentRowId + "].CreatedDate", @Model.PathedNomsList[0].CreatedDate, new { @class = "form-control", @rel = CurrentRowId, @readonly = "true" })
+
+
+        @*@Html.TextBox(a => a.PathedNomsList[CurrentRowIndex].EndDate,new { @class = "form-control dtpicker", @rel = CurrentRowIndex })*@
+    </td>
+
+
+    <td>
+        @Html.DropDownList("PathedNomsList[" + CurrentRowId + "].CycleID", new SelectList(ViewBag.Cycles, "Id", "Name", Model.PathedNomsList[0].CycleID), "-Select Cycle-", new { @class = "form-control", rel = CurrentRowId })
+        @*@Html.DropDownList("PathedNomsList[" + CurrentRowId+"].CycleID", (IEnumerable<SelectListItem>)ViewBag.Cycles, "--Select Cycle--", new { @class = "form-control" })*@
+    </td>
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentRowId','','@Model.Duns')">
+            @if (Model.PathedNomsList[0].Contract != null)
+            {
+                Contract = Model.PathedNomsList[0].Contract;
+            }
+            @Contract
+        </span>@Html.Hidden("PathedNomsList[" + CurrentRowId + "].Contract", Model.PathedNomsList[0].Contract, new { @rel = CurrentRowId })@*<input type="hidden" id="PathedNomsList_'@CurrentRowId'__Contract" value="" name="PathedNomsList[@CurrentRowId].Contract" rel = "@CurrentRowId" />*@
+    </td>
+    <td>
+        @Html.DropDownList("PathedNomsList[" + CurrentRowId + "].NomSubCycle", new SelectList(
+                  new List<Object>{
+                       new { value = "Y" , text = "Yes"  },
+                       new { value = "N" , text = "No" }
+                    }, "value", "text", Model.PathedNomsList[0].NomSubCycle), new { @class = "form-control" })
+    </td>
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentRowId','P','@Model.Duns')">
+            @if (Model.PathedNomsList[0].TransType != null)
+            {
+                TransType = Model.PathedNomsList[0].TransType;
+            }
+            @TransType
+        </span>@Html.Hidden("PathedNomsList[" + CurrentRowId + "].TransType", Model.PathedNomsList[0].TransType, new { @rel = CurrentRowId })
+              @Html.Hidden("PathedNomsList[" + CurrentRowId + "].TransTypeMapId", Model.PathedNomsList[0].TransTypeMapId, new { @rel = CurrentRowId })
+      </td>
+
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','RecLoc','@Model.Duns')">
+            @if (Model.PathedNomsList[0].RecLocation != null)
+            {
+                RecLocation = Model.PathedNomsList[0].RecLocation;
+            }
+            @RecLocation
+        </span>@Html.Hidden("PathedNomsList[" + CurrentRowId + "].RecLocation", Model.PathedNomsList[0].RecLocation, new { @rel = CurrentRowId })
+    </td>
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','RecLoc','@Model.Duns')">
+            @if (Model.PathedNomsList[0].RecLocProp != null)
+            {
+                RecLocProp = Model.PathedNomsList[0].RecLocProp;
+            }
+            @RecLocProp
+        </span>@Html.Hidden("PathedNomsList[" + CurrentRowId + "].RecLocProp", Model.PathedNomsList[0].RecLocProp, new { @rel = CurrentRowId })
+    </td>
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','RecLoc','@Model.Duns')">
+            @if (Model.PathedNomsList[0].RecLocID != null)
+            {
+                RecLocID = Model.PathedNomsList[0].RecLocID;
+            }
+            @RecLocID
+        </span>@Html.Hidden("PathedNomsList[" + CurrentRowId + "].RecLocID", Model.PathedNomsList[0].RecLocID, new { @rel = CurrentRowId })
+    </td>
+
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Up','@Model.Duns')">
+            @if (Model.PathedNomsList[0].UpName != null)
+            {
+                UpName = Model.PathedNomsList[0].UpName;
+            }
+            @UpName
+        </span>@Html.Hidden("PathedNomsList[" + CurrentRowId + "].UpName", Model.PathedNomsList[0].UpName, new { @rel = CurrentRowId })
+    </td>
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Up','@Model.Duns')">
+            @if (Model.PathedNomsList[0].UpIDProp != null)
+            {
+                UpIDProp = Model.PathedNomsList[0].UpIDProp;
+            }
+            @UpIDProp
+        </span>@Html.Hidden("PathedNomsList[" + CurrentRowId + "].UpIDProp", Model.PathedNomsList[0].UpIDProp, new { @rel = CurrentRowId })
+    </td>
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Up','@Model.Duns')">
+            @if (Model.PathedNomsList[0].UpID != null)
+            {
+                UpID = Model.PathedNomsList[0].UpID;
+            }
+            @UpID
+        </span>@Html.Hidden("PathedNomsList[" + CurrentRowId + "].UpID", Model.PathedNomsList[0].UpID, new { @rel = CurrentRowId })
+    </td>
+
+    <td>@Html.TextBox("PathedNomsList[" + CurrentRowId + "].UpKContract", Model.PathedNomsList[0].UpKContract, new { @class = "form-control", @rel = CurrentRowId })</td>
+    <td>@Html.TextBox("PathedNomsList[" + CurrentRowId + "].RecQty", Model.PathedNomsList[0].RecQty, new { @class = "form-control", @type = "number", @rel = CurrentRowId, @max = "100000000", @min = "0", @oninput = "FuelValidation(" + "'" + CurrentRowId + "'" + ")", @onkeyup = "FuelValidation(" + "'" + CurrentRowId + "'" + ")" })</td>
+    <td>@Html.TextBox("PathedNomsList[" + CurrentRowId + "].RecRank", Model.PathedNomsList[0].RecRank, new { @class = "form-control rank", @rel = CurrentRowId, maxlength = "3" })</td>
+
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','DelLoc','@Model.Duns')">
+            @if (Model.PathedNomsList[0].DelLoc != null)
+            {
+                DelLoc = Model.PathedNomsList[0].DelLoc;
+            }
+            @DelLoc
+        </span>@Html.Hidden("PathedNomsList[" + CurrentRowId + "].DelLoc", Model.PathedNomsList[0].DelLoc, new { @rel = CurrentRowId })
+    </td>
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','DelLoc','@Model.Duns')">
+            @if (Model.PathedNomsList[0].DelLocProp != null)
+            {
+                DelLocProp = Model.PathedNomsList[0].DelLocProp;
+            }
+            @DelLocProp
+        </span>@Html.Hidden("PathedNomsList[" + CurrentRowId + "].DelLocProp", Model.PathedNomsList[0].DelLocProp, new { @rel = CurrentRowId })
+    </td>
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','DelLoc','@Model.Duns')">
+            @if (Model.PathedNomsList[0].DelLocID != null)
+            {
+                DelLocID = Model.PathedNomsList[0].DelLocID;
+            }
+            @DelLocID
+        </span>@Html.Hidden("PathedNomsList[" + CurrentRowId + "].DelLocID", Model.PathedNomsList[0].DelLocID, new { @rel = CurrentRowId })
+    </td>
+
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Down','@Model.Duns')">
+            @if (Model.PathedNomsList[0].DownName != null)
+            {
+                DownName = Model.PathedNomsList[0].DownName;
+            }
+            @DownName
+        </span>@Html.Hidden("PathedNomsList[" + CurrentRowId + "].DownName", Model.PathedNomsList[0].DownName, new { @rel = CurrentRowId })
+    </td>
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Down','@Model.Duns')">
+            @if (Model.PathedNomsList[0].DownIDProp != null)
+            {
+                DownIDProp = Model.PathedNomsList[0].DownIDProp;
+            }
+            @DownIDProp
+        </span>@Html.Hidden("PathedNomsList[" + CurrentRowId + "].DownIDProp", Model.PathedNomsList[0].DownIDProp, new { @rel = CurrentRowId })
+    </td>
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Down','@Model.Duns')">
+            @if (Model.PathedNomsList[0].DownID != null)
+            {
+                DownID = Model.PathedNomsList[0].DownID;
+            }
+            @DownID
+        </span>@Html.Hidden("PathedNomsList[" + CurrentRowId + "].DownID", Model.PathedNomsList[0].DownID, new { @rel = CurrentRowId })
+    </td>
+
+    <td>@Html.TextBox("PathedNomsList[" + CurrentRowId + "].DownContract", Model.PathedNomsList[0].DownContract, new { @class = "form-control", @rel = CurrentRowId })</td>
+    <td>@Html.TextBox("PathedNomsList[" + CurrentRowId + "].DelQuantity", Model.PathedNomsList[0].DelQuantity, new { @class = "form-control", @type = "number", @max = "100000000", @min = "0", @oninput = "DelQtyFuelValidation(" + "'" + CurrentRowId + "'" + ")", @rel = CurrentRowId, @onkeyup = "DelQtyFuelValidation(" + "'" + CurrentRowId + "'" + ")" })</td>
+    <td>@Html.TextBox("PathedNomsList[" + CurrentRowId + "].DelRank", Model.PathedNomsList[0].DelRank, new { @class = "form-control rank", @rel = CurrentRowId, maxlength = "3" })</td>
+    <td>@Html.TextBox("PathedNomsList[" + CurrentRowId + "].PkgID", Model.PathedNomsList[0].PkgID, new { @class = "form-control", @rel = CurrentRowId })</td>
+  
+    <td class="cursor">
+        @*<span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentRowId','','@Model.Duns')">
+            @Html.TextBox("PathedNomsList[" + CurrentRowId + "].FuelPercentage", Model.PathedNomsList[0].FuelPercentage, new { @class = "form-control", @rel = CurrentRowId, @readonly = "true" })
+        </span>*@
+        @Html.TextBox("PathedNomsList[" + CurrentRowId + "].FuelPercentage", Model.PathedNomsList[0].FuelPercentage, new { @class = "form-control", @rel = CurrentRowId, @onblur = "FuelValidation(" + "'" + CurrentRowId + "'" + ")" })
+
+    </td>
+     @Html.Hidden("PathedNomsList[" + CurrentRowId + "].QuantityType", Model.PathedNomsList[0].QuantityType, new { rel = CurrentRowId })
+
+</tr>
+<script>
+
+    $(document).ready(function () {
+
+        $(function () {
+            var Eflag=0;
+            $(".Startdtpicker").datepicker({
+                todayBtn: false,
+                autoclose: true
+            }).on('changeDate', function (selected) {
+                 
+                if(Eflag==0){
+                    var minDate = new Date(selected.date.valueOf());
+                    $('.Enddtpicker').datepicker('setStartDate', minDate);
+                }
+            });
+
+            $(".Enddtpicker").datepicker({ autoclose: true, todayHighlight: false })
+                .on('changeDate', function (selected) {
+                     
+                    Eflag=1;
+                    var maxDate = new Date(selected.date.valueOf());
+                    $('.Startdtpicker').datepicker('setEndDate', maxDate);
+                });
+        });
+
+
+        $('.rank').keypress(function (e) {
+            var regex = new RegExp("^[0-9]+$");
+
+            var charCode = e.which;
+
+            if (charCode == 8 || charCode == 0) {
+                return;
+            }
+            else {
+                var keyChar = String.fromCharCode(charCode);
+                if (regex.test(keyChar)) {
+                    return true;
+                }
+            }
+            e.preventDefault();
+            return false;
+        });
+
+
+    });
+
+
+    $(".cycleSelect").change(function () {
+           
+            var rel = $(this).attr("rel");
+            var index = rel;
+            var startDate = "#PathedNomsList_" + index + "__StartDate";
+            var startDateValue = $(startDate).val();
+            var endDate = "#PathedNomsList_" + index + "__EndDate";
+            var endDateValue = $(endDate).val();
+            var cycle = "#PathedNomsList_" + index + "__CycleID";
+            var valueCycle = $(cycle).val();
+            var BegginingTime = "";
+            var EndTime = "";
+
+            if (valueCycle == 1 || valueCycle == 2) // timeley
+            {
+                BegginingTime = " 09:00 AM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 3)//intrs day 1
+            {
+                BegginingTime = " 02:00 PM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 4)//intrs day 2
+            {
+                BegginingTime = " 06:00 PM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 5)//intrs day 3
+            {
+                BegginingTime = " 10:00 PM";
+                EndTime = " 09:00 AM";
+            }
+
+            var startDateOnly = startDateValue.split(" ");
+            var endDateOnly = endDateValue.split(" ");
+            var finalStartdate = startDateOnly[0].concat(BegginingTime);
+            var finalEndDate = endDateOnly[0].concat(EndTime);
+
+            $(startDate).val(finalStartdate);
+            $(endDate).val(finalEndDate);
+          
+
+    });
+
+</script>
+
+

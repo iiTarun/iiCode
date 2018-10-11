@@ -1,0 +1,144 @@
+﻿@{
+    var HideClass = "";
+    var HideShipperClass = "";
+}
+
+
+
+
+@if (Request.Url.ToString().Contains("/DashNomStatus") || Request.Url.ToString().Contains("/CounterParty") || Request.Url.ToString().Contains("/Home") || Request.Url.ToString().Contains("/Account/Login") || Request.Url.ToString().Contains("/UserRegistration"))
+{
+    HideClass = "none";
+}
+else
+{
+    HideClass = "block";
+}
+<div class="row">
+    <div class="form-group">
+        <span onclick="OpenModal()">
+            <i class="fa fa fa-tasks" style="cursor:pointer"></i>
+        </span>
+    </div>
+</div>
+
+
+
+
+<div class="container col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 1%; display:@HideClass;">
+    <div class="form-row">
+        <strong>  @Html.Label("Pipelines:", new { @class = "col-md-2 col-sm-4 col-xs-4 col-form-label" })</strong>
+        @Html.DropDownList("SelectedItem", ViewBag.PipelineDropdown as SelectList, new { @class = "pipeline-dropdown form-control col-md-5 col-sm-6 col-xs-5", @onchange = "ChangePipeline(true)", id = "PipelineDropdown" })
+
+    </div>
+</div>
+
+
+@if (Request.Url.ToString().Contains("/DashNomStatus"))
+{
+    HideShipperClass = "block";
+}
+else
+{
+    HideShipperClass = "none";
+}
+
+
+
+
+
+<div class="container col-md-12 col-sm-12 col-xs-12" style="display:@HideShipperClass">
+    <div class="form-row">
+        <strong>@(Html.Label("Shipper:", new { @class = "col-md-2 col-sm-4 col-xs-4 col-form-label" }))</strong>
+        @Html.DropDownList("SelectedItem", ViewBag.ShipperDropdown as SelectList, "---Select Shipper--- ", new { @class = "shipper-dropdown form-control col-md-5 col-sm-6 col-xs-5", @onchange = "ChangeShipper(true)", id = "ShipperDropdown" })
+        <div class="col-md-1"></div>
+        <label class="engine-status col-xs-2 col-form-label"><b>Engine Status:</b></label>
+        <label class="switch ">
+            <input type="checkbox" id="togBtn">
+            <span class="slider round">
+                <span class="on">ON</span><span class="off">OFF</span>
+            </span>
+        </label>
+    </div>
+</div>
+
+<script>
+    $("#PipelineDropdown").select2();
+    $("#ShipperDropdown").select2();
+    $(document).ready(function () {
+        var ddlShipperDuns = $(ShipperDropdown).val();
+        if (ddlShipperDuns == "")
+        {
+            $('.switch,.engine-status').hide();
+        }
+
+        var IstogBtn = '@ViewBag.EngineStatus';
+        if (IstogBtn.toLowerCase() === 'true') {
+            $("#togBtn").prop('checked', true);
+        } else {
+            $("#togBtn").prop('checked', false);
+       }
+    });
+
+
+    $('#togBtn').change(function () {
+        var ddlShipperDuns = $(ShipperDropdown).val();
+        var IsEngine = "";
+        if ($(this).prop('checked')) {
+            IsEngine = true;
+        } else {
+            IsEngine = false;
+        }
+        $.ajax({
+            url: '/DashNomStatus/SwitchEngineStatus',
+            type: "Post",
+            data: { ShipperDuns: ddlShipperDuns, EngineStatus: IsEngine },
+            success: function (data) {
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    });
+
+        function OpenModal() {
+            $.ajax({
+            type: 'GET',
+            url: '@Url.Action("Index", "CrashFile")',
+            dataType: 'html',
+                success: function (data) {
+                    $("#CrashFileModal").empty();
+                    $("#CrashFileModal").html(data);
+                    $('#CrashFileModal').modal('show');
+                    //alert(data);
+            },
+            error: function (ex) {
+                alert(ex);
+            }
+        });
+    }
+</script>
+@*<li><a href="#">Username</a></li>
+    <li><a href="#">Change Password</a></li>
+    <li><a href="#">Log Out</a></li>
+
+            </ul>
+        </div>
+
+
+                        </div>
+    <div class="minimalize-styl-6" style="visibility:@HideClass">
+        <label class="col-md-2 control-label" margin-right: 10px !important;">
+            <b>Pipelines:</b>
+        </label>
+
+        <div class="col-md-6">
+            <div>
+                @Html.DropDownList("SelectedItem", ViewBag.PipelineDropdown as SelectList, new { @class = "pipeline-dropdown form-control", @onchange = "ChangePipeline(true)", id = "PipelineDropdown" })
+            </div>
+        </div>
+    </div>
+                </li>
+            </ul>
+        </div>
+*@

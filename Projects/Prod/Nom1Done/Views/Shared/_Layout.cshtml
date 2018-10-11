@@ -1,0 +1,557 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NatGasHub</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <link href="~/Content/toastr.min.css" rel="stylesheet" />
+    <link href="~/Assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />  
+
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Assets/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    
+    <script src="~/Assets/plugins/jQuery/jQuery-2.1.4.min.js"></script>   
+    <script src="~/Assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+   
+   
+    <script>
+        function OnClickSideMenu(path, params) {
+
+            var str = $('#PipelineDropdown').val();
+            var StrSplit = str.split("-");
+            var PipelineID = StrSplit[0];
+
+            $("#hfSelectedPipelineID").val(PipelineID);
+
+            var dataReload = "";
+            if (params == undefined) {
+                dataReload = location.origin + path + "?pipelineId=" + PipelineID;
+            } else {
+                dataReload = location.origin + path + "?pipelineId=" + PipelineID + params;
+            }
+            window.location.href = dataReload;
+        }
+
+        function NomsCheck() {
+            //Pathed=1,
+            //PNT = 2,
+            //NonPathed = 3,
+            //HyPathedNonPathed = 4,
+            //HyPathedPNT = 5,
+            //HyNonPathedPNT = 6          
+            var dataReload = "";
+            var PipelineID = $('#PipelineDropdown').val();
+            var res = PipelineID.split("-");
+            if (res[1] == "1") {
+                dataReload = location.origin + "/PathedNomination?pipelineId=" + res[0];
+            }
+            else if (res[1] == "2" || res[1] == "6" || res[1] == "5" || res[1] == "4") {
+                dataReload = location.origin + "/Batch?pipelineId=" + res[0];
+            }
+            else if (res[1] == "3") {
+                dataReload = location.origin + "/NonPathed?pipelineId=" + res[0];
+            }
+            window.location.href = dataReload;
+        }
+
+        function setSearchDates() {
+            var end = $('#EndDate');
+            var start = $('#StartDate');
+            var enddate = end.val();
+            var startdate = start.val();
+            //console.log(enddate);
+            //console.log(startdate);
+            if (enddate != '') {
+                var maxDate = new Date(enddate);
+                //console.log(maxDate);
+                $('#StartDate').datepicker('setEndDate', maxDate);
+            }
+            if (startdate != '') {
+                var minDate = new Date(startdate);
+                //console.log(minDate);
+                $('#EndDate').datepicker('setStartDate', minDate);
+            }
+        }
+
+    </script>
+    <!-- Data Tables -->
+    <link href="~/Assets/custom.css" rel="stylesheet">
+    <link href="~/Assets/style.css" rel="stylesheet">
+    <link href="~/Assets/animate.css" rel="stylesheet">
+    <link href="~/Assets/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="~/Assets/plugins/dataTables/dataTables.responsive.css" rel="stylesheet">
+    <link href="~/Assets/plugins/dataTables/dataTables.tableTools.min.css" rel="stylesheet">
+    <link href="~/Assets/plugins/select2/select2.min.css" rel="stylesheet">
+    <link href="~/Assets/plugins/dropzone/basic.css" rel="stylesheet">
+    <link href="~/Assets/plugins/dropzone/dropzone.css" rel="stylesheet">
+
+
+    <link href="~/Assets/plugins/datepicker/datepicker3.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"> 
+
+    <link href="~/Assets/plugins/multiselect/bootstrap-multiselect.css" rel="stylesheet" />
+  
+    <script src="~/Assets/plugins/multiselect/bootstrap-multiselect.js"></script>
+   
+     <!-- For AutoComplete Text Box in WatchList Screen -->
+         <script src="~/Assets/plugins/jQueryUI/jquery-ui-1.10.3.min.js"></script>
+
+    <link href="~/Assets/plugins/bootstrap-toggle-master/css/bootstrap-toggle.css" rel="stylesheet" />
+    <script src="~/Assets/plugins/bootstrap-toggle-master/js/bootstrap-toggle.js"></script>
+
+    <!--for ajax form submit-->
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    
+</head>
+<body class="skin-blue fixed-navigation">
+    <div id="loading" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background: rgba(0,0,0,0.4); display: none; z-index: 999999999">
+        <img src="~/Images/Loader.GIF" style="background: #fff; padding: 10px; position: absolute; top: 50%; left: 50%; margin-left: -60px; margin-top: -15px; border-radius: 3px;" />
+
+    </div>
+
+
+    <div id="wrapper">
+
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                    <li class="nav-header" style="background-color: #272F3C !important;">
+                        <div class="dropdown profile-element">
+                            <span>
+                                <img alt="image" style="max-width:70px;" src="~/Assets/logo.png" />
+                            </span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li>
+
+                                    @*<asp:LoginStatus runat="server" LogoutAction="Redirect" LogoutText="Log out" LogoutPageUrl="~/" OnLoggingOut="Unnamed_LoggingOut" />*@
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="logo-element">
+
+                            <img alt="image" style="max-width:40px; " src="~/Assets/logo.jpg" />
+                        </div>
+                    </li>
+
+                    <li id="DashboardLi" class="active">
+                        <a onclick="OnClickSideMenu('/Dashboard/Index')">
+                            <i class="fa fa-dashboard"></i>
+                            <span class="nav-label">Dashboard</span>
+                        </a>
+                    </li>
+
+                    @*<li id="PipelineLi">
+                            <a onclick="OnClickSideMenu('/Pipeline/Index')">
+                                <i class="fa fa-pied-piper"></i>
+                                <span class="nav-label">Pipelines</span>
+                            </a>
+                        </li>*@
+
+                    <li id="NomsLi">
+                        <a>
+                            <i class="fa fa-th"></i>
+                            <span class="nav-label">Noms</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level collapse" style="padding-left:0px !important; left:40px !important;">
+                            <li id="NominationLi"><a onclick="NomsCheck()"><i class="fa fa-circle-o"></i>Nomination</a></li>
+                            <li id="BulkuploadLi"><a onclick="OnClickSideMenu('/UploadNominations/Index')"><i class="fa fa-circle-o"></i>Bulk Nom Upload</a>
+                        </ul>
+                    </li>
+
+                    <li id="SQTSLi">
+                        <a>
+                            <i class="fa fa-dedent"></i>
+                            <span class="nav-label">Sched Qty</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level collapse" style="padding-left:0px !important;width:150px; left:40px !important;">
+                            <li id="SQTSLocLi"><a onclick="OnClickSideMenu('/SQTSSummary/Index','&val=loc')"><i class="fa fa-circle-o"></i>Sched Qty By Loc</a></li>
+                            <li id="SQTSSvcLi"><a onclick="OnClickSideMenu('/SQTSSummary/Index','&val=svc')"><i class="fa fa-circle-o"></i>Sched Qty By Svc Req K</a></li>
+                        </ul>
+                    </li>
+
+                    @*<li id="FlowingGasLi">
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-forumbee"></i>
+                                <span class="nav-label">Flowing Gas </span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-building-o"></i>
+                                <span class="nav-label">Invoicing</span>
+                            </a>
+                        </li>*@
+
+                    @*<li>
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-external-link"></i>
+                                <span class="nav-label">Capacity Release </span>
+                            </a>
+                        </li>*@
+
+                    <li id="CapacityLi">
+                        <a>
+                            <i class="fa fa-dedent"></i>
+                            <span class="nav-label">Capacity</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level collapse" style="padding-left:0px !important;width:150px; left:40px !important;">
+                            <li id="CapacityMOpCapLi"><a onclick="OnClickSideMenu('/MOperationalCapacity/index')"><i class="fa fa-circle-o"></i>Operationally Available </a></li>
+                            <li id="CapacityMUnsCapLi"><a onclick="OnClickSideMenu('/MUnsubscribedCapacity/index')"><i class="fa fa-circle-o"></i>Unsubscribed Capacity</a></li>
+                        </ul>
+                    </li>
+
+                    <li id="ContractsLi">
+                        <a onclick="OnClickSideMenu('/Contracts')">
+                            <i class="fa fa-newspaper-o"></i>
+                            <span class="nav-label">Contracts</span>
+                        </a>
+                    </li>
+
+                    <li id="NoticesLi">
+                        <a onclick="OnClickSideMenu('/Notices/Index')">
+                            <i class="fa fa-files-o"></i>
+                            <span class="nav-label">Notices</span>
+                            @*<span class="fa arrow"></span>*@
+                        </a>
+                        @*<ul class="nav nav-second-level collapse" style="padding-left:0px !important; left:40px !important;">
+                                <li><a href="javascript:void(0)" onclick="OnClickSideMenu('/Notices/Index','&Type=Critical')"><i class="fa fa-circle-o"></i>Critical</a></li>
+                                <li><a href="javascript:void(0)" onclick="OnClickSideMenu('/Notices/Index','&Type=NonCritical')"><i class="fa fa-circle-o"></i>Non-Critical</a></li>
+                            </ul>*@
+                    </li>
+
+                    <li id="WatchLi">
+                        <a>
+                            <i class="fa fa-newspaper-o"></i>
+                            <span class="nav-label">WatchLists</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level collapse">
+                            <li id="WatchLiCreateNew"><a onclick="OnClickSideMenu('/WatchList')"><i class="fa fa-circle-o"></i>Create Watchlist</a></li>
+                            <li id="WatchLiReviewList"><a onclick="OnClickSideMenu('/WatchList/List')"><i class="fa fa-circle-o"></i>View Watchlist Results</a></li>
+                        </ul>
+                    </li>
+
+                    @*<li>
+                            <a href="#">
+                                <i class="fa fa-bank"></i>
+                                <span class="nav-label">Counter Parties</span>
+                            </a>
+                        </li>*@
+
+                    @*<li id="LocationsLi">
+                            <a onclick="OnClickSideMenu('/Location/Index')">
+                                <i class="fa fa-globe"></i>
+                                <span class="nav-label">Locations</span>
+                            </a>
+                        </li>*@
+
+                    <li id="UserAccountsLi">
+                        <a onclick="OnClickSideMenu('/Users/Index')">
+                            <i class="fa fa-user-plus"></i>
+                            <span class="nav-label">Your Team</span>
+                        </a>
+                    </li>
+                    @*<li id="UserAccountsLi">
+                            <a onclick="OnClickSideMenu('/TransactionalReporting/Index')">
+                                <i class="fa fa-bar-chart"></i>
+                                <span class="nav-label">Transactional Reporting</span>
+                            </a>
+                        </li>*@
+
+                </ul>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="gray-bg">
+
+
+            <div class="row border-bottom">
+                @Html.Action("TopNavBarPartail", "Base")
+
+            </div>
+
+            <div class="wrapper wrapper-content">
+                @RenderBody()
+
+                @*<asp:ContentPlaceHolder runat="server" ID="MainContent"></asp:ContentPlaceHolder>
+                    <div class="modalLoading"></div>
+                    <asp:HiddenField ID="hfLoggedInUserDUNS" runat="server" Value="" />
+                    <asp:HiddenField ID="hfLoggedInUserCompanyID" runat="server" Value="" />
+                    <asp:HiddenField ID="hfLoggedInUserID" runat="server" Value="" />
+                    <asp:HiddenField ID="hfSelectedPipelineDUNS" runat="server" Value="0" />
+                    <asp:HiddenField ID="hfApiUrl" runat="server" Value="" />
+                    <asp:HiddenField ID="hfaccessToken" runat="server" Value="" />
+                    <asp:HiddenField ID="hfSelectedPipelineID" runat="server" Value="" />*@
+            </div>
+
+            <div class="footer">
+                <div style="text-align:center">
+                    <a href="#" class="" style="color:#5897fb !important">GasPro@NatGasHub.com</a>&nbsp;&nbsp;&nbsp;713.999.1188
+                </div>
+                <div style="text-align:center">
+                    <strong>Copyright &copy; 2018.</strong> All rights reserved.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="~/Assets/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/Assets/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <script src='~/Assets/plugins/fastclick/fastclick.min.js'></script>
+    <script src="~/Assets/dist/js/app.min.js" type="text/javascript"></script>
+    <script src="~/Assets/dist/js/demo.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.filedrop.js"></script>
+
+    <!-- Data Tables -->
+    <script src="~/Assets/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="~/Assets/plugins/dataTables/dataTables.bootstrap.js"></script>
+    <script src="~/Assets/plugins/dataTables/dataTables.responsive.js"></script>
+    <script src="~/Assets/plugins/dataTables/dataTables.tableTools.min.js"></script>
+    <script src="~/Assets/plugins/select2/select2.full.min.js"></script>
+    <script src="~/Assets/plugins/dropzone/dropzone.js"></script>
+    <script src="~/Assets/inspinia.js"></script>
+
+    <script src="~/Scripts/toastr.min.js"></script>
+    <script src="~/Assets/plugins/datepicker/bootstrap-datepicker.js"></script>
+
+
+
+
+
+    <script type="text/javascript">
+        $(document).ajaxStart(function () {
+            $("#loading").show();
+        });
+        $(document).ajaxStop(function () {
+            $("#loading").hide();
+        });
+
+        $(document).ready(function () {
+
+            $(":input[type=text]:not([readonly='readonly'])").attr("autocomplete", "off");
+            // toastr.error("Saved");
+            $('#editable, #modal-editable, #pipelineTable, #LocationTable, #pipelineStatus, #ContractsScreenTable,#TransactionalReportTable').DataTable({
+                scrollX: true,
+                scrollCollapse: true
+            });
+            $("#side-menu").metisMenu();
+            $(".pipeline-dropdown").select2();
+
+            var url = window.location.href;
+            if (url.indexOf("Dashboard") > 0) {
+                $("#side-menu li").each(function () {
+                    $(this).removeClass("active");
+                });
+                $("#DashboardLi").addClass("active");
+            }
+            else if (url.indexOf("Pipeline/Index") > 0) {
+                $("#side-menu li").each(function () {
+                    $(this).removeClass("active");
+                });
+                $("#PipelineLi").addClass("active");
+
+
+            }
+            else if (url.indexOf("PathedNomination") > 0 || url.indexOf("NonPathed") > 0) {
+                $("#side-menu li").each(function () {
+                    $(this).removeClass("active");
+                });
+                $("#NomsLi").addClass("active");
+                $("#NominationLi").addClass("active");
+                $("#NomsLi ul").removeClass("collapse");
+                $("#NomsLi ul").addClass("collapse in");
+            }
+            else if (url.indexOf("Batch") > 0) {
+                $("#side-menu li").each(function () {
+                    $(this).removeClass("active");
+                });
+                $("#NomsLi").addClass("active");
+                $("#NominationLi").addClass("active");
+                $("#NomsLi ul").removeClass("collapse");
+                $("#NomsLi ul").addClass("collapse in");
+            }
+            else if (url.indexOf("UploadNominations") > 0) {
+                $("#side-menu li").each(function () {
+                    $(this).removeClass("active");
+                });
+                $("#BulkuploadLi").addClass("active");
+                $("#NomsLi").addClass("active");
+                $("#NomsLi ul").removeClass("collapse");
+                $("#NomsLi ul").addClass("collapse in");
+
+            }
+            else if (url.indexOf("MOperationalCapacity") > 0) {
+                $("#side-menu li").each(function () {
+                    $(this).removeClass("active");
+                });
+                $("#CapacityLi").addClass("active");
+                $("#CapacityMOpCapLi").addClass("active");
+                $("#CapacityLi ul").removeClass("collapse");
+                $("#CapacityLi ul").addClass("collapse in");
+            }
+            else if (url.indexOf("MUnsubscribedCapacity") > 0) {
+                $("#side-menu li").each(function () {
+                    $(this).removeClass("active");
+                });
+                $("#CapacityLi").addClass("active");
+                $("#CapacityMUnsCapLi").addClass("active");
+                $("#CapacityLi ul").removeClass("collapse");
+                $("#CapacityLi ul").addClass("collapse in");
+            }
+            else if (url.indexOf("WatchList") > 0) {
+                $("#side-menu li").each(function () {
+                    $(this).removeClass("active");
+                });
+                $("#WatchLi").addClass("active");
+                $("#WatchLi ul").removeClass("collapse");
+                $("#WatchLi ul").addClass("collapse in");
+                if (url.indexOf("WatchList/List") > 0) {
+                    $("#WatchLiReviewList").addClass("active");
+                } else {
+                    $("#WatchLiCreateNew").addClass("active");
+                }
+            }
+            else if (url.indexOf("Contracts") > 0) {
+                $("#side-menu li").each(function () {
+                    $(this).removeClass("active");
+                });
+                $("#ContractsLi").addClass("active");
+
+            }
+            else if (url.indexOf("Notices") > 0) {
+                $("#side-menu li").each(function () {
+                    $(this).removeClass("active");
+                });
+                $("#NoticesLi").addClass("active");
+                // $("#NoticesLi ul").removeClass("collapse");
+                // $("#NoticesLi ul").addClass("collapse in");
+            }
+            //else if (url.indexOf("Notices") > 0 && url.indexOf("NonCritical") > 0) {
+            //    $("#side-menu li").each(function () {
+            //        $(this).removeClass("active");
+            //    });
+            //    $("#NoticesLi").addClass("active");
+            //    $("#NoticesLi ul").removeClass("collapse");
+            //    $("#NoticesLi ul").addClass("collapse in");
+            //}
+            else if (url.indexOf("Location") > 0) {
+                $("#side-menu li").each(function () {
+                    $(this).removeClass("active");
+                });
+                $("#LocationsLi").addClass("active");
+            }
+            else if (url.indexOf("Users") > 0) {
+                $("#side-menu li").each(function () {
+                    $(this).removeClass("active");
+                });
+                $("#UserAccountsLi").addClass("active");
+            }
+            //else if (url.indexOf("WatchList") > 0) {
+            //    $("").each(function () {
+            //        $(this).removeClass("active");
+            //    });
+            //    $('#WatchLi').addClass("active");
+            //}
+            else if (url.indexOf("SQTSSummary") > 0) {
+                $("#side-menu li").each(function () {
+                    $(this).removeClass("active");
+                });
+                $("#SQTSLi").addClass("active");
+                $("#SQTSLi ul").removeClass("collapse");
+                $("#SQTSLi ul").addClass("collapse in");
+                if (url.indexOf("SQTSSummary") > 0 && url.indexOf("&val=loc") > 0) {
+                    $("#SQTSLocLi").addClass("active");
+                } else {
+                    $("#SQTSSvcLi").addClass("active");
+                }
+            }
+            //else if (url.indexOf("FlowingGas") > 0)
+            //{
+            //    $("#side-menu li").each(function () {
+            //        $(this).removeClass("active");
+            //    });
+            //    $("#FlowingGasLi").addClass("active");
+
+            //}
+            $(document).on('focus', ':input', function () {
+                $(this).attr('autocomplete', 'off');
+            });
+
+        });
+
+
+
+
+
+
+    </script>
+    <footer>
+        <script type="text/javascript" src="https://cdn.ywxi.net/js/1.js" async></script>
+    </footer>
+    @RenderSection("scripts", required: false)
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="SQTSPopUpModal" role="dialog">
+
+    </div>
+
+
+    <div class="modal fade" id="ChangePasswordModal" role="dialog">
+
+    </div>
+
+</body>
+
+</html>
+<script>
+        function ChangePipeline(IsDUNS) {
+
+            var str = $('#PipelineDropdown').val();
+            var StrSplit = str.split("-");
+            var PipelineID = StrSplit[0];
+            var dataReload = "";
+            window.onbeforeunload = null;
+            if (window.location.href.indexOf("Critical") > 0) {
+                dataReload = location.origin + location.pathname + "?pipelineId=" + PipelineID + "&Type=Critical";
+            }
+            else if (window.location.href.indexOf("NonCritical") > 0) {
+                dataReload = location.origin + location.pathname + "?pipelineId=" + PipelineID + "&Type=NonCritical";
+            } else if (window.location.href.indexOf("SQTSSummary") > 0 && window.location.href.indexOf("&val=loc") > 0) {
+                dataReload = location.origin + location.pathname + "?pipelineId=" + PipelineID + "&val=loc";
+            } else if (window.location.href.indexOf("SQTSSummary") > 0 && window.location.href.indexOf("&val=svc") > 0) {
+                dataReload = location.origin + location.pathname + "?pipelineId=" + PipelineID + "&val=svc";
+            }
+            else {
+                dataReload = location.origin + location.pathname + "?pipelineId=" + PipelineID;
+            }
+            window.location.href = dataReload;
+        }
+
+        function ShowStsPopUp(transactionId, nomTrackingId) {
+            $('#SQTSPopUpModal').load('@Url.Action("_SQTSPopUpPartial", "SQTSSummary")' + "?transactionId=" + transactionId + "&nomTrackingId=" + nomTrackingId, function () {
+
+                $('#SQTSPopUpModal').modal('toggle');
+
+            });
+
+        }  
+        
+   
+</script> 

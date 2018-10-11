@@ -1,0 +1,54 @@
+﻿@model Nom.ViewModel.UsersDTO
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var count = 1;
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">                
+                <h4>Users</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox-content m-b-sm border-bottom">
+            <div class="ibox-content">
+
+                <div class="row">
+                    <table class="table table-bordered table-hover" id="pipelineTable">
+                        <thead>
+                            <tr>
+                                <th >Sr.No.</th>
+                                @*<th style="min-width: 120px;">First Name</th>
+                                <th style="min-width: 120px;">Comp DUNS</th>*@
+                                 <th>Username</th>
+                                <th> Email</th>
+                                <th>Phone No</th>  
+                                @*<th style="min-width: 120px;">Role</th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.userList)
+                            {
+
+                                <tr class="gradeX">
+                                    <td>@count</td>                                   
+                                    <td>@item.Username</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.PhoneNo</td>
+                                </tr>
+                                count++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

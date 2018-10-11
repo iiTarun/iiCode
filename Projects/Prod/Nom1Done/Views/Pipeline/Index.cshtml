@@ -1,0 +1,71 @@
+﻿@model Nom.ViewModel.PipelineListDTO
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var count = 1;
+}
+
+<style>
+    .natgashubLabelColor {
+        background-color: #FF6C3A;
+        color: white;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label pull-right  natgashubLabelColor">Current Date/Time: @System.DateTime.Now</span>
+                <h4>Pipelines</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox-content m-b-sm border-bottom">
+            <div class="ibox-content">
+
+                <div class="row">
+                    <table class="table table-bordered table-hover" id="pipelineTable">
+                        <thead>
+                            <tr>
+                                <th style="min-width: 60px;">Sr.No.</th>
+                                <th style="min-width: 100px;">Name</th>
+                                <th style="min-width: 100px;">DUNS</th>
+                                <th style="min-width: 100px;">IsActive</th>
+                                <th style="min-width: 60px">IsUprdActive</th>
+                                @*<th style="min-width: 60px">SetUPRD</th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.PipelineList)
+                            {
+
+                                <tr class="gradeX">
+                                    <td>@count</td>
+                                    <td>@item.NameWithoutDuns</td>
+                                    <td>@item.DUNSNo</td>
+                                    <td>@item.IsActive</td>
+                                    <td>@item.IsUprdActive</td>
+                                    @*<td>@Html.ActionLink("UPRD Req","Edit",new { id = item.ID })</td>*@
+                                </tr>
+                                count++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,178 @@
+﻿@model IEnumerable<Nom1Done.Model.TradingPartnerWorksheet>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PipelineID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UsernameLive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PasswordLive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.URLLive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.KeyLive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UsernameTest)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PasswordTest)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.URLTest)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.KeyTest)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceiveSubSeperator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceiveDataSeperator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceiveSegmentSeperator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SendSubSeperator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SendDataSeperator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SendSegmentSeperator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsTest)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModifiedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModifiedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PipeDuns)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PipelineID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UsernameLive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PasswordLive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.URLLive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.KeyLive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UsernameTest)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PasswordTest)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.URLTest)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.KeyTest)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReceiveSubSeperator)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReceiveDataSeperator)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReceiveSegmentSeperator)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SendSubSeperator)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SendDataSeperator)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SendSegmentSeperator)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsTest)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsActive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedBy)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ModifiedBy)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ModifiedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PipeDuns)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+
+
+<script>
+    $(document).ready(function () {
+        $(".table").DataTable();
+    })
+</script>

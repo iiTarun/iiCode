@@ -1,0 +1,236 @@
+﻿@model Nom.ViewModel.PathedDTO
+
+@for (var i = 0; i < Model.ReceiptNoms.Count; i++)
+{
+    Guid CurrentRowId = Guid.NewGuid();
+    var LocationProp = "--Select--";
+    var LocationName = "--Select--";
+    var Location = "--Select--";
+    var TransactionType = "--Select--";
+    var UpstreamIDProp = "--Select--";
+    var UpstreamIDName = "--Select--";
+    var UpstreamID = "--Select--";
+    var ServiceRequesterContractCode = "-Select-";
+
+    <tr class="gradeX newReceiptRow" id="ReceiptTable_@CurrentRowId" rel="@CurrentRowId">
+        @Html.Hidden("ReceiptNoms.Index", CurrentRowId.ToString())
+        <td><input type="checkbox" value="@CurrentRowId" class="Receiptchkboxes" onchange="ReceiptchkboxesOnChange()"></td>
+
+        <td>
+            <span class="label label-info" id="status_@CurrentRowId" value="0">Unsubmitted</span>
+            @Html.Hidden("ReceiptNoms[" + CurrentRowId + "].StatusId", 0, new { @rel = CurrentRowId })
+        </td>
+        <td>
+            <span></span>
+        </td>
+        <td>
+            @Html.TextBox("ReceiptNoms[" + CurrentRowId + "].StartDateTime", string.Format("{0:d}", Model.ReceiptNoms[i].StartDateTime), new { @class = "form-control Startdtpicker", @rel = CurrentRowId, @readonly = "true", placeholder = "Start Date Time... " })
+        </td>
+
+        <td>
+            @Html.TextBox("ReceiptNoms[" + CurrentRowId + "].EndDateTime", string.Format("{0:d}", Model.ReceiptNoms[i].EndDateTime), new { @class = "form-control Enddtpicker", @rel = CurrentRowId, @readonly = "true", placeholder = "End Date Time... " })
+        </td>
+
+        <td>
+            @Html.TextBox("ReceiptNoms[" + CurrentRowId + "].CreateDateTime", Model.ReceiptNoms[i].CreateDateTime, new { @class = "form-control", @rel = CurrentRowId, @readonly = "true" })
+        </td>
+        <td>
+            @Html.DropDownList("ReceiptNoms[" + CurrentRowId + "].CycleId", new SelectList(ViewBag.Cycles, "Id", "Name", Model.ReceiptNoms[i].CycleId), "-Select Cycle-", new { @class = "form-control", rel = CurrentRowId })
+        </td>
+        <td>
+            @Html.DropDownList("ReceiptNoms[" + CurrentRowId + "].NomSubCycle", new SelectList(
+                  new List<Object>{
+                       new { value = "Y" , text = "Yes"  },
+                       new { value = "N" , text = "No" }
+                    }, "value", "text", Model.ReceiptNoms[i].NomSubCycle), new { @class = "form-control" })
+        </td>
+
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentRowId','Receipt',@Model.PipelineID)">
+                @if (Model.ReceiptNoms[i].TransactionType != null)
+                {
+                    TransactionType = Model.ReceiptNoms[i].TransactionType;
+                }
+                @TransactionType
+            </span>
+            @Html.Hidden("ReceiptNoms[" + CurrentRowId + "].TransactionTypeDesc", Model.ReceiptNoms[i].TransactionTypeDesc, new { @rel = CurrentRowId })
+            @Html.Hidden("ReceiptNoms[" + CurrentRowId + "].TransactionType", Model.ReceiptNoms[i].TransactionType, new { @rel = CurrentRowId })
+            @Html.Hidden("ReceiptNoms[" + CurrentRowId + "].TransTypeMapId", Model.ReceiptNoms[i].TransTypeMapId, new { @rel = CurrentRowId })
+         </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentRowId','Receipt',@Model.PipelineID)">
+                @if (Model.ReceiptNoms[i].ServiceRequesterContractCode != null)
+                {
+                    ServiceRequesterContractCode = Model.ReceiptNoms[i].ServiceRequesterContractCode;
+                }
+                @ServiceRequesterContractCode
+            </span>@Html.Hidden("ReceiptNoms[" + CurrentRowId + "].ServiceRequesterContractCode", Model.ReceiptNoms[i].ServiceRequesterContractCode, new { @rel = CurrentRowId })
+            @Html.Hidden("ReceiptNoms[" + CurrentRowId + "].ServiceRequesterContractName", Model.ReceiptNoms[i].ServiceRequesterContractName, new { @rel = CurrentRowId })
+        </td>
+
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','Receipt',@Model.PipelineID)">
+                @if (Model.ReceiptNoms[i].ReceiptLocProp != null)
+                {
+                    LocationProp = Model.ReceiptNoms[i].ReceiptLocProp;
+                }
+                @LocationProp
+            </span>
+            @Html.Hidden("ReceiptNoms[" + CurrentRowId + "].ReceiptLocProp", Model.ReceiptNoms[i].ReceiptLocProp, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','Receipt',@Model.PipelineID)">
+                @if (Model.ReceiptNoms[i].ReceiptLocName != null)
+                {
+                    LocationName = Model.ReceiptNoms[i].ReceiptLocName;
+                }
+                @LocationName
+            </span>
+            @Html.Hidden("ReceiptNoms[" + CurrentRowId + "].ReceiptLocName", Model.ReceiptNoms[i].ReceiptLocName, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','Receipt',@Model.PipelineID)">
+                @if (Model.ReceiptNoms[i].ReceiptLocId != null)
+                {
+                    Location = Model.ReceiptNoms[i].ReceiptLocId;
+                }
+                @Location
+            </span>
+            @Html.Hidden("ReceiptNoms[" + CurrentRowId + "].ReceiptLocId", Model.ReceiptNoms[i].ReceiptLocId, new { @rel = CurrentRowId })
+        </td>
+
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Receipt',@Model.PipelineID)">
+                @if (Model.ReceiptNoms[i].UpstreamProp != null)
+                {
+                    UpstreamIDProp = Model.ReceiptNoms[i].UpstreamProp;
+                }
+                @UpstreamIDProp
+            </span>
+            @Html.Hidden("ReceiptNoms[" + CurrentRowId + "].UpstreamProp", Model.ReceiptNoms[i].UpstreamProp, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Receipt',@Model.PipelineID)">
+                @if (Model.ReceiptNoms[i].UpstreamName != null)
+                {
+                    UpstreamIDName = Model.ReceiptNoms[i].UpstreamName;
+                }
+                @UpstreamIDName
+            </span>
+            @Html.Hidden("ReceiptNoms[" + CurrentRowId + "].UpstreamName", Model.ReceiptNoms[i].UpstreamName, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Receipt',@Model.PipelineID)">
+                @if (Model.ReceiptNoms[i].UpstreamId != null)
+                {
+                    UpstreamID = Model.ReceiptNoms[i].UpstreamId;
+                }
+                @UpstreamID
+            </span>
+            @Html.Hidden("ReceiptNoms[" + CurrentRowId + "].UpstreamId", Model.ReceiptNoms[i].UpstreamId, new { @rel = CurrentRowId })
+        </td>
+
+        <td>@Html.TextBox("ReceiptNoms[" + CurrentRowId + "].UpstreamK", Model.ReceiptNoms[i].UpstreamK, new { @class = "form-control", @rel = CurrentRowId })</td>
+        <td>@Html.TextBox("ReceiptNoms[" + CurrentRowId + "].ReceiptQty", Model.ReceiptNoms[i].ReceiptQty, new { @class = "form-control cellReceiptRec", @type = "number", @rel = CurrentRowId, @min = "0", @oninput = "FuelValidationReceipt(" + "'" + CurrentRowId + "'" + ")", @onkeyup = "FuelValidationReceipt(" + "'" + CurrentRowId + "'" + ")" })</td>
+        <td>@Html.TextBox("ReceiptNoms[" + CurrentRowId + "].ReceiptRank", Model.ReceiptNoms[i].ReceiptRank, new { @class = "form-control rank", @rel = CurrentRowId, maxlength = "3" })</td>
+        <td>@Html.TextBox("ReceiptNoms[" + CurrentRowId + "].PackageId", Model.ReceiptNoms[i].PackageId, new { @class = "form-control", @rel = CurrentRowId })</td>
+
+    </tr>
+
+}
+<script>
+
+    $(document).ready(function () {
+        var todaydate = new Date();
+        $(function () {
+            var Eflag=0;
+            $(".Startdtpicker").datepicker({
+                todayBtn: false,
+                autoclose: true,
+                startDate: todaydate
+            }).on('changeDate', function (selected) {             
+                if(Eflag==0){
+                    var minDate = new Date(selected.date.valueOf());
+                    $('.Enddtpicker').datepicker('setStartDate', minDate);
+                }
+            });
+
+            $(".Enddtpicker").datepicker({ autoclose: true, todayHighlight: false, startDate: todaydate   })
+                .on('changeDate', function (selected) {                   
+                    Eflag=1;
+                    var maxDate = new Date(selected.date.valueOf());
+                    $('.Startdtpicker').datepicker('setEndDate', maxDate);
+                });
+        });
+
+
+        $('.rank').keypress(function (e) {
+            var regex = new RegExp("^[0-9]+$");
+
+            var charCode = e.which;
+
+            if (charCode == 8 || charCode == 0) {
+                return;
+            }
+            else {
+                var keyChar = String.fromCharCode(charCode);
+                if (regex.test(keyChar)) {
+                    return true;
+                }
+            }
+            e.preventDefault();
+            return false;
+        });
+
+
+    });
+
+    $(".cycleSelect").change(function () {           
+            var rel = $(this).attr("rel");
+            var index = rel;
+            var startDate = "#ReceiptNoms_" + index + "__StartDateTime";
+            var startDateValue = $(startDate).val();
+            var endDate = "#ReceiptNoms_" + index + "__EndDateTime";
+            var endDateValue = $(endDate).val();
+            var cycle = "#ReceiptNoms_" + index + "__CycleId";
+            var valueCycle = $(cycle).val();
+            var BegginingTime = "";
+            var EndTime = "";
+
+            if (valueCycle == 1 || valueCycle == 2) // timeley
+            {
+                BegginingTime = " 09:00 AM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 3)//intrs day 1
+            {
+                BegginingTime = " 02:00 PM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 4)//intrs day 2
+            {
+                BegginingTime = " 06:00 PM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 5)//intrs day 3
+            {
+                BegginingTime = " 10:00 PM";
+                EndTime = " 09:00 AM";
+            }
+
+            var startDateOnly = startDateValue.split(" ");
+            var endDateOnly = endDateValue.split(" ");
+            var finalStartdate = startDateOnly[0].concat(BegginingTime);
+            var finalEndDate = endDateOnly[0].concat(EndTime);
+
+            $(startDate).val(finalStartdate);
+            $(endDate).val(finalEndDate);
+
+
+    });
+
+</script>
+
+
+
+

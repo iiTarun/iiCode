@@ -1,0 +1,194 @@
+﻿@model UPRD.DTO.DashNominationStatusListDTO
+@{
+    ViewBag.Title = "Nomination Status";
+
+}
+
+<h2>Nomination Status</h2>
+<div class="section clearfix object-non-visible" data-animation-effect="fadeIn">
+    <div class="container">
+        <div class="row">
+            <div class="ibox-title" style="background-color:#f3f3f4 !important;">
+                <h1 id="about" class="title text-left"><span id=""></span></h1>
+            </div>
+        </div>
+        <div class="ibox-content" style="background-color:#f3f3f4 !important;" id="dvPageResult"></div>
+        <div id="dvSearch">
+            @using (Html.BeginForm("Index", "DashNomStatus"))
+            {
+
+                @Html.Hidden("NotifierEntity", (object)ViewBag.NotifierEntity)
+                <br />
+
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped" id="DashNomTable">
+                            <thead>
+                                <tr>
+                                    <th>Environment</th>
+                                    <th>Shipper</th>
+                                    <th>Username</th>
+                                    <th>Pipeline</th>
+                                    <th>Pipe DUNS</th>
+                                    <th>Nom Tracking ID</th>
+                                    <th>Submitted Date/Time</th>
+                                    <th>Time Elapsed</th>
+                                    <th>Nom Status</th>
+                                    <th>Alert Triggered</th>
+                                    <th style="visibility: hidden;">StatusId</th>
+                                    <th style="visibility: hidden;">ShipperDuns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.dashNominationStatusDTO)
+                                {
+                                <tr>
+                                    <td>@item.Environment</td>
+                                    <td>@item.ShipperCompany</td>
+                                    <td>@item.UserName</td>
+                                    <td>@item.PipelineName</td>
+                                    <td class="pipeDuns">@item.PipeDuns</td>
+                                    <td>@item.NomTrackingId</td>
+                                    <td>@item.SubmittedDate</td>
+                                    <td class="countdown"> <span class="timeElapsed" style="display:none">@item.TimeElapsed</span><span class="minutes"></span>:<span class="seconds"></span></td>
+                                    <td class="nomStatus">@item.NomStatus</td>
+                                    <td class="IsTriggered">@item.AlertTrigger</td>
+                                    <td class="statusId" style="visibility: hidden;">@item.StatusId</td>
+                                    <td class="shipperduns" style="visibility:hidden;">@item.ShipperDuns</td>
+                                </tr>
+                                }
+
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        dataTable = $('#DashNomTable').DataTable({
+            "scrollX": true,
+            "scrollY": 400,
+        });
+        doUpdate();
+
+        // Schedule the update to happen once every second
+        setInterval(doUpdate, 1000);
+        setInterval(CheckStatus, 60000);
+        var time = parseInt($(this).find(".timeElapsed").text());
+    });
+    function doUpdate() {
+                // Function to update counters on all elements with class counter
+        $('.countdown').each(function () {
+            var s = 0;
+            var m = 0;
+            var timeElapsed = parseInt($(this).find(".timeElapsed").text());
+
+            if (timeElapsed != 0) {
+                s = parseInt($(this).find(".timeElapsed").text());
+                m = Math.floor(s / 60);
+                s -= m * 60;
+                $(this).find(".timeElapsed").text('0')
+            }
+            else {
+                m = parseInt($(this).find(".minutes").text());
+                s = parseInt($(this).find(".seconds").text());
+
+                if (s == 0) {
+                    s = 59
+                    m = m - 1
+                    if (m < 0) {
+                        return
+                    }
+                }
+                else {
+                    s = s - 1;
+                }
+            }
+            m = m > 9 ? "" + m : "0" + m;
+            s = s > 9 ? "" + s : "0" + s;
+            $(this).find('.minutes').text(m);
+            $(this).find('.seconds').text(s);
+
+            if (isNaN(m))
+                $(this).find('.minutes').text("00");
+            if (isNaN(s))
+                $(this).find('.seconds').text("00");
+        });
+    };
+
+    function CheckStatus() {
+        var Count = 0;
+        $('.countdown').each(function () {
+            var min = parseInt($(this).find(".minutes").text());
+            var sec = parseInt($(this).find(".seconds").text());
+            var time = min + sec;
+            if (time == 0) {
+
+                var shipperDuns = $(this).closest('tr').find('.shipperduns').text();
+                var pipeDuns = $(this).closest('tr').find('.pipeDuns').text();
+                var nominationStatus = $(this).closest('tr').find('.nomStatus').text();
+                var statusId = $(this).closest('tr').find('.statusId').text();
+                var isTriggered = $(this).closest('tr').find('.IsTriggered').text();
+
+
+
+                if (isTriggered === 'false' && (nominationStatus.toLowerCase() === 'submitted' || nominationStatus.toLowerCase() === 'in-process')) {
+                    $.ajax({
+                        url: '/DashNomStatus/UpdateAlertTrigger',
+                        type: "Post",
+                        data: { ShipperDuns: shipperDuns, PipeDuns: pipeDuns, StatusID: statusId },
+                        success: function (data) {
+                        },
+                        error: function () {
+                            alert("error");
+                        }
+                    });
+
+                    Count = Count + 1;
+
+                }
+            }
+        });
+        if (Count > 0) { alert('You have New Notification.') }
+    };
+</script>
+
+
+@section scripts {
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+
+    <script type="text/javascript">
+        var signalRHubInitialized = false;
+        $(function () {
+            InitializeSignalRHubStore();
+        });
+        function InitializeSignalRHubStore() {
+            if (signalRHubInitialized)
+                return;
+            try {
+                var clientHub = $.connection.nomDoneHub;
+                clientHub.client.broadcastMessage = function (message) {
+                    if (message === "Refresh") {
+                        window.location.reload();
+                        if (!signalRHubInitialized)
+                            InitializeSignalRHubStore();
+                    }
+                };
+                $.connection.hub.start().done(function () {
+                    clientHub.server.initializeNomTable($("#NotifierEntity").val());
+                    signalRHubInitialized = true;
+                });
+            } catch (err) {
+                signalRHubInitialized = false;
+            }
+        };
+
+    </script>
+}

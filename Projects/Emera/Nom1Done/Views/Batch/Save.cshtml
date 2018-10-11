@@ -1,0 +1,143 @@
+﻿@model  Nom1Done.DTO.BatchDetailDTO
+@{
+    ViewBag.Title = "Save";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Add Batch</h5>
+            </div>
+            <div class="ibox-content">
+                <div class="form-horizontal">
+                    @using (Html.BeginForm())
+                    {
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">*Cycle</label>
+                            @Html.HiddenFor(a => a.PipelineId, new { @id = "BatchPipelineId" })
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(r => r.CycleId, (IEnumerable<SelectListItem>)ViewBag.Cycles, "--Select Cycle--", new { @class = "form-control" })
+                                @*@Html.DropDownList("PathedNomsList[" + CurrentRowId + "].CycleID", new SelectList(ViewBag.Cycles, "Id", "Name", Model.PathedNomsList[0].CycleID), "-Select Cycle-", new { @class = "form-control cycleSelect", rel = CurrentRowId })*@
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group" id="flow_start">
+                            <label class="col-sm-2 control-label">*Flow Start Date</label>
+                            <div class="col-sm-6">
+                                <div class="input-group date">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    @Html.TextBoxFor(a => a.StartDateTime, "{0:MM/dd/yyyy}",new { @class = "form-control m-b startDtpicker", placeholder = "Start Date ... " })
+                                    @*<input type="text" class="form-control m-b" value="03/04/2014">*@
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group" id="flow_end">
+                            <label class="col-sm-2 control-label">*Flow End Date</label>
+                            <div class="col-sm-6">
+                                <div class="input-group date">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    @Html.TextBoxFor(a => a.EndDateTime, "{0:MM/dd/yyyy}", new { @class = "form-control endDtpicker", placeholder = "End Date ... " })
+                                    @*<input type="text" class="form-control" value="03/04/2014">*@
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+                       if (Model.PipelineModelType == Nom1Done.DTO.NomType.HyNonPathedPNT) { 
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Nominate subsequent cycle(Auto-Renom)</label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(a=>a.NomSubCycle, new SelectList(
+new List<Object>{
+                       new { value = "Y" , text = "Yes"  },
+                       new { value = "N" , text = "No" }
+}, "value", "text", 0), new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        }
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Description</label>
+                            <div class="col-sm-6">
+                                @Html.TextAreaFor(a => a.Description, new { @class = "form-control", placeholder = "Desc...." })
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <button class="btn btn-white" type="button" style="background-color:#FF6C3A !important; border-color:#FF6C3A;color:white !important;" onclick="clean();">Clear</button>
+                                <button class="btn btn-primary" name="Save" style="background-color:#FF6C3A !important; border-color:#FF6C3A !important;" type="submit" onclick="return validate();">Save changes</button>
+                                <a href="@Url.Action("Index",new {pipelineId = Model.PipelineId })" style="background-color:#FF6C3A !important; border-color:#FF6C3A;color:white !important;" class="btn btn-white">Cancel</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    function clean()
+    {
+
+            var cycle = $("#CycleId");
+            cycle.val('');
+            var startdate = $("#StartDateTime");
+            startdate.val('');
+            var enddate = $("#EndDateTime");
+            enddate.val('');
+            $("#Description").val('');
+
+    }
+    function validate()
+    {
+        var flag = true;
+        var cycle = $("#CycleId");
+        var startDate = $("#StartDateTime");
+        var endDate = $("#EndDateTime");
+        if ((cycle.val() == "") || (startDate.val() == "") || (endDate.val() == ""))
+        {
+            toastr.warning("Please Fill required fields(*).");
+            flag = false;
+        }
+        return flag;
+    }
+    $(document).ready(function () {
+        $(function () {            
+            $("#StartDateTime").datepicker({
+                todayBtn: 1,
+                autoclose: true,
+                startDate: new Date(),
+            }).on('changeDate', function (selected) {
+                var minDate = new Date(selected.date.valueOf());
+                $('#EndDateTime').datepicker('setStartDate', minDate);
+            });
+
+            $("#EndDateTime").datepicker({ autoclose: true, startDate: new Date() })
+                .on('changeDate', function (selected) {
+                    var maxDate = new Date(selected.date.valueOf());
+                    $('#StartDateTime').datepicker('setEndDate', maxDate);
+            });
+        });
+
+        var str = $('#PipelineDropdown').val();
+        var StrSplit = str.split("-");
+        var PipelineID = StrSplit[0];
+        $("#BatchPipelineId").val(PipelineID);
+    });
+</script>
+

@@ -1,0 +1,1052 @@
+﻿@model Nom1Done.DTO.NonPathedDTO
+@{   
+    Guid CurrentReceiptNomId = Guid.NewGuid();
+    Guid CurrentDeliveryNomId = Guid.NewGuid();
+    string RowStatusClass = "label-warning";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tabs-container">
+            <ul class="nav nav-tabs" id="tabList">
+
+                <li class="active"><a data-toggle="tab" href="#ReceiptTab">Receipt</a></li>
+                <li><a data-toggle="tab" href="#DeliveryTab">Delivery</a></li>
+
+            </ul>
+
+            <!--All Tabs Body-->
+            <div class="tab-content">
+                <!-- Receipt Tab Body-->
+                <div id="ReceiptTab" class="tab-pane active">
+                    <div class="panel-body">
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-content">
+                                        @*<div class="btn-group">
+                                            <a class="btn" onclick="AddReceiptRow(''@Model.PipelineDuns'');"><span class="glyphicon glyphicon-plus-sign glyphicon-color" title="Add"></span></a>
+                                            <a class="btn" onclick="CopyReceiptNomRow('@Model.PipelineDuns')" href="javascript:void(0)"><span class="glyphicon glyphicon-copy glyphicon-color" title="Copy"></span></a>
+                                            <a class="btn" onclick="removeReceipt();"><span class="glyphicon glyphicon-remove glyphicon-color" title="Delete"></span></a>
+                                        </div>*@
+                                        <div class="table-responsive">
+                                            <table id="ReceiptTable" class="table table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th><input type="checkbox" class="selectallReceipt" value="0"> Select All</th>
+
+                                                        <th>Status</th>
+                                                        <th style="min-width: 120px;">Sched Qty</th>
+                                                        <th style="min-width:200px !important">StartDate</th>
+                                                        <th style="min-width:200px !important">EndDate</th>
+                                                        <th style="min-width:200px !important">CreatedDate</th>
+                                                        <th style="min-width:150px !important">Cycle</th>
+                                                        <th>RollNom</th>
+                                                        <th>TransactionType</th>
+                                                        <th>SrvReqContract</th>
+                                                        <th>RecLocProp</th>
+                                                        <th>RecLocName</th>
+                                                        <th>RecLoc</th>
+                                                        <th>UpID prop</th>
+                                                        <th>UpName</th>
+                                                        <th>UpID</th>
+                                                        <th>UpContract</th>
+                                                        <th>RecQty</th>
+                                                        <th>RecRank</th>
+                                                        <th>PackageID</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.ReceiptNoms)
+                                                    {
+                                                        var LocationProp = "--Select--";
+                                                        var LocationName = "--Select--";
+                                                        var Location = "--Select--";
+                                                        var TransactionType = "--Select--";
+                                                        var UpstreamIDProp = "--Select--";
+                                                        var UpstreamIDName = "--Select--";
+                                                        var UpstreamID = "--Select--";
+                                                        var ServiceRequesterContractCode = "-Select-";
+
+                                                        if (item.StatusId == 1 || item.StatusId == 2 || item.StatusId == 3 || item.StatusId == 4)
+                                                        {
+                                                            RowStatusClass = "label-info";
+                                                            item.Status = "In-Process";
+                                                        }
+                                                        else if (item.StatusId == 5 || item.StatusId == 6)
+                                                        {
+                                                            RowStatusClass = "label-success";
+                                                            item.Status = "Submitted";
+                                                        }
+                                                        else if (item.StatusId == 7)
+                                                        {
+                                                            RowStatusClass = "label-success";
+                                                            item.Status = "Accepted";
+                                                        }
+                                                        else if (item.StatusId == 8 || item.StatusId == 9)
+                                                        {
+                                                            RowStatusClass = "label-warning";
+                                                            item.Status = "Exception Occured";
+                                                        }
+                                                        else if (item.StatusId == 10)
+                                                        {
+                                                            RowStatusClass = "label-warning";
+                                                            item.Status = "Rejected";
+                                                        }
+                                                        else if (item.StatusId == 11)
+                                                        {
+                                                            RowStatusClass = "label-warning";
+                                                            item.Status = "Draft";
+                                                        }
+                                                        else if (item.StatusId == 12)
+                                                        {
+                                                            RowStatusClass = "label-info";
+                                                            item.Status = "Replaced";
+                                                        }
+
+                                                        if (item.StatusId == 11)
+                                                        {
+                                                                             <!--Editable Row UI-->
+                                                            <tr class="gradeX" rel="@CurrentReceiptNomId">
+                                                                @Html.Hidden("ReceiptNoms.Index", CurrentReceiptNomId.ToString())
+                                                                @Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].TransactionId", item.TransactionId, new { rel = CurrentReceiptNomId })
+                                                                <td>
+                                                                    <input type="checkbox" value="@CurrentReceiptNomId" class="Receiptchkboxes" onchange="ReceiptchkboxesOnChange()" rel="@item.TransactionId">
+                                                                    @*<input type="checkbox" onclick="ChkBoxClick(this,@item.StatusID)" class="chkboxes" rel="@item.TransactionId" value="@CurrentRowIndex" onchange="chkboxesOnchange()">*@
+                                                                </td>
+
+                                                                <td class="cursor">
+                                                                    @if (item.StatusId == 8 || item.StatusId == 9 || item.StatusId == 10)
+                                                                    {
+                                                                        <span rel="@item.TransactionId" class="label @RowStatusClass status_@item.TransactionId" id="status_@CurrentReceiptNomId" value="@item.StatusId" onclick="OpenPopUp('StatusReason','@CurrentReceiptNomId','@item.TransactionId','@Model.PipelineDuns')">@item.Status</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span rel="@item.TransactionId" class="label @RowStatusClass status_@item.TransactionId" id="status_@CurrentReceiptNomId"  value="@item.StatusId">@item.Status</span>
+                                                                    }
+                                                                    @Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].StatusId", item.StatusId, new { @rel = CurrentReceiptNomId })
+
+                                                                </td>
+                                                                <td>
+                                                                    <span></span>
+                                                                </td>
+                                                                <td>
+                                                                    @Html.TextBox("ReceiptNoms[" + CurrentReceiptNomId + "].StartDateTime", string.Format("{0:d}", item.StartDateTime), new { @class = "form-control dtpicker ", @rel = CurrentReceiptNomId, @readonly = "true", placeholder = "Start Date Time... " })
+                                                                </td>
+
+                                                                <td>
+                                                                    @Html.TextBox("ReceiptNoms[" + CurrentReceiptNomId + "].EndDateTime", string.Format("{0:d}", item.EndDateTime), new { @class = "form-control dtpicker", @rel = CurrentReceiptNomId, @readonly = "true", placeholder = "End Date Time... " })
+                                                                </td>
+                                                                <td>
+                                                                    @Html.TextBox("ReceiptNoms[" + CurrentReceiptNomId + "].CreateDateTime", string.Format("{0:d}", item.CreateDateTime) , new { @class = "form-control", @rel = CurrentReceiptNomId, @readonly = "true" })
+                                                                </td>
+                                                                <td>
+                                                                    @Html.DropDownList("ReceiptNoms[" + CurrentReceiptNomId + "].CycleId", new SelectList(ViewBag.Cycles, "CycleID", "Name", item.CycleId), "-Select Cycle-", new { @class = "form-control", rel = CurrentReceiptNomId })
+                                                                </td>
+                                                                <td>
+                                                                    @Html.DropDownList("ReceiptNoms[" + CurrentReceiptNomId + "].NomSubCycle", new SelectList(
+                                                                                    new List<Object>{
+                                                                                                           new { value = "Y" , text = "Yes"  },
+                                                                                                           new { value = "N" , text = "No" }
+                                                                                    }, "value", "text", item.NomSubCycle), new { @class = "form-control" })
+                                                                </td>
+
+
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentReceiptNomId','Receipt','@Model.PipelineDuns')">
+                                                                        @if (item.TransactionType != null && item.TransactionType != "")
+                                                                            {
+                                                                                TransactionType = item.TransactionType;
+                                                                            }
+                                                                            @TransactionType
+                                                                        </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].TransactionTypeDesc", item.TransactionTypeDesc, new { @rel = CurrentReceiptNomId })
+                                                                    @Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].TransactionType", item.TransactionType, new { @rel = CurrentReceiptNomId })
+                                                                </td>
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentReceiptNomId','Receipt','@Model.PipelineDuns')">
+                                                                        @if (item.ServiceRequesterContractCode != null)
+                                                                    {
+                                                                        ServiceRequesterContractCode = item.ServiceRequesterContractCode;
+                                                                    }
+                                                                    @ServiceRequesterContractCode
+                                                                </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].ServiceRequesterContractCode", item.ServiceRequesterContractCode, new { @rel = CurrentReceiptNomId })
+                                                                    @Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].ServiceRequesterContractName", item.ServiceRequesterContractName, new { @rel = CurrentReceiptNomId })
+                                                                </td>
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentReceiptNomId','Receipt','@Model.PipelineDuns')">
+                                                                        @if (item.ReceiptLocProp != null)
+                                                                    {
+                                                                        LocationProp = item.ReceiptLocProp;
+                                                                    }
+                                                                    @LocationProp
+                                                                </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].ReceiptLocProp", item.ReceiptLocProp, new { @rel = CurrentReceiptNomId })
+                                                                </td>
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentReceiptNomId','Receipt','@Model.PipelineDuns')">
+                                                                        @if (item.ReceiptLocName != null && item.ReceiptLocName != "")
+                                                                    {
+                                                                        LocationName = item.ReceiptLocName;
+                                                                    }
+                                                                    @LocationName
+                                                                </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].ReceiptLocName", item.ReceiptLocName, new { @rel = CurrentReceiptNomId })
+                                                                </td>
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentReceiptNomId','Receipt','@Model.PipelineDuns')">
+                                                                        @if (item.ReceiptLocId != null)
+                                                                    {
+                                                                        Location = item.ReceiptLocId;
+                                                                    }
+                                                                    @Location
+                                                                </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].ReceiptLocId", item.ReceiptLocId, new { @rel = CurrentReceiptNomId })
+                                                                </td>
+
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentReceiptNomId','Receipt','@Model.PipelineDuns')">
+                                                                        @if (item.UpstreamProp != null && item.UpstreamProp != "")
+                                                                    {
+                                                                        UpstreamIDProp = item.UpstreamProp;
+                                                                    }
+                                                                    @UpstreamIDProp
+                                                                </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].UpstreamProp", item.UpstreamProp, new { @rel = CurrentReceiptNomId })
+                                                                </td>
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentReceiptNomId','Receipt','@Model.PipelineDuns')">
+                                                                        @if (item.UpstreamName != null && item.UpstreamName != "")
+                                                                    {
+                                                                        UpstreamIDName = item.UpstreamName;
+                                                                    }
+                                                                    @UpstreamIDName
+                                                                </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].UpstreamName", item.UpstreamName, new { @rel = CurrentReceiptNomId })
+                                                                </td>
+
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentReceiptNomId','Receipt','@Model.PipelineDuns')">
+                                                                        @if (item.UpstreamId != null && item.UpstreamId != "")
+                                                                    {
+                                                                        UpstreamID = item.UpstreamId;
+                                                                    }
+                                                                    @UpstreamID
+                                                                </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].UpstreamId", item.UpstreamId, new { @rel = CurrentReceiptNomId })
+                                                                </td>
+
+                                                                <td>@Html.TextBox("ReceiptNoms[" + CurrentReceiptNomId + "].UpstreamK", item.UpstreamK, new { @class = "form-control", @rel = CurrentReceiptNomId })</td>
+                                                                <td>@Html.TextBox("ReceiptNoms[" + CurrentReceiptNomId + "].ReceiptQty", item.ReceiptQty, new { @class = "form-control", @rel = CurrentReceiptNomId })</td>
+                                                                <td>@Html.TextBox("ReceiptNoms[" + CurrentReceiptNomId + "].ReceiptRank", item.ReceiptRank, new { @class = "form-control", @rel = CurrentReceiptNomId })</td>
+                                                                <td>@Html.TextBox("ReceiptNoms[" + CurrentReceiptNomId + "].PackageId", item.PackageId, new { @class = "form-control", @rel = CurrentReceiptNomId })</td>
+                                                                @Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].NomTrackingId", item.NomTrackingId, new { @rel = CurrentReceiptNomId })
+
+
+                                                            </tr>
+
+                                                        }
+                                                        else
+                                                        {
+                                                                             <!--Non-Editable Row UI-->
+
+                                                            <tr class="gradeX" rel="@CurrentReceiptNomId">
+                                                                @Html.Hidden("ReceiptNoms.Index", CurrentReceiptNomId.ToString())
+                                                                @Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].TransactionId", item.TransactionId, new { rel = CurrentReceiptNomId })
+                                                                <td><input type="checkbox" value="@CurrentReceiptNomId" class="Receiptchkboxes" onchange="ReceiptchkboxesOnChange()" rel="@item.TransactionId"></td>
+
+                                                                <td class="cursor">
+                                                                    @if (item.StatusId == 8 || item.StatusId == 9 || item.StatusId == 10)
+                                                                    {
+                                                                        <span rel="@item.TransactionId" class="label @RowStatusClass status_@item.TransactionId" id="status_@CurrentReceiptNomId" value="@item.StatusId" onclick="OpenPopUp('StatusReason','@CurrentReceiptNomId','@item.TransactionId','@Model.PipelineDuns')">@item.Status</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span rel="@item.TransactionId" class="label @RowStatusClass status_@item.TransactionId" id="status_@CurrentReceiptNomId" value="@item.StatusId">@item.Status</span>
+                                                                    }
+                                                                    @Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].StatusId", item.StatusId, new { @rel = CurrentReceiptNomId })
+
+                                                                </td>
+                                                                <td>
+                                                                    @if (item.StatusId == 7)
+                                                                    {
+                                                                        <a href="javascript:void(0)" style="color:#FF6C3A !important;" onclick="ShowStsPopUp('@item.TransactionId','@item.NomTrackingId')">View Sched Qty</a>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span></span>
+                                                                    }
+                                                                </td>
+                                                                <td>
+                                                                    @Html.TextBox("ReceiptNoms[" + CurrentReceiptNomId + "].StartDateTime", string.Format("{0:d}", item.StartDateTime), new { @class = "form-control", @rel = CurrentReceiptNomId, @readonly = "true", placeholder = "Start Date Time... " })
+                                                                </td>
+
+                                                                <td>
+                                                                    @Html.TextBox("ReceiptNoms[" + CurrentReceiptNomId + "].EndDateTime", string.Format("{0:d}", item.EndDateTime), new { @class = "form-control", @rel = CurrentReceiptNomId, @readonly = "true", placeholder = "End Date Time... " })
+                                                                </td>
+                                                                <td>
+                                                                    @Html.TextBox("ReceiptNoms[" + CurrentReceiptNomId + "].CreateDateTime", string.Format("{0:d}", item.CreateDateTime), new { @class = "form-control", @rel = CurrentReceiptNomId, @readonly = "true" })
+                                                                </td>
+                                                                <td>
+                                                                    @Html.DropDownList("ReceiptNoms[" + CurrentReceiptNomId + "].CycleId", new SelectList(ViewBag.Cycles, "CycleID", "Name", item.CycleId), "-Select Cycle-", new { @class = "form-control", @disabled = "disabled", rel = CurrentReceiptNomId })
+                                                                    @Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].CycleId", item.CycleId, new { @rel = CurrentReceiptNomId })
+                                                                </td>
+                                                                <td>
+                                                                    @Html.DropDownList("ReceiptNoms[" + CurrentReceiptNomId + "].NomSubCycle", new SelectList(
+                                                                                    new List<Object>{
+                                                                                                           new { value = "Y" , text = "Yes"  },
+                                                                                                           new { value = "N" , text = "No" }
+                                                                                    }, "value", "text", item.NomSubCycle), new { @class = "form-control", @disabled = "disabled" })
+                                                                    @Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].NomSubCycle", item.NomSubCycle, new { @rel = CurrentReceiptNomId })
+                                                                </td>
+
+
+                                                                <td>
+                                                                    <span data-toggle="modal">
+                                                                        @if (item.TransactionType != null && item.TransactionType != "")
+                                                                    {
+                                                                                    TransactionType = item.TransactionType;
+                                                                                }
+                                                                                @TransactionType
+                                                                            </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].TransactionTypeDesc", item.TransactionTypeDesc, new { @rel = CurrentReceiptNomId })
+                                                                    @Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].TransactionType", item.TransactionType, new { @rel = CurrentReceiptNomId })
+                                                                </td>
+                                                                <td>
+                                                                    <span data-toggle="modal">
+                                                                        @if (item.ServiceRequesterContractCode != null && item.ServiceRequesterContractCode != "")
+                                                                    {
+                                                                                    ServiceRequesterContractCode = item.ServiceRequesterContractCode;
+                                                                                }
+                                                                                @ServiceRequesterContractCode
+                                                                            </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].ServiceRequesterContractCode", item.ServiceRequesterContractCode, new { @rel = CurrentReceiptNomId })
+                                                                    @Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].ServiceRequesterContractName", item.ServiceRequesterContractName, new { @rel = CurrentReceiptNomId })
+                                                                </td>
+                                                                <td>
+                                                                    <span data-toggle="modal">
+                                                                        @if (item.ReceiptLocProp != null && item.ReceiptLocProp != "")
+                                                                    {
+                                                                                    LocationProp = item.ReceiptLocProp;
+                                                                                }
+                                                                                @LocationProp
+                                                                            </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].ReceiptLocProp", item.ReceiptLocProp, new { @rel = CurrentReceiptNomId })
+                                                                            </td>
+
+
+                                                                            <td>
+
+
+                                                                                <span data-toggle="modal">
+                                                                                    @if (item.ReceiptLocName != null && item.ReceiptLocName != "")
+                                                                    {
+                                                                                    LocationName = item.ReceiptLocName;
+                                                                                }
+                                                                                @LocationName
+                                                                            </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].ReceiptLocName", item.ReceiptLocName, new { @rel = CurrentReceiptNomId })
+                                                                            </td>
+
+
+                                                                            <td>
+
+
+                                                                                <span data-toggle="modal">
+                                                                                    @if (item.ReceiptLocId != null && item.ReceiptLocId != "")
+                                                                    {
+                                                                                    Location = item.ReceiptLocId;
+                                                                                }
+                                                                                @Location
+                                                                            </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].ReceiptLocId", item.ReceiptLocId, new { @rel = CurrentReceiptNomId })
+                                                                            </td>
+
+
+
+                                                                            <td>
+
+
+                                                                                <span data-toggle="modal">
+                                                                                    @if (item.UpstreamProp != null && item.UpstreamProp != "")
+                                                                    {
+                                                                                    UpstreamIDProp = item.UpstreamProp;
+                                                                                }
+                                                                                @UpstreamIDProp
+                                                                            </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].UpstreamProp", item.UpstreamProp, new { @rel = CurrentReceiptNomId })
+                                                                            </td>
+
+
+                                                                            <td>
+
+
+                                                                                <span data-toggle="modal">
+                                                                                    @if (item.UpstreamName != null && item.UpstreamName != "")
+                                                                    {
+                                                                                    UpstreamIDName = item.UpstreamName;
+                                                                                }
+                                                                                @UpstreamIDName
+                                                                            </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].UpstreamName", item.UpstreamName, new { @rel = CurrentReceiptNomId })
+                                                                            </td>
+
+
+
+                                                                            <td>
+
+
+                                                                                <span data-toggle="modal">
+                                                                                    @if (item.UpstreamId != null && item.UpstreamId != "")
+                                                                    {
+                                                                                    UpstreamID = item.UpstreamId;
+                                                                                }
+                                                                                @UpstreamID
+                                                                            </span>@Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].UpstreamId", item.UpstreamId, new { @rel = CurrentReceiptNomId })
+                                                                            </td>
+
+
+
+                                                                            <td>@Html.TextBox("ReceiptNoms[" + CurrentReceiptNomId + "].UpstreamK", item.UpstreamK, new { @class = "form-control", @readonly = "readonly", @rel = CurrentReceiptNomId })</td>
+
+
+                                                                            <td>@Html.TextBox("ReceiptNoms[" + CurrentReceiptNomId + "].ReceiptQty", item.ReceiptQty, new { @class = "form-control", @readonly = "readonly", @rel = CurrentReceiptNomId })</td>
+
+
+                                                                            <td>@Html.TextBox("ReceiptNoms[" + CurrentReceiptNomId + "].ReceiptRank", item.ReceiptRank, new { @class = "form-control", @readonly = "readonly", @rel = CurrentReceiptNomId })</td>
+
+
+                                                                            <td>@Html.TextBox("ReceiptNoms[" + CurrentReceiptNomId + "].PackageId", item.PackageId, new { @class = "form-control", @readonly = "readonly", @rel = CurrentReceiptNomId })</td>
+                                                                            @Html.Hidden("ReceiptNoms[" + CurrentReceiptNomId + "].NomTrackingId", item.NomTrackingId, new { @rel = CurrentReceiptNomId })
+
+
+                                                                        </tr>
+
+                                                        }
+
+                                                                            CurrentReceiptNomId = Guid.NewGuid();
+                                                                        }
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Receipt Tab Body End-->
+                <!-- Delivery Tab Body-->
+                <div id="DeliveryTab" class="tab-pane">
+                    <div class="panel-body">
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="ibox float-e-margins">
+
+                                    <div class="ibox-content">
+                                        @*<div class="btn-group">
+                                            <a class="btn" onclick="AddDeliveryRow(''@Model.PipelineDuns'');"><span class="glyphicon glyphicon-plus-sign glyphicon-color" title="Add"></span></a>
+                                            <a class="btn" onclick="CopyDeliveryNomRow('@Model.PipelineDuns')" href="javascript:void(0)"><span class="glyphicon glyphicon-copy glyphicon-color" title="Copy"></span></a>
+                                            <a class="btn" onclick="removeDelivery();"><span class="glyphicon glyphicon-remove glyphicon-color" title="Delete"></span></a>
+                                        </div>*@
+                                        <div class="table-responsive">
+                                            <table id="DeliveryTable" class="table table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th><input type="checkbox" class="selectallDelivery" value="0"> Select All</th>
+
+                                                        <th>Status</th>
+                                                        <th style="min-width: 120px;">Sched Qty</th>
+                                                        <th style="min-width:200px !important">StartDate</th>
+                                                        <th style="min-width:200px !important">EndDate</th>
+                                                        <th style="min-width:200px !important">CreatedDate</th>
+                                                        <th style="min-width:150px !important">Cycle</th>
+                                                        <th>RollNom</th>
+
+                                                        <th>TransactionType</th>
+                                                        <th>SrvReqContract</th>
+                                                        <th>DelLocProp</th>
+                                                        <th>DelLocName</th>
+                                                        <th>DelLoc</th>
+                                                        <th>DnProp</th>
+                                                        <th>DnName</th>
+                                                        <th>DnID</th>
+                                                        <th>DnContract</th>
+                                                        <th>DelQty</th>
+                                                        <th>DelRank</th>
+                                                        <th>PackageID</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.DeliveryNoms)
+                                                    {
+                                                        var DelLocationProp = "--Select--";
+                                                        var DelLocationName = "--Select--";
+                                                        var DelLocation = "--Select--";
+                                                        var DelTransactionType = "--Select--";
+                                                        var DnstreamIDProp = "--Select--";
+                                                        var DnstreamIDName = "--Select--";
+                                                        var DnstreamID = "--Select--";
+                                                        var ServiceRequesterContractCode = "-Select-";
+
+
+                                                        if (item.StatusId == 1 || item.StatusId == 2 || item.StatusId == 3 || item.StatusId == 4)
+                                                        {
+                                                            RowStatusClass = "label-info";
+                                                            item.Status = "In-Process";
+                                                        }
+                                                        else if (item.StatusId == 5 || item.StatusId == 6)
+                                                        {
+                                                            RowStatusClass = "label-success";
+                                                            item.Status = "Submitted";
+                                                        }
+                                                        else if (item.StatusId == 7)
+                                                        {
+                                                            RowStatusClass = "label-success";
+                                                            item.Status = "Accepted";
+                                                        }
+                                                        else if (item.StatusId == 8 || item.StatusId == 9)
+                                                        {
+                                                            RowStatusClass = "label-warning";
+                                                            item.Status = "Exception Occured";
+                                                        }
+                                                        else if (item.StatusId == 10)
+                                                        {
+                                                            RowStatusClass = "label-warning";
+                                                            item.Status = "Rejected";
+                                                        }
+                                                        else if (item.StatusId == 11)
+                                                        {
+                                                            RowStatusClass = "label-warning";
+                                                            item.Status = "Draft";
+                                                        }
+                                                        else if (item.StatusId == 12)
+                                                        {
+                                                            RowStatusClass = "label-info";
+                                                            item.Status = "Replaced";
+                                                        }
+
+                                                        if (item.StatusId == 11)
+                                                        {
+                                                                            <!--Editable Row UI-->
+
+                                                            <tr class="gradeX" rel="@CurrentDeliveryNomId">
+                                                                @Html.Hidden("DeliveryNoms.Index", CurrentDeliveryNomId.ToString())
+                                                                @Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].TransactionId", item.TransactionId, new { rel = CurrentDeliveryNomId })
+                                                                <td><input type="checkbox" value="@CurrentDeliveryNomId" class="Deliverychkboxes" onchange="DeliverychkboxesOnChange()" rel="@item.TransactionId"></td>
+
+                                                                <td class="cursor">
+                                                                    @if (item.StatusId == 8 || item.StatusId == 9 || item.StatusId == 10)
+                                                                    {
+                                                                        <span rel="@item.TransactionId" class="label @RowStatusClass status_@item.TransactionId" id="status_@CurrentDeliveryNomId" value="@item.StatusId" onclick="OpenPopUp('StatusReason','@CurrentDeliveryNomId','@item.TransactionId','@Model.PipelineDuns')">@item.Status</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span rel="@item.TransactionId" class="label @RowStatusClass status_@item.TransactionId" id="status_@CurrentDeliveryNomId" value="@item.StatusId">@item.Status</span>
+                                                                    }
+                                                                    @Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].StatusId", item.StatusId, new { @rel = CurrentDeliveryNomId })
+
+                                                                </td>
+                                                                <td>
+                                                                    <span></span>
+                                                                </td>
+                                                                <td>
+                                                                    @Html.TextBox("DeliveryNoms[" + CurrentDeliveryNomId + "].StartDateTime", string.Format("{0:d}", item.StartDateTime), new { @class = "form-control dtpicker ", @rel = CurrentDeliveryNomId, @readonly = "true", placeholder = "Start Date Time... " })
+                                                                </td>
+
+                                                                <td>
+                                                                    @Html.TextBox("DeliveryNoms[" + CurrentDeliveryNomId + "].EndDateTime", string.Format("{0:d}", item.EndDateTime), new { @class = "form-control dtpicker", @rel = CurrentDeliveryNomId, @readonly = "true", placeholder = "End Date Time... " })
+                                                                </td>
+                                                                <td>
+                                                                    @Html.TextBox("DeliveryNoms[" + CurrentDeliveryNomId + "].CreateDateTime", string.Format("{0:d}", item.CreateDateTime), new { @class = "form-control ", @rel = CurrentDeliveryNomId, @readonly = "true" })
+                                                                </td>
+                                                                <td>
+                                                                    @Html.DropDownList("DeliveryNoms[" + CurrentDeliveryNomId + "].CycleId", new SelectList(ViewBag.Cycles, "CycleID", "Name", item.CycleId), "-Select Cycle-", new { @class = "form-control", rel = CurrentDeliveryNomId })
+                                                                </td>
+                                                                <td>
+                                                                    @Html.DropDownList("DeliveryNoms[" + CurrentDeliveryNomId + "].NomSubCycle", new SelectList(
+                                                                                      new List<Object>{
+                                                                                                           new { value = "Y" , text = "Yes"  },
+                                                                                                           new { value = "N" , text = "No" }
+                                                                                      }, "value", "text", item.NomSubCycle), new { @class = "form-control" })
+                                                                </td>
+
+
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentDeliveryNomId','Delivery','@Model.PipelineDuns')">
+                                                                        @if (item.TransactionType != null && item.TransactionType != "")
+                                                                            {
+                                                                                DelTransactionType = item.TransactionType;
+                                                                            }
+                                                                            @DelTransactionType
+                                                                        </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].TransactionTypeDesc", item.TransactionTypeDesc, new { @rel = CurrentDeliveryNomId })
+                                                                    @Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].TransactionType", item.TransactionType, new { @rel = CurrentDeliveryNomId })
+                                                                </td>
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentDeliveryNomId','Delivery','@Model.PipelineDuns')">
+                                                                        @if (item.ServiceRequesterContractCode != null)
+                                                                    {
+                                                                        ServiceRequesterContractCode = item.ServiceRequesterContractCode;
+                                                                    }
+                                                                    @ServiceRequesterContractCode
+                                                                </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].ServiceRequesterContractCode", item.ServiceRequesterContractCode, new { @rel = CurrentDeliveryNomId })
+                                                                    @Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].ServiceRequesterContractName", item.ServiceRequesterContractName, new { @rel = CurrentDeliveryNomId })
+                                                                </td>
+
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentDeliveryNomId','Delivery','@Model.PipelineDuns')">
+                                                                        @if (item.DeliveryLocProp != null)
+                                                                    {
+                                                                        DelLocationProp = item.DeliveryLocProp;
+                                                                    }
+                                                                    @DelLocationProp
+                                                                </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].DeliveryLocProp", item.DeliveryLocProp, new { @rel = CurrentDeliveryNomId })
+                                                                </td>
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentDeliveryNomId','Delivery','@Model.PipelineDuns')">
+                                                                        @if (item.DeliveryLocName != null && item.DeliveryLocName != "")
+                                                                    {
+                                                                        DelLocationName = item.DeliveryLocName;
+                                                                    }
+                                                                    @DelLocationName
+                                                                </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].DeliveryLocName", item.DeliveryLocName, new { @rel = CurrentDeliveryNomId })
+                                                                </td>
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentDeliveryNomId','Delivery','@Model.PipelineDuns')">
+                                                                        @if (item.DeliveryLocId != null)
+                                                                    {
+                                                                        DelLocation = item.DeliveryLocId;
+                                                                    }
+                                                                    @DelLocation
+                                                                </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].DeliveryLocId", item.DeliveryLocId, new { @rel = CurrentDeliveryNomId })
+                                                                </td>
+
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentDeliveryNomId','Delivery','@Model.PipelineDuns')">
+                                                                        @if (item.DnstreamProp != null && item.DnstreamProp != "")
+                                                                    {
+                                                                        DnstreamIDProp = item.DnstreamProp;
+                                                                    }
+                                                                    @DnstreamIDProp
+                                                                </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].DnstreamProp", item.DnstreamProp, new { @rel = CurrentDeliveryNomId })
+                                                                </td>
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentDeliveryNomId','Delivery','@Model.PipelineDuns')">
+                                                                        @if (item.DnstreamName != null && item.DnstreamName != "")
+                                                                    {
+                                                                        DnstreamIDName = item.DnstreamName;
+                                                                    }
+                                                                    @DnstreamIDName
+                                                                </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].DnstreamName", item.DnstreamName, new { @rel = CurrentDeliveryNomId })
+                                                                </td>
+
+                                                                <td class="cursor">
+                                                                    <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentDeliveryNomId','Delivery','@Model.PipelineDuns')">
+                                                                        @if (item.DnstreamId != null && item.DnstreamId != "")
+                                                                    {
+                                                                        DnstreamID = item.DnstreamId;
+                                                                    }
+                                                                    @DnstreamID
+                                                                </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].DnstreamId", item.DnstreamId, new { @rel = CurrentDeliveryNomId })
+                                                                </td>
+
+                                                                <td>@Html.TextBox("DeliveryNoms[" + CurrentDeliveryNomId + "].DnstreamK", item.DnstreamK, new { @class = "form-control", @rel = CurrentDeliveryNomId })</td>
+                                                                <td>@Html.TextBox("DeliveryNoms[" + CurrentDeliveryNomId + "].DeliveryQty", item.DeliveryQty, new { @class = "form-control", @rel = CurrentDeliveryNomId })</td>
+                                                                <td>@Html.TextBox("DeliveryNoms[" + CurrentDeliveryNomId + "].DeliveryRank", item.DeliveryRank, new { @class = "form-control", @rel = CurrentDeliveryNomId })</td>
+                                                                <td>@Html.TextBox("DeliveryNoms[" + CurrentDeliveryNomId + "].PackageId", item.PackageId, new { @class = "form-control", @rel = CurrentDeliveryNomId })</td>
+                                                                @Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].NomTrackingId", item.NomTrackingId, new { @rel = CurrentDeliveryNomId })
+                                                            </tr>
+
+
+                                                        }
+                                                        else
+                                                        {     <!--Non-Editable Row UI-->
+
+                                                                    <tr class="gradeX" rel="@CurrentDeliveryNomId">
+                                                                        @Html.Hidden("DeliveryNoms.Index", CurrentDeliveryNomId.ToString())
+                                                                        @Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].TransactionId", item.TransactionId, new { rel = CurrentDeliveryNomId })
+                                                                        <td><input type="checkbox" value="@CurrentDeliveryNomId" class="Deliverychkboxes" onchange="DeliverychkboxesOnChange()" rel="@item.TransactionId"></td>
+
+
+
+                                                                        <td class="cursor">
+                                                                            @if (item.StatusId == 8 || item.StatusId == 9 || item.StatusId == 10)
+                                                                    {
+                                                                                <span rel="@item.TransactionId" class="label @RowStatusClass status_@item.TransactionId" id="status_@CurrentDeliveryNomId" value="@item.StatusId" onclick="OpenPopUp('StatusReason','@CurrentDeliveryNomId','@item.TransactionId','@Model.PipelineDuns')">@item.Status</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span rel="@item.TransactionId" class="label @RowStatusClass status_@item.TransactionId" id="status_@CurrentDeliveryNomId" value="@item.StatusId">@item.Status</span>
+                                                                            }
+                                                                            @Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].StatusId", item.StatusId, new { @rel = CurrentDeliveryNomId })
+
+                                                                        </td>
+                                                                        <td>
+                                                                            @if (item.StatusId == 7)
+                                                                    {
+                                                                                <a href="javascript:void(0)" style="color:#FF6C3A !important;" onclick="ShowStsPopUp('@item.TransactionId','@item.NomTrackingId')">View Sched Qty</a>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span></span>
+                                                                            }
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.TextBox("DeliveryNoms[" + CurrentDeliveryNomId + "].StartDateTime", string.Format("{0:d}", item.StartDateTime), new { @class = "form-control", @rel = CurrentDeliveryNomId, @readonly = "true", placeholder = "Start Date Time... " })
+                                                                        </td>
+
+                                                                        <td>
+                                                                            @Html.TextBox("DeliveryNoms[" + CurrentDeliveryNomId + "].EndDateTime", string.Format("{0:d}", item.EndDateTime), new { @class = "form-control", @rel = CurrentDeliveryNomId, @readonly = "true", placeholder = "End Date Time... " })
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.TextBox("DeliveryNoms[" + CurrentDeliveryNomId + "].CreateDateTime", string.Format("{0:d}", item.CreateDateTime), new { @class = "form-control", @rel = CurrentDeliveryNomId, @readonly = "true" })
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.DropDownList("DeliveryNoms[" + CurrentDeliveryNomId + "].CycleId", new SelectList(ViewBag.Cycles, "CycleID", "Name", item.CycleId), "-Select Cycle-", new { @class = "form-control", @disabled = "disabled", rel = CurrentDeliveryNomId })
+                                                                            @Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].CycleId", item.CycleId, new { @rel = CurrentDeliveryNomId })
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.DropDownList("DeliveryNoms[" + CurrentDeliveryNomId + "].NomSubCycle", new SelectList(
+                                                                                      new List<Object>{
+                                                                                                           new { value = "Y" , text = "Yes"  },
+                                                                                                           new { value = "N" , text = "No" }
+                                                                                      }, "value", "text", item.NomSubCycle), new { @class = "form-control", @disabled = "disabled" })
+                                                                            @Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].NomSubCycle", item.NomSubCycle, new { @rel = CurrentDeliveryNomId })
+                                                                        </td>
+                                                                        <td>
+                                                                            <span data-toggle="modal">
+                                                                                @if (item.TransactionType != null && item.TransactionType != "")
+                                                                    {
+                                                                                        DelTransactionType = item.TransactionType;
+                                                                                    }
+                                                                                    @DelTransactionType
+                                                                                </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].TransactionTypeDesc", item.TransactionTypeDesc, new { @rel = CurrentDeliveryNomId })
+                                                                            @Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].TransactionType", item.TransactionType, new { @rel = CurrentDeliveryNomId })
+                                                                        </td>
+                                                                        <td>
+                                                                            <span data-toggle="modal">
+                                                                                @if (item.ServiceRequesterContractCode != null && item.ServiceRequesterContractCode != "")
+                                                                    {
+                                                                                        ServiceRequesterContractCode = item.ServiceRequesterContractCode;
+                                                                                    }
+                                                                                    @ServiceRequesterContractCode
+                                                                                </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].ServiceRequesterContractCode", item.ServiceRequesterContractCode, new { @rel = CurrentDeliveryNomId })
+                                                                            @Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].ServiceRequesterContractName", item.ServiceRequesterContractName, new { @rel = CurrentDeliveryNomId })
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <span data-toggle="modal">
+                                                                                @if (item.DeliveryLocProp != null && item.DeliveryLocProp != "")
+                                                                    {
+                                                                                        DelLocationProp = item.DeliveryLocProp;
+                                                                                    }
+                                                                                    @DelLocationProp
+                                                                                </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].DeliveryLocProp", item.DeliveryLocProp, new { @rel = CurrentDeliveryNomId })
+                                                                                        </td>
+
+
+                                                                                        <td>
+
+
+                                                                                            <span data-toggle="modal">
+                                                                                                @if (item.DeliveryLocName != null && item.DeliveryLocName != "")
+                                                                    {
+                                                                                        DelLocationName = item.DeliveryLocName;
+                                                                                    }
+                                                                                    @DelLocationName
+                                                                                </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].DeliveryLocName", item.DeliveryLocName, new { @rel = CurrentDeliveryNomId })
+                                                                                        </td>
+
+
+                                                                                        <td>
+
+
+                                                                                            <span data-toggle="modal">
+                                                                                                @if (item.DeliveryLocId != null && item.DeliveryLocId != "")
+                                                                    {
+                                                                                        DelLocation = item.DeliveryLocId;
+                                                                                    }
+                                                                                    @DelLocation
+                                                                                </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].DeliveryLocId", item.DeliveryLocId, new { @rel = CurrentDeliveryNomId })
+                                                                                        </td>
+
+
+
+                                                                                        <td>
+
+
+                                                                                            <span data-toggle="modal">
+                                                                                                @if (item.DnstreamProp != null && item.DnstreamProp != "")
+                                                                    {
+                                                                                        DnstreamIDProp = item.DnstreamProp;
+                                                                                    }
+                                                                                    @DnstreamIDProp
+                                                                                </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].DnstreamProp", item.DnstreamProp, new { @rel = CurrentDeliveryNomId })
+                                                                                        </td>
+
+
+                                                                                        <td>
+
+
+                                                                                            <span data-toggle="modal">
+                                                                                                @if (item.DnstreamName != null && item.DnstreamName != "")
+                                                                    {
+                                                                                        DnstreamIDName = item.DnstreamName;
+                                                                                    }
+                                                                                    @DnstreamIDName
+                                                                                </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].DnstreamName", item.DnstreamName, new { @rel = CurrentDeliveryNomId })
+                                                                                        </td>
+
+
+
+                                                                                        <td>
+
+
+                                                                                            <span data-toggle="modal">
+                                                                                                @if (item.DnstreamId != null && item.DnstreamId != "")
+                                                                    {
+                                                                                        DnstreamID = item.DnstreamId;
+                                                                                    }
+                                                                                    @DnstreamID
+                                                                                </span>@Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].DnstreamId", item.DnstreamId, new { @rel = CurrentDeliveryNomId })
+                                                                                        </td>
+
+
+
+                                                                                        <td>@Html.TextBox("DeliveryNoms[" + CurrentDeliveryNomId + "].DnstreamK", item.DnstreamK, new { @class = "form-control", @readonly = "readonly", @rel = CurrentDeliveryNomId })</td>
+
+
+                                                                                        <td>@Html.TextBox("DeliveryNoms[" + CurrentDeliveryNomId + "].DeliveryQty", item.DeliveryQty, new { @class = "form-control", @readonly = "readonly", @rel = CurrentDeliveryNomId })</td>
+
+
+                                                                                        <td>@Html.TextBox("DeliveryNoms[" + CurrentDeliveryNomId + "].DeliveryRank", item.DeliveryRank, new { @class = "form-control", @readonly = "readonly", @rel = CurrentDeliveryNomId })</td>
+
+
+                                                                                        <td>@Html.TextBox("DeliveryNoms[" + CurrentDeliveryNomId + "].PackageId", item.PackageId, new { @class = "form-control", @readonly = "readonly", @rel = CurrentDeliveryNomId })</td>
+                                                                                        @Html.Hidden("DeliveryNoms[" + CurrentDeliveryNomId + "].NomTrackingId", item.NomTrackingId, new { @rel = CurrentDeliveryNomId })
+                                                                                    </tr>
+
+                                                        }
+
+                                                                                CurrentDeliveryNomId = Guid.NewGuid();
+                                                                            }
+
+                                                </tbody>
+                                                @*<tfoot>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td colspan="9">Total</td>
+                                                            <td><span id="DeliveryTotal">@Model.DeliveryQtyTotal</span></td>
+                                                            <td colspan="2"></td>
+                                                        </tr>
+                                                    </tfoot>*@
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Delivery Tab Body End-->
+
+            </div>
+            <!--All Tabs Body End-->
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+
+        $(function () {
+            $('.dtpicker').datepicker({ autoclose: true }).on('changeDate', function (selected) {
+                var id = $(this).attr("id");
+                var rowId = $(this).attr("rel");
+                if (id.indexOf("ReceiptNoms") != -1) {
+                    if (id.indexOf("StartDateTime") != -1) {
+                        var minDate = new Date(selected.date.valueOf());
+                        var endDate = "#ReceiptNoms_" + rowId + "__EndDateTime";
+                        $(endDate).datepicker('setStartDate', minDate);
+
+                        var startDate = "#ReceiptNoms_" + rowId + "__StartDateTime";
+                        var cycle = "#ReceiptNoms_" + rowId + "__CycleId";
+                        var valueCycle = $(cycle).val();
+                      //  UpdateTimeOnCycle(startDate, endDate, valueCycle);
+                    }
+                    if (id.indexOf("EndDateTime") != -1) {
+                        var maxDate = new Date(selected.date.valueOf());
+                        var startDate = "#ReceiptNoms_" + rowId + "__StartDateTime";
+                        $(startDate).datepicker('setEndDate', maxDate);
+
+                        var endDate = "#ReceiptNoms_" + rowId + "__EndDateTime";
+                        var cycle = "#ReceiptNoms_" + rowId + "__CycleId";
+                        var valueCycle = $(cycle).val();
+                       // UpdateTimeOnCycle(startDate, endDate, valueCycle);
+                    }
+                }
+                if (id.indexOf("DeliveryNoms") != -1) {
+                    if (id.indexOf("StartDateTime") != -1) {
+                        var minDate = new Date(selected.date.valueOf());
+                        var endDate = "#DeliveryNoms_" + rowId + "__EndDateTime";
+                        $(endDate).datepicker('setStartDate', minDate);
+
+                        var startDate = "#DeliveryNoms_" + rowId + "__StartDateTime";
+                        var cycle = "#DeliveryNoms_" + rowId + "__CycleId";
+                        var valueCycle = $(cycle).val();
+                       // UpdateTimeOnCycle(startDate, endDate, valueCycle);
+                    }
+                    if (id.indexOf("EndDateTime") != -1) {
+                        var maxDate = new Date(selected.date.valueOf());
+                        var startDate = "#DeliveryNoms_" + rowId + "__StartDateTime";
+                        $(startDate).datepicker('setEndDate', maxDate);
+
+                        var endDate = "#DeliveryNoms_" + rowId + "__EndDateTime";
+                        var cycle = "#DeliveryNoms_" + rowId + "__CycleId";
+                        var valueCycle = $(cycle).val();
+                       // UpdateTimeOnCycle(startDate, startDate, valueCycle);
+                    }
+                }
+            });
+        });
+
+        //To keep previous clicked tab
+
+        $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+            localStorage.setItem('activeTabNonPathed', $(e.target).attr('href'));
+        });
+        var activeTab = localStorage.getItem('activeTabNonPathed');
+        if (activeTab) {
+            $('#tabList a[href="' + activeTab + '"]').tab('show');
+        }
+
+        // end code.
+        function UpdateTimeOnCycle(startDate, endDate, valueCycle) {
+           
+            var startDateValue = $(startDate).val();
+            var endDateValue = $(endDate).val();
+            var BegginingTime = "";
+            var EndTime = "";
+            if (valueCycle == 1 || valueCycle == 2) // timeley
+            {
+                BegginingTime = " 09:00 AM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 3)//intrs day 1
+            {
+                BegginingTime = " 02:00 PM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 4)//intrs day 2
+            {
+                BegginingTime = " 06:00 PM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 5)//intrs day 3
+            {
+                BegginingTime = " 10:00 PM";
+                EndTime = " 09:00 AM";
+            }
+
+            var startDateOnly = startDateValue.split(" ");
+            var endDateOnly = endDateValue.split(" ");
+            var finalStartdate = startDateOnly[0].concat(BegginingTime);
+            var finalEndDate = endDateOnly[0].concat(EndTime);
+
+            $(startDate).val(finalStartdate);
+            $(endDate).val(finalEndDate);
+        }
+
+        $(".DeliverycycleSelect").change(function () {
+
+            var rel = $(this).attr("rel");
+            var index = rel;
+            var startDate = "#DeliveryNoms_" + index + "__StartDateTime";
+            var startDateValue = $(startDate).val();
+            var endDate = "#DeliveryNoms_" + index + "__EndDateTime";
+            var endDateValue = $(endDate).val();
+            var cycle = "#DeliveryNoms_" + index + "__CycleId";
+            var valueCycle = $(cycle).val();
+            var BegginingTime = "";
+            var EndTime = "";
+
+            if (valueCycle == 1 || valueCycle == 2) // timeley
+            {
+                BegginingTime = " 09:00 AM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 3)//intrs day 1
+            {
+                BegginingTime = " 02:00 PM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 4)//intrs day 2
+            {
+                BegginingTime = " 06:00 PM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 5)//intrs day 3
+            {
+                BegginingTime = " 10:00 PM";
+                EndTime = " 09:00 AM";
+            }
+
+            var startDateOnly = startDateValue.split(" ");
+            var endDateOnly = endDateValue.split(" ");
+            var finalStartdate = startDateOnly[0].concat(BegginingTime);
+            var finalEndDate = endDateOnly[0].concat(EndTime);
+
+            $(startDate).val(finalStartdate);
+            $(endDate).val(finalEndDate);
+
+
+        });
+
+
+        $(".cycleSelect").change(function () {
+
+            var rel = $(this).attr("rel");
+            var index = rel;
+            var startDate = "#ReceiptNoms_" + index + "__StartDateTime";
+            var startDateValue = $(startDate).val();
+            var endDate = "#ReceiptNoms_" + index + "__EndDateTime";
+            var endDateValue = $(endDate).val();
+            var cycle = "#ReceiptNoms_" + index + "__CycleId";
+            var valueCycle = $(cycle).val();
+            var BegginingTime = "";
+            var EndTime = "";
+
+            if (valueCycle == 1 || valueCycle == 2) // timeley
+            {
+                BegginingTime = " 09:00 AM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 3)//intrs day 1
+            {
+                BegginingTime = " 02:00 PM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 4)//intrs day 2
+            {
+                BegginingTime = " 06:00 PM";
+                EndTime = " 09:00 AM";
+            }
+            else if (valueCycle == 5)//intrs day 3
+            {
+                BegginingTime = " 10:00 PM";
+                EndTime = " 09:00 AM";
+            }
+
+            var startDateOnly = startDateValue.split(" ");
+            var endDateOnly = endDateValue.split(" ");
+            var finalStartdate = startDateOnly[0].concat(BegginingTime);
+            var finalEndDate = endDateOnly[0].concat(EndTime);
+
+            $(startDate).val(finalStartdate);
+            $(endDate).val(finalEndDate);
+
+        });
+
+
+        $(".selectallReceipt").click(function () {
+            $(".Receiptchkboxes").prop('checked', $(this).prop('checked'));
+        });
+
+        $(".selectallDelivery").click(function () {
+            $(".Deliverychkboxes").prop('checked', $(this).prop('checked'));
+        });
+
+
+
+});
+</script>

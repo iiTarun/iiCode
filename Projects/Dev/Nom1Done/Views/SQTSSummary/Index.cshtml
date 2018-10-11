@@ -1,0 +1,682 @@
+﻿@using Nom1Done.Enums
+
+@{
+                /**/
+
+                /**/
+
+                /**/
+
+                ViewBag.Title = "Index";
+                var monthHighLight1 = "";
+                var monthHighLight2 = "";
+                var monthHighLight3 = "";
+                var monthHighLight4 = "";
+                var monthHighLight5 = "";
+                var monthHighLight6 = "";
+                var monthHighLight7 = "";
+                var monthHighLight8 = "";
+                var monthHighLight9 = "";
+                var monthHighLight10 = "";
+                var monthHighLight11 = "";
+                var monthHighLight12 = "";
+
+}
+<link href="~/Content/SQTSSummary.css" rel="stylesheet" />
+
+<style>
+    .transparentZeros {
+        color: transparent;
+    }
+
+    div .dataTables_wrapper, div .dataTables_filter {
+        text-align: left !important;
+    }
+
+    .MonthHighlighted {
+        background-color: #FF6C3A;
+        padding: 7px 10px;
+        margin-left: 1px;
+        color: #fff;
+        font-size: 16px;
+        color: #fff;
+    }
+
+    .MinimumWidth {
+        min-width: 150px !important;
+    }
+
+    .MinimumWidthLargeCol {
+        min-width: 300px !important;
+    }
+</style>
+
+<input type="hidden" value="" id="IsSqtsSummaryOpen" />
+<input type="hidden" value="@ViewBag.SqtsType" id="SqtsType" />
+<input type="hidden" value="@DateTime.Now.Month" id="selectedMonth" />
+<input type="hidden" value="@ViewBag.PipelineDuns" id="PipelineDuns" />
+@if (ViewBag.IsPermission != null && ViewBag.IsPermission == true)
+{
+    <div class="container-fluid" style="background-color: white">
+
+
+        @if (ViewBag.PipelineNomType == Nom1Done.DTO.NomType.HyPathedNonPathed)
+        {
+            <button id="PathedBtn" type="button" onclick="pathedBtnClick()" class="active btn btn-w-m btn-success btn-outline upperBtns">Pathed</button>
+            <button id="NonPathedBtn" type="button" onclick="NonPathedbtnClick();" class="btn btn-w-m btn-success btn-outline upperBtns">NonPathed</button>
+            <input type="hidden" value="Pathed" id="currentMode" />
+
+        }
+
+        else if (ViewBag.PipelineNomType == Nom1Done.DTO.NomType.HyPathedPNT)
+        {
+            <button id="PathedBtn" type="button" onclick="pathedBtnClick()" class="active btn btn-w-m btn-success btn-outline">Pathed</button>
+            <button id="PntBtn" type="button" onclick="PNTbtnClick();" class="btn btn-w-m btn-success btn-outline">PNT</button>
+            <input type="hidden" value="Pathed" id="currentMode" />
+
+        }
+        else if (ViewBag.PipelineNomType == Nom1Done.DTO.NomType.Pathed)
+        {
+            <input type="hidden" value="Pathed" id="currentMode" />
+        }
+        else if (ViewBag.PipelineNomType == Nom1Done.DTO.NomType.PNT)
+        {
+            <input type="hidden" value="PntContract" id="currentMode" />
+        }
+
+        <br />
+        @switch (DateTime.Now.Month)
+        {
+            case 1:
+                monthHighLight1 = "MonthHighlighted";
+                break;
+            case 2:
+                monthHighLight2 = "MonthHighlighted";
+                break;
+            case 3:
+                monthHighLight3 = "MonthHighlighted";
+                break;
+            case 4:
+                monthHighLight4 = "MonthHighlighted";
+                break;
+            case 5:
+                monthHighLight5 = "MonthHighlighted";
+                break;
+            case 6:
+                monthHighLight6 = "MonthHighlighted";
+                break;
+            case 7:
+                monthHighLight7 = "MonthHighlighted";
+                break;
+            case 8:
+                monthHighLight8 = "MonthHighlighted";
+                break;
+            case 9:
+                monthHighLight9 = "MonthHighlighted";
+                break;
+            case 10:
+                monthHighLight10 = "MonthHighlighted";
+                break;
+            case 11:
+                monthHighLight11 = "MonthHighlighted";
+                break;
+            case 12:
+                monthHighLight12 = "MonthHighlighted";
+                break;
+        }
+        <ul id="menu" class="center-screen">
+            <li class="active"><a id="month1" href="javascript:void(0)" class='@monthHighLight1' onclick="LoadPartials(1)">Jan</a></li>
+            <li><a id="month2" href="javascript:void(0)" class='@monthHighLight2' onclick="LoadPartials(2)">Feb</a></li>
+            <li><a id="month3" href="javascript:void(0)" class='@monthHighLight3' onclick="LoadPartials(3)">March</a></li>
+            <li><a id="month4" href="javascript:void(0)" class='@monthHighLight4' onclick="LoadPartials(4)">April</a></li>
+            <li><a id="month5" href="javascript:void(0)" class='@monthHighLight5' onclick="LoadPartials(5)">May</a></li>
+            <li><a id="month6" href="javascript:void(0)" class='@monthHighLight6' onclick="LoadPartials(6)">June</a></li>
+            <li><a id="month7" href="javascript:void(0)" class='@monthHighLight7' onclick="LoadPartials(7)">July</a></li>
+            <li><a id="month8" href="javascript:void(0)" class='@monthHighLight8' onclick="LoadPartials(8)">Aug</a></li>
+            <li><a id="month9" href="javascript:void(0)" class='@monthHighLight9' onclick="LoadPartials(9)">Sep</a></li>
+            <li><a id="month10" href="javascript:void(0)" class='@monthHighLight10' onclick="LoadPartials(10)">Oct</a></li>
+            <li><a id="month11" href="javascript:void(0)" class='@monthHighLight11' onclick="LoadPartials(11)">Nov</a></li>
+            <li><a id="month12" href="javascript:void(0)" class='@monthHighLight12' onclick="LoadPartials(12)">Dec</a></li>
+        </ul>
+
+        <div id="sqtsDivs">
+            @if (ViewBag.PipelineNomType == Nom1Done.DTO.NomType.Pathed || ViewBag.PipelineNomType == Nom1Done.DTO.NomType.HyPathedPNT || ViewBag.PipelineNomType == Nom1Done.DTO.NomType.HyPathedNonPathed)
+            {
+                <div id="btnsDiv" style="display:none;">
+                    @if (ViewBag.PipelineNomType == Nom1Done.DTO.NomType.HyPathedPNT)
+                    {
+                        <button id="contractBtn" type="button" class="active hover btn btn-w-m btn-success btn-outline lowerBtns">Contract Path</button>
+                    }
+                    <button id="receiptBtn" type="button" class="active btn btn-w-m btn-success btn-outline lowerBtns">Receipt</button>
+                    <button id="deliveryBtn" type="button" class="btn btn-w-m btn-success btn-outline lowerBtns">Delivery</button>
+                </div>
+
+            }
+            else if (ViewBag.PipelineNomType == Nom1Done.DTO.NomType.NonPathed)
+            {
+                @*<button id="contractBtn" type="button" class="active hover btn btn-w-m btn-success btn-outline lowerBtns">Contract Path</button>*@
+                <button id="receiptBtn" type="button" class="active hover btn btn-w-m btn-success btn-outline lowerBtns">Receipt</button>
+                <button id="deliveryBtn" type="button" class="btn btn-w-m btn-success btn-outline lowerBtns">Delivery</button>
+                <br />
+
+            }
+            else
+
+            {
+                <button id="contractBtn" type="button" class="active hover btn btn-w-m btn-success btn-outline lowerBtns">Contract Path</button>
+                <button id="receiptBtn" type="button" class="hover btn btn-w-m btn-success btn-outline lowerBtns">Receipt</button>
+                <button id="deliveryBtn" type="button" class="btn btn-w-m btn-success btn-outline lowerBtns">Delivery</button>
+                <br />
+
+            }
+
+            <div id="ShowMineDiv" style="margin:5px;">
+                <input type="checkbox" name="showMine" value="true" id="showminecheckbox" checked="checked"> Show Mine Only<br>
+            </div>
+            <div id="ShowZeroDiv" style="margin:5px;">
+                <input type="checkbox" name="showZero" value="true" id="showzerocheckbox" checked="checked"> Hide Zero Volume<br>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li id="NomQTY" class="active"><a onclick="ClickOnTabNOm()" data-toggle="tab" href="#NomQtyTab">Nom Qty</a></li>
+                            <li id="SchedQty" class=""><a onclick="ClickOnTabSqts()" data-toggle="tab" href="#SqtQtyTab">Sched Qty</a></li>
+                            <li id="OrpnSqtsQty" class=""><a onclick="ClickOnTabOrphan()" data-toggle="tab" href="#OrpSqtsTab">Sched Qty Orphans</a></li>
+                            @if (ViewBag.PipelineNomType == Nom1Done.DTO.NomType.Pathed || ViewBag.PipelineNomType == Nom1Done.DTO.NomType.HyPathedPNT || ViewBag.PipelineNomType == Nom1Done.DTO.NomType.PNT)
+                            {
+                                <li id="OperSqtsQty" class=""><a onclick="ClickOnTabOperSqts()" data-toggle="tab" href="#OperSqtsTab">Sched Qty Oper</a></li>
+                            }
+                        </ul>
+                        <div class="tab-content">
+                            <div id="NomQtyTab" class="tab-pane active">
+                                <!--Nom QTY Table -->
+                                <div id="NomQtyPartial">
+
+                                </div>
+                                <br />
+                            </div>
+                            <div id="SqtQtyTab" class="tab-pane">
+                                <!--Sched QTY Table-->
+                                <div id="SchedQTY">
+                                </div>
+                                <br />
+                            </div>
+                            <div id="OrpSqtsTab" class="tab-pane">
+
+                                <div id="SQTSOrphans">
+                                </div>
+                                <br />
+                            </div>
+                            <div id="OperSqtsTab" class="tab-pane">
+
+                                <div id="SQTSOper">
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+    <div style="padding-top:240px">
+        <div class="dz-clickable h1 text-center"><b>You do not have access to this pipeline.</b></div>
+    </div>
+}
+
+
+
+<script>
+
+    $.fn.digits = function () {
+        return this.each(function () {
+            $(this).text($(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+        })
+    }
+
+    function MakeStaticHeader(DivHeaderRow, DivMainContent, gridId, height, width, headerHeight, isFooter) {
+        var tbl = $(gridId);
+        if (tbl) {
+            //var DivHR = $('#DivHeaderRow');
+            //var DivMC = $('#DivMainContent');
+
+            var DivHR = $(DivHeaderRow);
+            var DivMC = $(DivMainContent);
+
+            //*** Set divMainContent Properties ****
+            DivMC.width("100%");
+            DivMC.css('max-height', height + 'px');
+            DivMC.css({ position: 'relative',top: -headerHeight+1 + 'px', zIndex: '1' });
+
+
+
+            //*** Set divheaderRow Properties ****
+            DivHR.height(headerHeight);
+            DivHR.width("98.5%");
+            DivHR.css({position: 'relative', top:'0px',zIndex:'10'});
+
+        }
+    }
+
+    function OnScrollDiv(DivHeaderRow, Scrollablediv) {
+        //$("#DivHeaderRow").scrollLeft($(Scrollablediv).scrollLeft());
+        $(DivHeaderRow).scrollLeft($(Scrollablediv).scrollLeft());
+      }
+
+
+    $(document).ready(function () {
+        $("#IsSqtsSummaryOpen").val(true);
+        var month = '@DateTime.Now.Month';
+        $("#selectedMonth").val(month);
+        $(".MonthHighlighted").removeClass("MonthHighlighted");
+        $("#month" + month).addClass("MonthHighlighted");
+        localStorage.setItem('SqtsUIActiveTab', "NomQTY");
+        //$("#ShowZeroDiv").hide();
+        ClickOnTabSwitch('NomQTY');
+
+
+        $('#showminecheckbox').change(function () {
+            //if ($(this).is(":checked")) {
+            //    var returnVal = confirm("Are you sure?");
+            //    $(this).attr("checked", returnVal);
+            //}
+            $('#showminecheckbox').val($(this).is(':checked'));
+            var activeTab = localStorage.getItem('SqtsUIActiveTab');
+            if (activeTab) {
+                ClickOnTabSwitch(activeTab);
+            } else {
+                ClickOnTabSwitch('NomQTY');
+            }
+        });
+        $('#showzerocheckbox').change(function () {
+            $('#showzerocheckbox').val($(this).is(':checked'));
+            var activeTab = localStorage.getItem('SqtsUIActiveTab');
+            if (activeTab) {
+                ClickOnTabSwitch(activeTab);
+            } else {
+                ClickOnTabSwitch('NomQTY');
+            }
+        });
+
+    });
+
+    function LoadPartials(month) {
+        $(".MonthHighlighted").removeClass("MonthHighlighted");
+        $("#month" + month).addClass("MonthHighlighted");
+        $("#selectedMonth").val(month);
+        var activeTab = localStorage.getItem('SqtsUIActiveTab');
+        if (activeTab) {
+            ClickOnTabSwitch(activeTab);
+        } else {
+            ClickOnTabSwitch('NomQTY');
+        }
+
+    }
+
+    function loadNominationDelivery(month) {
+                $('#NomQtyPartial').load(
+                        '@Url.Action("SQTSPartials", new { sqts = SqtsPartials.NomQtyDelivery })' +
+                        "&month=" + month +
+                        "&sqtsType=" + $("#SqtsType").val() +
+                        "&pipelineDuns=" + $('#PipelineDuns').val() +
+                        "&showMine=" + $('#showminecheckbox').val() +
+                        "&showZero="+$('#showzerocheckbox').val()
+                        , function () {
+                            $("#currentMode").val("PntDelivery");
+                        });
+    }
+
+    function loadNominationContractPath(month) {
+        $('#NomQtyPartial').load(
+            '@Url.Action("SQTSPartials", new { sqts = SqtsPartials.NomQtyContractPath })' +
+            "&month=" + month +
+            "&sqtsType=" + $("#SqtsType").val() +
+            "&pipelineDuns=" + $('#PipelineDuns').val() +
+            "&showMine=" + $('#showminecheckbox').val() +
+            "&showZero=" + $('#showzerocheckbox').val()
+            , function () {
+                $("#currentMode").val("PntContract");
+            });
+    }
+
+    function loadNominationPathed(month) {
+        $('#NomQtyPartial').load(
+            '@Url.Action("SQTSPartials", new { sqts = SqtsPartials.NomQty })' +
+            "&month=" + month +
+            "&sqtsType=" + $("#SqtsType").val() +
+            "&pipelineDuns=" + $('#PipelineDuns').val() +
+            "&showMine=" + $('#showminecheckbox').val() +
+            "&showZero=" + $('#showzerocheckbox').val()
+            , function () {
+                $("#currentMode").val("Pathed");
+            });
+    }
+
+    function loadNominationReceipt(month) {
+        $('#NomQtyPartial').load(
+            '@Url.Action("SQTSPartials", new { sqts = SqtsPartials.NomQtyReceipt })' +
+            "&month=" + month +
+            "&sqtsType=" + $("#SqtsType").val() +
+            "&pipelineDuns=" + $('#PipelineDuns').val() +
+            "&showMine=" + $('#showminecheckbox').val() +
+            "&showZero=" + $('#showzerocheckbox').val()
+            , function () {
+                $("#currentMode").val("PntReceipt");
+            });
+    }
+
+    function loadSqtsDelivery(month) {
+        $('#SchedQTY').load(
+            '@Url.Action("SQTSPartials", new { sqts = SqtsPartials.SqtsQtyDelivery })' +
+            "&month=" + month +
+            "&sqtsType=" + $("#SqtsType").val() +
+            "&pipelineDuns=" + $('#PipelineDuns').val() +
+            "&showMine=" + $('#showminecheckbox').val() +
+            "&showZero=" + $('#showzerocheckbox').val()
+            , function () {
+                $("#currentMode").val("PntDelivery");
+            });
+    }
+
+    function loadSqtsContractPath(month) {
+        $('#SchedQTY').load(
+            '@Url.Action("SQTSPartials", new { sqts = SqtsPartials.SqtsQtyContractPath })' +
+            "&month=" + month +
+            "&sqtsType=" + $("#SqtsType").val() +
+            "&pipelineDuns=" + $('#PipelineDuns').val() +
+            "&showMine=" + $('#showminecheckbox').val() +
+            "&showZero=" + $('#showzerocheckbox').val()
+            , function () {
+                $("#currentMode").val("PntContract");
+            });
+    }
+
+    function loadSqtsPathed(month) {
+
+        $('#SchedQTY').load(
+            '@Url.Action("SQTSPartials", new { sqts = SqtsPartials.SqtsQty })' +
+            "&month=" + month +
+            "&sqtsType=" + $("#SqtsType").val() +
+            "&pipelineDuns=" + $('#PipelineDuns').val() +
+            "&showMine=" + $('#showminecheckbox').val() +
+            "&showZero=" + $('#showzerocheckbox').val()
+            , function () {
+                $("#currentMode").val("Pathed");
+            });
+    }
+
+    function loadSqtsReceipt(month) {
+        $('#SchedQTY').load(
+            '@Url.Action("SQTSPartials", new { sqts = SqtsPartials.SqtsQtyReceipt })' +
+            "&month=" + month +
+            "&sqtsType=" + $("#SqtsType").val() +
+            "&pipelineDuns=" + $('#PipelineDuns').val() +
+            "&showMine=" + $('#showminecheckbox').val() +
+            "&showZero=" + $('#showzerocheckbox').val()
+            , function () {
+                $("#currentMode").val("PntReceipt");
+            });
+    }
+
+    function loadOrphanSqtsDelivery(month) {
+        $('#SQTSOrphans').load(
+            '@Url.Action("SQTSPartials", new { sqts = SqtsPartials.SqtsOrphanDelivery})' +
+            "&month=" + month +
+            "&sqtsType=" + $("#SqtsType").val() +
+            "&pipelineDuns=" + $('#PipelineDuns').val() +
+            "&showMine=" + $('#showminecheckbox').val() +
+            "&showZero=" + $('#showzerocheckbox').val()
+            , function () {
+                $("#currentMode").val("PntDelivery");
+            });
+    }
+
+    function loadOrphanSqtsPathed(month){
+        $('#SQTSOrphans').load(
+            '@Url.Action("SQTSPartials", new { sqts = SqtsPartials.SqtsOrphan })' +
+            "&month=" + month +
+            "&sqtsType=" + $("#SqtsType").val() +
+            "&pipelineDuns=" + $('#PipelineDuns').val() +
+            "&showMine=" + $('#showminecheckbox').val() +
+            "&showZero=" + $('#showzerocheckbox').val()
+            , function () {
+                $("#currentMode").val("Pathed");
+            });
+    }
+
+    function loadOperSqtsPathed(month,currentMode) {
+        $('#SQTSOper').load(
+            '@Url.Action("SQTSPartials", new { sqts = SqtsPartials.OperSqts })' +
+            "&month=" + month +
+            "&sqtsType=" + $("#SqtsType").val() +
+            "&pipelineDuns=" + $('#PipelineDuns').val() +
+            "&showMine=" + $('#showminecheckbox').val() +
+            "&showZero=" + $('#showzerocheckbox').val()
+            , function () {
+                $("#currentMode").val(currentMode);
+            });
+    }
+
+    function loadOrphanSqtsContractPath(month) {
+        $('#SQTSOrphans').load(
+            '@Url.Action("SQTSPartials", new { sqts = SqtsPartials.SqtsOrphanContractPath })' +
+            "&month=" + month +
+            "&sqtsType=" + $("#SqtsType").val() +
+            "&pipelineDuns=" + $('#PipelineDuns').val() +
+            "&showMine=" + $('#showminecheckbox').val() +
+            "&showZero=" + $('#showzerocheckbox').val()
+            , function () {
+                $("#currentMode").val("PntContract");
+            });
+    }
+
+    function loadOrphanSqtsReceipt(month) {
+        $('#SQTSOrphans').load(
+            '@Url.Action("SQTSPartials", new { sqts = SqtsPartials.SqtsOrphanReceipt })' +
+            "&month=" + month +
+            "&sqtsType=" + $("#SqtsType").val() +
+            "&pipelineDuns=" + $('#PipelineDuns').val() +
+            "&showMine=" + $('#showminecheckbox').val() +
+            "&showZero=" + $('#showzerocheckbox').val()
+            , function () {
+                $("#currentMode").val("PntReceipt");
+            });
+    }
+
+    function ClickOnTabNOm() {
+        $("#ShowMineDiv").show();
+        localStorage.setItem('SqtsUIActiveTab', "NomQTY");
+        ClickOnTabSwitch("NomQTY");
+    }
+    function ClickOnTabSqts() {
+        $("#ShowMineDiv").show();
+        localStorage.setItem('SqtsUIActiveTab', "SchedQty");
+        ClickOnTabSwitch("SchedQty");
+    }
+    function ClickOnTabOrphan() {
+        $("#ShowMineDiv").hide();
+        localStorage.setItem('SqtsUIActiveTab', "OrpnSqtsQty");
+        ClickOnTabSwitch("OrpnSqtsQty");
+    }
+
+
+    function ClickOnTabOperSqts() {
+        $("#ShowMineDiv").hide();
+        localStorage.setItem('SqtsUIActiveTab', "OperSqtsQty");
+        ClickOnTabSwitch("OperSqtsQty");
+    }
+
+    function ClickOnTabSwitch(data) {
+        $('#NomQtyPartial').empty();
+        $('#SchedQTY').empty();
+        $('#SQTSOrphans').empty();
+        var month = $("#selectedMonth").val();
+        switch (data) {
+
+            case 'OperSqtsQty':
+                $('.nav-tabs li:eq(3) a').tab('show');
+                if ($("#currentMode").val() == "PntDelivery") {
+                    loadOperSqtsPathed(month, "PntDelivery");
+                } else if ($("#currentMode").val() == "Pathed") {
+                    loadOperSqtsPathed(month,"Pathed");
+                } else if ($("#currentMode").val() == "PntReceipt") {
+                    loadOperSqtsPathed(month, "PntReceipt");
+                } else if ($("#currentMode").val() == "PntContract") {
+                    loadOperSqtsPathed(month, "PntContract");
+                }
+                break;
+            case 'NomQTY':
+                $('.nav-tabs li:first-child a').tab('show');
+                if ($("#currentMode").val() == "PntDelivery") {
+                    loadNominationDelivery(month);
+                } else if ($("#currentMode").val() == "Pathed") {
+                    loadNominationPathed(month);
+                } else if ($("#currentMode").val() == "PntReceipt") {
+                    loadNominationReceipt(month);
+                } else if ($("#currentMode").val() == "PntContract") {
+                    loadNominationContractPath(month);
+                }
+                break;
+            case 'SchedQty':
+                $('.nav-tabs li:eq(1) a').tab('show');
+                if ($("#currentMode").val() == "PntDelivery") {
+                    loadSqtsDelivery(month);
+                } else if ($("#currentMode").val() == "Pathed") {
+                    loadSqtsPathed(month);
+                } else if ($("#currentMode").val() == "PntReceipt") {
+                    loadSqtsReceipt(month);
+                }
+                else if ($("#currentMode").val() == "PntContract") {
+                    loadSqtsContractPath(month);
+                }
+                break;
+            case 'OrpnSqtsQty':
+                $('.nav-tabs li:eq(2) a').tab('show');
+                if ($("#currentMode").val() == "PntDelivery") {
+                    loadOrphanSqtsDelivery(month);
+                } else if ($("#currentMode").val() == "Pathed") {
+                    loadOrphanSqtsPathed(month);
+                } else if ($("#currentMode").val() == "PntReceipt") {
+                    loadOrphanSqtsReceipt(month);
+                }
+                else if ($("#currentMode").val() == "PntContract") {
+                    loadOrphanSqtsContractPath(month);
+                }
+                break;
+            default:
+        }
+    }
+
+    function pathedBtnClick() {
+        $("#btnsDiv").hide();
+        $("#OperSqtsQty").show();
+        $(".upperBtns").removeClass("active");
+        $("#PathedBtn").addClass("active");
+        $("#NonPathedBtn").removeClass("active");
+        $("#PntBtn").removeClass("active");
+        $("#currentMode").val("Pathed");
+        var activeTab = localStorage.getItem('SqtsUIActiveTab');
+        if (activeTab) {
+            ClickOnTabSwitch(activeTab);
+        } else {
+            ClickOnTabSwitch('NomQTY');
+        }
+       // ClickOnTabSwitch('NomQTY');
+    }
+
+    function NonPathedbtnClick() {
+        $("#btnsDiv").show();
+        $(".upperBtns").removeClass("active");
+        $("#NonPathedBtn").addClass("active");
+        $("#PathedBtn").removeClass("active");
+        $("#PntBtn").removeClass("active");
+        $("#deliveryBtn").removeClass("active");
+        $("#receiptBtn").addClass("active");
+        $("#currentMode").val("PntReceipt");
+        var activeTab = localStorage.getItem('SqtsUIActiveTab');
+        if (activeTab) {
+            ClickOnTabSwitch(activeTab);
+        } else {
+            ClickOnTabSwitch('NomQTY');
+        }
+        //ClickOnTabSwitch('NomQTY');
+    }
+
+    function PNTbtnClick() {
+        $("#btnsDiv").show();
+        $("#OperSqtsQty").show();
+        //$(".upperBtns").removeClass("active");
+        //$("#NonPathedBtn").addClass("active");
+        $("#PathedBtn").removeClass("active");
+        $("#PntBtn").addClass("active");
+        $("#deliveryBtn").removeClass("active");
+        $("#receiptBtn").removeClass("active");
+        //$("#currentMode").val("PntReceipt");
+        $(".lowerBtns").removeClass("active");
+        $("#contractBtn").addClass("active");
+        $("#currentMode").val("PntContract");
+        var activeTab = localStorage.getItem('SqtsUIActiveTab');
+        if (activeTab) {
+            ClickOnTabSwitch(activeTab);
+        } else {
+            ClickOnTabSwitch('NomQTY');
+        }
+        //ClickOnTabSwitch('NomQTY');
+    }
+
+    $("#contractBtn").on('click', function () {
+        $(".lowerBtns").removeClass("active");
+        $("#OperSqtsQty").show();
+        $("#contractBtn").addClass("active");
+        $("#currentMode").val("PntContract");
+        var activeTab = localStorage.getItem('SqtsUIActiveTab');
+        if (activeTab) {
+            ClickOnTabSwitch(activeTab);
+        } else {
+            ClickOnTabSwitch('NomQTY');
+        }
+        //ClickOnTabSwitch('NomQTY');
+    })
+
+    $("#receiptBtn").on('click', function () {
+        $("#OperSqtsQty").hide();
+        $(".lowerBtns").removeClass("active");
+        $("#receiptBtn").addClass("active");
+        $("#currentMode").val("PntReceipt");
+        var activeTab = localStorage.getItem('SqtsUIActiveTab');
+        if (activeTab) {
+            if (activeTab == 'OperSqtsQty') {
+                ClickOnTabSwitch('NomQTY');
+            } else {
+                ClickOnTabSwitch(activeTab);
+            }
+        } else {
+            ClickOnTabSwitch('NomQTY');
+        }
+        //ClickOnTabSwitch('NomQTY');
+    })
+
+    $("#deliveryBtn").on("click", function () {
+        $(".lowerBtns").removeClass("active");
+        $("#OperSqtsQty").hide();
+        $("#deliveryBtn").addClass("active");
+        $("#currentMode").val("PntDelivery");
+        var activeTab = localStorage.getItem('SqtsUIActiveTab');
+        if (activeTab) {
+            if (activeTab == 'OperSqtsQty') {
+                ClickOnTabSwitch('NomQTY');
+            } else {
+                ClickOnTabSwitch(activeTab);
+            }
+        } else {
+            ClickOnTabSwitch('NomQTY');
+        }
+       // ClickOnTabSwitch('NomQTY');
+    });
+</script>

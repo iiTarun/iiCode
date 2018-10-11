@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="1e592c4689034bb2bca9de7c5f180f69" Name="Diagram1" ZoomLevel="99">
+        <EntityTypeShape EntityType="UprdDbModel.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.ApplicationLog" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.EmailQueue" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.EmailTemplate" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.GISBInbox" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.GISBOutbox" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.Inbox" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.IncomingData" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.JobStackErrorLog" Width="1.5" PointX="6.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.JobWorkflow" Width="1.5" PointX="4.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.metadataDataset" Width="1.5" PointX="6.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.metadataErrorCode" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.metadataPipelineEncKeyInfo" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.OACYPerTransaction" Width="1.5" PointX="8.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.Outbox_MultipartForm" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.Outbox" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.PipelineEDISetting" Width="1.5" PointX="2.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.Pipeline" Width="1.5" PointX="10.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.Setting" Width="1.5" PointX="10.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.ShipperCompany" Width="1.5" PointX="4.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.Shipper" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.SwntPerTransaction" Width="1.5" PointX="12.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.TaskMgrJob" Width="1.5" PointX="12.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.TaskMgrXml" Width="1.5" PointX="6.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.TradingPartnerWorksheet" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.TransactionLog" Width="1.5" PointX="14.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.TransportationServiceProvider" Width="1.5" PointX="8.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.UnscPerTransaction" Width="1.5" PointX="14.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.UPRDStatu" Width="1.5" PointX="10.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="UprdDbModel.WatchListMailAlertUPRDMapping" Width="1.5" PointX="17.375" PointY="0.75" />
+        <EntityTypeShape EntityType="UprdDbModel.DataTypeGrouping" Width="1.5" PointX="0.75" PointY="19.625" />
+        <EntityTypeShape EntityType="UprdDbModel.LogicalOperator" Width="1.5" PointX="3" PointY="18.125" />
+        <EntityTypeShape EntityType="UprdDbModel.MasterColumn" Width="1.5" PointX="3" PointY="20.75" />
+        <AssociationConnector Association="UprdDbModel.FK_dbo_LogicalOperators_dbo_DataTypeGroupings_DataTypeId" />
+        <AssociationConnector Association="UprdDbModel.FK_dbo_MasterColumns_dbo_DataTypeGroupings_DataTypeId" />
+        <EntityTypeShape EntityType="UprdDbModel.FileSysIncomingData" Width="1.5" PointX="17.375" PointY="3.75" />
+        <EntityTypeShape EntityType="UprdDbModel.WatchListPipelineMapping" Width="1.5" PointX="5.375" PointY="17.75" />
+        <EntityTypeShape EntityType="UprdDbModel.CounterParty" Width="1.5" PointX="17.375" PointY="7.75" />
+        <EntityTypeShape EntityType="UprdDbModel.Location" Width="1.5" PointX="17.375" PointY="11.75" />
+        <EntityTypeShape EntityType="UprdDbModel.WatchlistRule" Width="1.5" PointX="15.625" PointY="17" />
+        <EntityTypeShape EntityType="UprdDbModel.Watchlist" Width="1.5" PointX="13.375" PointY="17.125" />
+        <AssociationConnector Association="UprdDbModel.FK_dbo_WatchlistRules_dbo_Watchlists_WatchlistId" />
+        <EntityTypeShape EntityType="UprdDbModel.SQTSReductionReason" Width="1.5" PointX="7.375" PointY="18.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

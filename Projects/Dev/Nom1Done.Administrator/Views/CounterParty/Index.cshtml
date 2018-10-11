@@ -1,0 +1,162 @@
+﻿@model IEnumerable<UPRD.DTO.CounterPartyDTO>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .dataTables_scroll {
+        overflow: auto;
+    }
+</style>
+
+
+
+<h2>Counter Parties</h2>
+<div class="ibox float-e-margins">
+    <a class="btn btn-add-edit" onclick="PopupForm('@Url.Action("AddorEdit","CounterParty")')"><i class="glyphicon glyphicon-plus"></i>Add New </a>
+    <button type="submit" onclick="SyncData('@Url.Action("SyncData", "CounterParty")')" class="btn btn-w-m btn-success btn-outline"><i class="fa fa-bars"></i> Sync Data</button>
+</div>
+<br />
+
+
+<div class="content mt-3">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                   
+                    <div class="card-body">
+                        <table id="CounterDetails" class="table stripe row-border order-column table-bordered table-striped" style="width:100%;  overflow:auto">
+                            <thead>
+                                <tr>
+                                    <th style="min-width: 150px;">Name</th>
+                                    <th style="min-width: 150px;">Identifier</th>
+                                    <th style="min-width: 150px;">PropCode</th>
+                                    <th style="min-width: 150px;">IsActive</th>
+                                    <th style="min-width: 150px;">Edit/Delete</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div><!-- .animated -->
+</div><!-- .content -->
+
+
+
+
+@section scripts
+{
+
+
+    <script>
+
+  var Popup, dataTable;
+
+        $(document).ready(function () {
+
+            dataTable = $("#CounterDetails").DataTable({
+                "scrollX": true,
+                "scrollY": 400,
+                "ajax" : {
+                    "url": "/CounterParty/PostData",
+                    "type": "POST",
+                    "dataType": "json"
+                },
+                "columns": [
+                    { "data": "Name", "autoWidth": true,  },
+                    { "data": "Identifier", "autoWidth": true },
+                    { "data": "PropCode", "autoWidth": true },
+                    { "data": "IsActive", "autoWidth": true, "IsActive": true},
+                    {
+                        "data": "ID", "render": function (data, type, row) {
+                            if (row.IsActive === true) {
+
+                                return "<a class='btn btn-add-edit btn-sm' onclick=PopupForm('@Url.Action("AddorEdit", "CounterParty")/" + data + "')><i class='fa fa-pencil'></i> Edit</a><a class='btn btn-delete btn-sm' style='margin-left:5px' onclick=Delete('@Url.Action("Delete", "CounterParty")/" + data + "')><i class='fa fa-trash'></i> DeActivate</a>";
+                            }
+                            else {
+                                return "<a class='btn btn-delete btn-sm' style='margin-left:5px' onclick=Activate('@Url.Action("Activate", "CounterParty")/" + data + "')><i class='fa fa-trash'></i> Activate</a>";
+
+                            }
+                        },
+                        "orderable": true,
+                        "searchable": true,
+                        "info": true,
+                        "Paging": true,
+                        "searching": true,
+                        "width": "150px",
+                        
+                    },
+                  //{
+                  //      "data": "ID", "render": function (data) {
+                  //          return "<a class='btn btn-primary btn-sm' onclick=PopupForm('@Url.Action("AddorEdit", "CounterParty")/" + data + "')><i class='fa fa-pencil'></i> Edit</a><a class='btn btn-warning btn-sm' style='margin-left:5px' onclick=Delete(" + data + ")><i class='fa fa-trash'></i> Delete</a>";
+                  //  }
+
+                  //  }
+
+
+
+                ],
+                "language": { "emptyTable": "No data found" }
+
+            })
+        });
+        $('.dataTable').wrap('<div class="dataTables_scroll" />');
+
+
+
+        function PopupForm(url) {
+            var formDiv = $('<div/>');
+            $.get(url)
+                .done(function (response) {
+                    formDiv.html(response);
+                    Popup = formDiv.dialog({
+                        autopen: true,
+                        resizable: false,
+                        title: "Add New Counterparty",
+                        height: 400,
+                        width: 600,
+                        close: function () {
+                            Popup.dialog('destroy').remove();
+                        },
+                        open: function () {
+                            $(this).closest(".ui-dialog")
+                                .find(".ui-dialog-titlebar-close")
+                                .removeClass("ui-dialog-titlebar-close")
+                                .html("<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>");
+                        }
+                    });
+                });
+        }
+        function SubmitForm(form) {
+
+            $.validator.unobtrusive.parse(form);
+            if ($(form).valid()) {
+                $.ajax({
+                    type: "POST",
+                    url: form.action,
+                    data: $(form).serialize(),
+
+                    success: function (data) {
+                        if (data.success) {
+
+                            Popup.dialog('close');
+                            dataTable.ajax.reload();
+                            toastr.success(data.message);
+                        }
+                    }
+
+                });
+            }
+
+            return false;
+        }
+
+
+    </script>
+
+}

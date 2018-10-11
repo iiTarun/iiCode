@@ -1,0 +1,127 @@
+﻿
+@model Nom.ViewModel.UploadFilesListDTO
+@{
+    ViewBag.Title = "Upload Nominations";
+}
+
+
+<script type="text/javascript">
+
+  
+    $(function () {       
+
+        $('#dropZone').filedrop({
+            url: '@Url.Action("UploadFiles")',
+            paramname: 'files',
+            maxFiles: 5,
+            error: function (err, file) {
+                switch (err) {
+                    case 'BrowserNotSupported':
+                        alert('browser does not support HTML5 drag and drop')
+                        break;
+                    case 'TooManyFiles':
+                        alert('More than 5 files not allow to upload.')
+                        break;
+                    case 'FileTooLarge':
+                        alert('File size more than 5MB not allow to upload.')
+                        break;
+                    case 'FileTypeNotAllowed':
+                        break;
+                    case 'FileExtensionNotAllowed':
+                        alert('File extension with .xls and .xlsx are only allow to upload.')
+                        break;
+                    default:
+                        //debugger;
+                        alert('Oops! Something went wrong.')
+                        break;
+                }
+            },
+
+            allowedfileextensions: ['.xls', '.xlsx'],
+            maxfiles: 5,
+            maxfilesize: 5, 	// max file size in MBs
+            dragOver: function () {
+                $('#dropZone').css('background', 'gray');
+            },
+            dragLeave: function () {
+                $('#dropZone').css('background', 'gray');
+            },
+            drop: function () {
+                $('#dropZone').css('background', '#E6E5E5');
+            },
+            afterAll: function () {
+                $('#messageShow').html('The file(s) have been uploaded successfully!');
+                $("#loading").hide();
+            },
+            uploadStarted: function (i, file, len) {
+                $("#loading").show();
+            },
+            uploadFinished: function (i, file, response, time) {
+                $('#dropZone').html(response);
+                $('#uploadResult').append('<li>' + file.name + '</li>');
+                toastr.success("", response);
+                debugger;
+
+                @*if (response == "All files have been successfully stored.")
+                {
+                    redirect(@ViewBag.ss);
+                }*@
+            }
+        });
+    });
+
+
+    @*function redirect(id) {
+        var url = '@Url.Action("Redirection", "UploadNominations", new { PipelineId = "__id__" })';
+        window.location.href = url.replace('__id__', id);
+    }*@
+
+
+</script>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h2>Select your Pipeline from the dropdown menu </h2>
+            </div>
+            <div class="ibox-content">
+                <div id="dropZone" class="dropzone dz-clickable h1 text-center"><b>Drop files to upload...</b></div>
+                @*<div class="dz-default dz-message"></div>*@
+                <div>
+                    <div class="m text-danger">
+                        Only .xls(Excel) files allowed<br />
+                        Max of 5 Excel files allowed. Each file must not exceed 5MB
+                    </div>
+                </div>
+                <div id="uploadFileTableDiv">
+                    <h4>List Of Uploaded Files</h4>
+                    <div class="row">
+                        <table class="table table-bordered table-hover" id="UploadedFileTable">
+                            <thead>
+                                <tr class="gradeX">
+                                    @*<th style="min-width: 120px;"><input type="checkbox" class="selectall" value="0"> Select All</th>*@
+                                    <th>Name</th>
+                                    <th>Created Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.UploadedFilesList)
+                                {
+                                    <tr class="gradeX">
+                                        @*<td class="center"><input type="checkbox" rel="@item.ID" class="chkboxes"></td>*@
+                                        <td class="left">
+                                            <a href="@Url.Action("DownloadFile",new { FileID = item.ID })" title="Click to Download">@item.FileName</a>
+                                        </td>
+                                        <td class="center">@item.CreatedDate</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

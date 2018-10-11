@@ -1,0 +1,232 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NatGasHub</title>
+
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/toastr/css")
+    @Styles.Render("~/Content/datatable/css")
+    @Styles.Render("~/Content/select2/css")
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/bootbox")
+    @Scripts.Render("~/bundles/toastr")
+    @Scripts.Render("~/bundles/select2")
+    @Scripts.Render("~/bundles/signalR")
+   
+</head>
+<body>
+
+    <aside id="left-panel" class="left-panel">
+        <nav class="navbar navbar-expand-sm navbar-default">
+            <div class="navbar-header">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <br /> <br />
+            </div>
+            <div id="main-menu" class="main-menu collapse navbar-collapse">
+
+                <ul class="nav navbar-nav">
+                    <li class="DashNomStatusLi">
+                        <a class="DashNomStatusLi1" href='@Url.Action("index", "DashNomStatus")'> <i class="menu-icon1 fa fa-tasks" style="margin-right: 5px !important;"></i>DashNomStatus </a>
+                    </li>
+                    <li class="CounterPartyLi">
+                        <a class="CounterPartyLi1" href='@Url.Action("index", "CounterParty")'> <i class="menu-icon1 fa fa-dashboard" style="margin-right: 5px;"></i>CounterParty </a>
+                    </li>
+                    <li class="LocationLi">
+                        <a class="LocationLi1" href='@Url.Action("index", "Location")'> <i class="menu-icon1 fa fa-tasks" style="margin-right: 5px;"></i>Location </a>
+                    </li>
+                    <li class="TransactiontypesLi">
+                        <a class="TransactiontypesLi1" href='@Url.Action("index", "Transactiontypes")'> <i class="menu-icon1 fa fa-tasks" style="margin-right: 5px;"></i>Transaction types </a>
+                    </li>
+                    <li class="PipeLineTransactionTypeLi">
+                        <a class="PipeLineTransactionTypeLi1" href='@Url.Action("index", "PipeLineTransactionType")'> <i class="menu-icon1 fa fa-tasks" style="margin-right: 5px;"></i>PipeLine transaction types </a>
+                    </li>
+
+                    <li class="UserRegistrationLi">
+                        <a class="UserRegistrationLi1" href='@Url.Action("index", "UserRegistration")'> <i class="menu-icon1 fa fa-tasks" style="margin-right: 5px;"></i>User Registration </a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+    </aside>
+
+
+    <div id="right-panel" class="right-panel">
+
+
+
+
+
+
+        <header id="header" class="header">
+            <div class="header-menu">
+                <div class="col-sm-9">
+                    <a id="menuToggle" class="menutoggle pull-left"><i class="fa fa fa-tasks"></i></a>
+                    <div class="header-left">
+                        @Html.Action("TopNavBarPartail", "Base")
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="user-area dropdown float-right">
+                        @Html.Partial("_LoginPartial")
+                    </div>
+
+                </div>
+            </div>
+        </header>
+
+
+        <div class="container body-content">
+            <div class="container-fluid">
+                <div class="col-sm-12">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function ChangePipeline(IsDUNS) {
+            var str = $('#PipelineDropdown').val();
+            var StrSplit = str.split("-");
+            var pipelineDuns = StrSplit[0];
+            var dataReload = "";
+            window.onbeforeunload = null;
+            if (window.location.href.indexOf("Critical") > 0) {
+                dataReload = location.origin + location.pathname + "?pipelineDuns=" + pipelineDuns + "&Type=Critical";
+            }
+
+            else {
+                dataReload = location.origin + location.pathname + "?pipelineDuns=" + pipelineDuns;
+            }
+            window.location.href = dataReload;
+        }
+
+        function ChangeShipper(IsShipperDUNS) {
+            var str = $('#ShipperDropdown').val();
+            var StrSplit = str.split("-");
+            var shipperDuns = StrSplit[0];
+            var dataReload = "";
+            window.onbeforeunload = null;
+            dataReload = location.origin + location.pathname + "?shipperDuns=" + shipperDuns;
+            window.location.href = dataReload;
+        }
+
+    </script>
+    @Scripts.Render("~/bundles/main")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <div class="modal fade" id="CrashFileModal" role="dialog">
+
+    </div>
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+
+        $('.navbar-toggler').click(function () {
+            $('#main-menu').toggle();
+        });
+
+        var url = window.location.href;
+        if (url.indexOf("DashNomStatus") > 0) {
+            $("navbar-nav li").each(function () {
+                $(this).removeClass("active").css("background-color", "");
+            });
+            $(".DashNomStatusLi").addClass("active ").css("background-color", "rgb(103, 105, 109)");
+        }
+        else if (url.indexOf("CounterParty") > 0) {
+            $("navbar-nav li").each(function () {
+                $(this).removeClass("active ").css("background-color", "");
+            });
+            $(".CounterPartyLi").addClass("active ").css("background-color", "rgb(103, 105, 109)");
+        }
+        else if (url.indexOf("Location") > 0) {
+            $("navbar-nav li").each(function () {
+                $(this).removeClass("active ").css("background-color", "");
+            });
+            $(".LocationLi").addClass("active ").css("background-color", "rgb(103, 105, 109)");
+        }
+        else if (url.indexOf("Transactiontypes") > 0) {
+            $("navbar-nav li").each(function () {
+                $(this).removeClass("active ").css("background-color", "");
+            });
+            $(".TransactiontypesLi").addClass("active ").css("background-color", "rgb(103, 105, 109)");
+        }
+        else if (url.indexOf("PipeLineTransactionType") > 0) {
+            $("navbar-nav li").each(function () {
+                $(this).removeClass("active ").css("background-color", "");
+            });
+            $(".PipeLineTransactionTypeLi").addClass("active ").css("background-color", "rgb(103, 105, 109)");
+        }
+        else if (url.indexOf("UserRegistration") > 0) {
+            $("navbar-nav li").each(function () {
+                $(this).removeClass("active ").css("background-color", "");
+            });
+            $(".UserRegistrationLi").addClass("active ").css("background-color", "rgb(103, 105, 109)");
+        }
+    });
+
+    function SyncData(url) {
+        bootbox.confirm('Are You Sure to Sync this Pipeline Transaction ?', function (result) {
+            if (result) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            dataTable.ajax.reload();
+                            toastr.success(data.message);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function Activate(url) {
+        bootbox.confirm('Are You Sure to Activate this Entry ?', function (result) {
+            if (result) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            dataTable.ajax.reload();
+                            toastr.success(data.message);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function Delete(url) {
+        bootbox.confirm('Are You Sure to Delete this Entry ?', function (result) {
+            if (result) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            dataTable.ajax.reload();
+                            toastr.success(data.message);
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>

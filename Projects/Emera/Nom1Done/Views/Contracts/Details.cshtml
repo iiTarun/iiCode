@@ -1,0 +1,130 @@
+﻿@model Nom1Done.Model.Contract
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Contract</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.RequestNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RequestNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RequestTypeID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RequestTypeID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FuelPercentage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FuelPercentage)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MDQ)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MDQ)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LocationFromID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LocationFromID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LocationToID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LocationToID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ValidUpto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ValidUpto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PipelineID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PipelineID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShipperID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShipperID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ModifiedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModifiedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ModifiedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModifiedDate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

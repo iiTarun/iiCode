@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "_CrashFilePartial";
+}
+
+<style>
+    table.dataTable thead th.sorting,
+    table.dataTable thead th.sorting_asc,
+    table.dataTable thead th.sorting_desc {
+        background: none;
+        padding: 13px -6px;
+    }
+</style>
+<!-- Modal content-->
+<div class="modal-dialog" style="max-width:800px;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title col-md-2">Crash Files</h5>
+            <div class="col-md-8">
+                @*ViewBag.CityList is holding all the cities values*@
+                @Html.DropDownList("SelectItem", ViewBag.ShipperDropdown as SelectList, "---Select Shipper Company--- ", new { @class = "form-control col-md-8" , id = "ShipperDropdown" })
+            </div>
+            <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body" id="partial">
+            @{ Html.RenderPartial("~/Views/Shared/_CrashFileTblPartial.cshtml");}
+        </div>
+    </div>
+</div>
+<script>
+    $("#ShipperDropdown").change(function () {
+        var ShipperDuns = $('#ShipperDropdown').val();
+        alert(ShipperDuns);
+        $.ajax({
+            type: "POST",
+            url: '/CrashFile/GetCrashFileByShipperduns',
+            data: { ShipperDuns: ShipperDuns},
+            //  async: true,
+            success: function (data) {
+               $("#partial").html(data);
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    })
+</script>
+
+

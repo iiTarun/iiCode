@@ -1,0 +1,82 @@
+﻿
+.navbar-default {
+    border-color: #272F3C !important;
+}
+
+.box.box-solid {
+    border: 1px solid #FF6C3A !important;
+    border-top-color: #FF6C3A !important;
+}
+
+.box.box-solid > .box-header {
+    background: #FF6C3A !important;
+    background-color: #FF6C3A !important;
+}
+
+.nav-second-level li a {
+    padding-left: 32px !important;
+}
+
+.dropdown.profile-element img.img-circle {
+    border-radius: 50%;
+    max-width: 70px;
+}
+
+.dz-default.dz-message {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+    -webkit-transition: opacity 0.3s ease-in-out;
+    -moz-transition: opacity 0.3s ease-in-out;
+    -o-transition: opacity 0.3s ease-in-out;
+    -ms-transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
+    background-image: url("../../Assets/img/spritemap.png");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    position: absolute;
+    width: 428px;
+    height: 123px;
+    margin-left: -214px;
+    margin-top: -61.5px;
+    top: 50%;
+    left: 50%;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.form-horizontal .form-group {
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.glyphicon-color{
+          color:#FF6C3A !important;
+     }
+
+
+/*  Pipeline Dropdown custom style*/
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #272F3C !important;
+  }
+
+
+.select2-container--default .select2-search--dropdown .select2-search__field:hover,
+.select2-container--default .select2-search--dropdown .select2-search__field:focus,
+.select2-container--default .select2-search--dropdown .select2-search__field:active:hover,
+.select2-container--default .select2-search--dropdown .select2-search__field:active:focus {
+ border-color: #272F3C !important;
+ box-shadow: 0 0 5px #272F3C !important;
+  padding: 3px 0px 3px 3px;
+  margin: 5px 1px 3px 0px;
+  border: 1px solid #272F3C !important;
+}
+
+
+.btn-success {
+	background-color: #FF6C3A;
+	border-color: #FF6C3A
+}
+.btn-success:hover, .btn-success:active, .btn-success.hover {
+	/*background-color: #FF6C3A*/
+}

@@ -1,0 +1,79 @@
+﻿@model UPRD.DTO.UserRegistrationDTO
+
+@using (Html.BeginForm("RegisterUser", "UserRegistration", FormMethod.Post, new { onsubmit = "return SubmitForm(this)" }))
+{
+    @Html.AntiForgeryToken()
+    @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
+    @Html.HiddenFor(model => model.Id);
+    <div class="row">
+        <div class="col-sm-3">
+            @Html.Label("Shipper")
+        </div>
+        <div class="col-sm-6">
+            @if (ViewBag.ShipperList != null)
+            {
+                @Html.DropDownListFor(model => model.ShipperDuns, ViewBag.ShipperList as SelectList, new { @class = "form-control", id = "ddlShipper" })
+
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.ShipperDuns, new List<SelectListItem> { new SelectListItem { Text = "Select", Value = "0" } }, new { @class = "form-control", id = "ddlShipper" })
+            }
+        </div>
+        <div class="col-sm-6">
+            @Html.ValidationMessageFor(model => model.ShipperDuns)
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-3">
+            @Html.Label("Email Address")
+        </div>
+        <div class="col-sm-6">
+            @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+        </div>
+        <div class="col-sm-6">
+            @Html.ValidationMessageFor(model => model.Email)
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-3">
+            @Html.Label("Password")
+        </div>
+        <div class="col-sm-6">
+            @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+        </div>
+        <div class="col-sm-6">
+            @Html.ValidationMessageFor(model => model.Password)
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-3">
+            @Html.Label("Confirm Password")
+        </div>
+        <div class="col-sm-6">
+            @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control" })
+        </div>
+        <div class="col-sm-6">
+            @Html.ValidationMessageFor(model => model.ConfirmPassword)
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-3">
+
+        </div>
+        <div class="col-sm-6">
+            <input type="submit" value="Submit" class="btn btn-primary" />
+        </div>
+        <div class="col-sm-3">
+
+        </div>
+    </div>
+}
+<script src="~/Scripts/jQuery-2.1.4.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+

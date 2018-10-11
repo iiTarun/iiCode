@@ -1,0 +1,80 @@
+﻿@*@model UPRD.DTO.TransactionTypesDTO*@
+@model UPRD.DTO.MetaDataTransactionTypesDTO
+
+@{
+    /**/
+
+    Layout = null;
+}
+<style>
+    span.field-validation-error {
+        color: red;
+    }
+</style>
+<!DOCTYPE html>
+
+@using (Html.BeginForm("AddorEdit", "Transactiontypes", FormMethod.Post, new { onsubmit = "return SubmitForm(this)" }))
+{
+    <div style="width:90%; margin:0 auto">
+        @Html.HiddenFor(Model => Model.ID, new { @id = "frmCounterId" })
+        @*@Html.HiddenFor(Model => Model.pipelineDuns)*@
+
+        <div class="row">
+            <div class="col-sm-3">
+                @Html.LabelFor(model => model.Name, new { @class = "control-label" })
+            </div>
+            <div class="col-sm-6">
+                @Html.TextAreaFor(model => model.Name, new { @class = "form-control" })
+            </div>
+            <div class="col-sm-3">
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-sm-3">
+                @Html.LabelFor(model => model.Identifier, new { @class = "control-label" })
+            </div>
+            <div class="col-sm-6">
+                @Html.EditorFor(model => model.Identifier, new { @class = "form-control" })
+            </div>
+            <div class="col-sm-3">
+                @Html.ValidationMessageFor(model => model.Identifier)
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-sm-3">
+                @Html.LabelFor(model => model.SequenceNo, new { @class = "control-label" })
+            </div>
+            <div class="col-sm-6">
+                @Html.EditorFor(model => model.SequenceNo, new { @class = "form-control" })
+            </div>
+            <div class="col-sm-3">
+                @Html.ValidationMessageFor(model => model.SequenceNo)
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-sm-3">
+
+            </div>
+            <div class="col-sm-6">
+                <input type="submit" value="Submit" class="btn btn-save" />
+            </div>
+            <div class="col-sm-3">
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+}
+
+<script src="~/Scripts/jQuery-2.1.4.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

@@ -1,0 +1,22 @@
+﻿@model string
+@{
+    Guid CurrentGuid = Guid.NewGuid();
+}
+
+<span id="@CurrentGuid"></span>
+
+
+<script>
+    $(document).ready(function () {
+        
+         $.ajax({
+             url: "/SQTSSummary/_CounterPartyName",
+             data: { counteryPartyDuns: '@Model' },
+                    datatype: "JSON",
+                    type: "GET",
+                    success: function (data) {
+                       $("#" + "@CurrentGuid").text(data);
+                    }
+                });
+    });
+</script>

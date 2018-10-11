@@ -1,0 +1,150 @@
+﻿@model IEnumerable<Nom1Done.DTO.SummaryDTO>
+@using System.Linq;
+@using System;
+@using Nom1Done.DTO;
+@{
+    bool sqtsForLoc = ViewBag.IsSqtsForLoc;
+    var sumaryNomNew = new List<SummaryDTO>();
+    int daysInMonth = DateTime.DaysInMonth(DateTime.Now.Year, ViewBag.Month);
+    DateTime dtFrom = new DateTime(DateTime.Now.Year, ViewBag.Month, 1);
+    List<DateTime> dates = Enumerable.Range(0, daysInMonth)
+     .Select(offset => dtFrom.AddDays(offset))
+     .ToList();
+}
+
+<div class="row">
+    @*<span style="padding-left: 20px; color: #272F3C;">Nom Qty</span>*@
+</div>
+<div class="row">
+    <div class="ibox-content">
+
+        <div id="NomQtyDeliveryTableDiv" class="table-responsive">          
+          
+                <table class="table stripe row-border order-column table-bordered table-striped" id="NomQtyDeliveryTable" >
+                    <thead>
+                        <tr>
+                            @if (sqtsForLoc)
+                            {
+                                <th class="MinimumWidth">Del Loc</th>
+                                <th class="MinimumWidth">Svc Req K</th>
+                            }
+                            else
+                            {
+                                <th class="MinimumWidth">Svc Req K</th>
+                                <th class="MinimumWidth">Del Loc</th>
+                            }
+                            <th class="MinimumWidth">Cycle</th>
+                            <th class="MinimumWidthLargeCol">Dn Name</th>
+                            <th class="MinimumWidth">Pkg Id</th>
+                            <th class="MinimumWidth">Nom Tracking Id</th>
+                            <th class="MinimumWidth">Submitted Date</th>
+                            <th class="MinimumWidth">User</th>
+                            @if (Model.Count() > 0)
+                            {
+                                foreach (var CurrentMonthDates in dates)
+                                {
+                                    <th class="nosort" style="padding:10px !important;">@CurrentMonthDates.Day</th>
+                                }
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+
+
+                            foreach (var item in Model)
+                            {
+                        <tr>
+                            @if (sqtsForLoc)
+                            {
+                                <td class="orangeThemeColor">@item.DelLoc</td>
+                                <td class="orangeThemeColor">@item.ContractSVC</td>
+                            }
+                            else
+                            {
+                                <td class="orangeThemeColor">@item.ContractSVC</td>
+                                <td class="orangeThemeColor">@item.DelLoc</td>
+                            }
+
+                            <td>@item.Cycle</td>
+                            <td>@item.DownStreamName</td>
+                            <td>@item.PkgId</td>
+                            <td>@item.NomTrackingId</td>
+                            <td>@item.SubmittedDate</td>
+                            <td>@item.Username</td>
+                            @if (Model.Count() > 0)
+                            {
+                                foreach (var rec1 in dates.Where(a => a.Date < item.nomStartDate))
+                                {
+                                    <td></td>
+                                }
+                                foreach (var QtyOnDate in dates.Where(a => a.Date >= item.nomStartDate && a.Date <= item.nomEndDate))
+                                {
+
+                                    var qty = item.Qty != null ? String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}", item.Qty) : string.Empty;
+                                    <td>@qty</td>
+                                }
+                                foreach (var rec1 in dates.Where(a => a.Date > item.nomEndDate))
+                                {
+                                    <td></td>
+                                }
+                            }
+                        </tr>
+
+                            }
+                        }
+                    </tbody>
+                </table>
+
+          
+        </div>
+
+     </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        if (@Model.Count()> 0) {
+            TableConfig();
+        }
+    });
+    function TableConfig() {
+
+
+        // Setup - add a text input to each footer cell
+
+        var totalColmns = $('#NomQtyDeliveryTable tbody tr').first().find('td').length;
+        var CountableColmns = $('#NomQtyDeliveryTable tbody tr').first().find('td.countable').length;
+        var loopCount = parseInt(totalColmns - CountableColmns) - 1;
+
+
+
+        //$('#filterTR th').each(function (i) {
+        //    if (i <= loopCount) {
+        //        //var title = $('#filterTR th').eq($(this).index()).text();
+        //        $(this).html('<input style="color:black;" type="text" placeholder="Search" data-index="' + i + '" />');
+        //    }
+        //});
+
+        // DataTable
+        var table = $('#NomQtyDeliveryTable').DataTable({
+            scrollY: "300px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: false,
+            fixedColumns: true,
+            ordering: true
+        });
+
+
+        // Filter event handler
+        $(table.table().container()).on('keyup', 'thead input', function () {
+            table
+                .column($(this).data("index"))
+                .search(this.value)
+                .draw();
+        });
+    }
+</script>
+

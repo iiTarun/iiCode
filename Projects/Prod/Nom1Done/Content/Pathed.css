@@ -1,0 +1,107 @@
+﻿.table > tbody > tr > td {
+    padding: 0px !important;
+}
+
+.lookup {
+    background-image: url('/images/list.png');
+    background-repeat: no-repeat;
+    padding-left: 20px;
+}
+
+.scheduled {
+    background-image: url('/images/scheduled.png');
+    background-repeat: no-repeat;
+    padding-left: 5px;
+    background-position-x: 97px;
+    background-position-y: 3px;
+}
+
+.progress-file {
+    background-image: url('/images/progress.gif');
+    background-repeat: no-repeat;
+    padding-left: 5px;
+    background-position-x: 97px;
+    background-position-y: 3px;
+}
+
+.table-th {
+    padding: 8px !important;
+    line-height: 1.42857143 !important;
+    vertical-align: middle !important;
+    border: 1px solid #ddd !important;
+    min-width: 100px !important;
+    font-size: 12px !important;
+    max-height: 10px !important;
+    background-color: #3c8dbc !important;
+    color: #ffffff !important;
+}
+
+.table-td {
+    font-size: 12px !important;
+    border: 1px solid #ddd !important;
+    padding: 0px !important;
+}
+
+.table-input {
+    width: 100% !important;
+    border: 1px solid #ddd !important;
+    padding-left: 7px !important;
+}
+
+.table-select {
+    margin-top: -1px !important;
+    width: 100% !important;
+    border: 1px solid #ddd !important;
+}
+
+.table-cell-input {
+    height: 32px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+}
+
+.table-cell-checkbox {
+    background-color: white;
+    padding-top: 10px;
+    text-align: center !important;
+}
+
+.checkbox-margin {
+    margin-top: 10px !important;
+    padding: 0px !important;
+}
+
+.custom-modal {
+    max-width: 875px !important;
+    margin-top: 95px !important;
+    margin: 0px auto;
+}
+
+.modalButton {
+    background-color: #3c8dbc !important;
+    color: #ffffff !important;
+}
+
+.customCursor {
+    cursor: pointer;
+}
+
+
+.customCursorNomination {
+    cursor: pointer;
+}
+
+.customCursorNomination:hover {
+    color:#72afd2
+}
+
+
+.modalSearchRow {
+    font-size: 12px !important;
+    padding: 8px !important;
+}
+
+.table-label {
+    margin: 8px !important;
+}
+

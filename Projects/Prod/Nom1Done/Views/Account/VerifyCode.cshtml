@@ -1,0 +1,189 @@
+﻿@model  Nom1Done.Models.VerifyCodeViewModel
+
+
+@{
+    ViewBag.Title = "OTP Verification";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NatGasHub</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <link href="~/Content/toastr.min.css" rel="stylesheet" />
+    <link href="~/Assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Assets/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="~/Assets/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <script src="~/Assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+
+
+
+    <!-- Data Tables -->
+    <link href="~/Assets/custom.css" rel="stylesheet">
+    <link href="~/Assets/style.css" rel="stylesheet">
+    <link href="~/Assets/animate.css" rel="stylesheet">
+    <link href="~/Assets/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="~/Assets/plugins/dataTables/dataTables.responsive.css" rel="stylesheet">
+    <link href="~/Assets/plugins/dataTables/dataTables.tableTools.min.css" rel="stylesheet">
+    <link href="~/Assets/plugins/select2/select2.min.css" rel="stylesheet">
+    <link href="~/Assets/plugins/dropzone/basic.css" rel="stylesheet">
+    <link href="~/Assets/plugins/dropzone/dropzone.css" rel="stylesheet">
+
+
+    <link href="~/Assets/plugins/datepicker/datepicker3.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+    <link href="~/Assets/plugins/multiselect/bootstrap-multiselect.css" rel="stylesheet" />
+
+    <script src="~/Assets/plugins/multiselect/bootstrap-multiselect.js"></script>
+
+    <!-- For AutoComplete Text Box in WatchList Screen -->
+    <script src="~/Assets/plugins/jQueryUI/jquery-ui-1.10.3.min.js"></script>
+
+    <link href="~/Assets/plugins/bootstrap-toggle-master/css/bootstrap-toggle.css" rel="stylesheet" />
+    <script src="~/Assets/plugins/bootstrap-toggle-master/js/bootstrap-toggle.js"></script>
+
+    <!--for ajax form submit-->
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+
+    <script src="~/Assets/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/Assets/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <script src='~/Assets/plugins/fastclick/fastclick.min.js'></script>
+    <script src="~/Assets/dist/js/app.min.js" type="text/javascript"></script>
+    <script src="~/Assets/dist/js/demo.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.filedrop.js"></script>
+
+    <!-- Data Tables -->
+    <script src="~/Assets/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="~/Assets/plugins/dataTables/dataTables.bootstrap.js"></script>
+    <script src="~/Assets/plugins/dataTables/dataTables.responsive.js"></script>
+    <script src="~/Assets/plugins/dataTables/dataTables.tableTools.min.js"></script>
+    <script src="~/Assets/plugins/select2/select2.full.min.js"></script>
+    <script src="~/Assets/plugins/dropzone/dropzone.js"></script>
+    <script src="~/Assets/inspinia.js"></script>
+
+    <script src="~/Scripts/toastr.min.js"></script>
+    <script src="~/Assets/plugins/datepicker/bootstrap-datepicker.js"></script>
+
+
+</head>
+
+<body style="background-color:white;">   
+        <div class="container be-detail-container">
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <br>
+                    <img src="http://test.natgashub.com/Assets/OrangeNom1DoneLogo.jpg" class="img-responsive" style="width:300px; height:200px;margin:0 auto;"><br>
+                    <h1 class="text-center">2 Factor Verification</h1><br>
+                    <div class="form-group col-sm-8 col-sm-offset-2" style="align-content:center;">
+                        <p>A verification code has been sent to your email address. Please enter the code below to log in.</p>
+                        <br>
+                        </div>
+                        <form method="post" id="veryfyotp" action="">
+                            <div class="row">
+                                <div class="form-group col-sm-7 col-sm-offset-2" style="align-content:center;">
+                                    <span style="color:red;"></span>
+                                    <input type="text" class="form-control" id="inputOTP" placeholder="Enter 2 factor verification code here">
+                                    @*@Html.TextBoxFor(m => m.Code, new { @class = "form-control",placeholder="Enter your OTP Number"})*@
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div></div>
+                                <div class="form-group col-sm-10 col-lg-offset-3" style="align-content:center;">
+                                    <button type="button" class="btn btn-primary  col-sm-2" id="verifyCode" style="margin:0px 2px; background-color:#293846; border:none"  onclick="VerifyCode()">Verify</button>
+                                    <button type="button" class="btn btn-primary  col-sm-2" onclick="RedirectToLogin();" style="margin:0px 2px;background-color:#293846; border:none">Cancel</button>
+                                    <button type="button" class="btn btn-primary  col-sm-2" style="margin:0px 2px;background-color:#293846; border:none" onclick="ResendOtp()">Resend</button>
+                                </div>
+                            </div>
+                        </form>
+                        <br><br>
+                    </div>
+                </div>
+        </div> 
+    @Html.HiddenFor(a=>a.userId)
+</body>
+
+</html>
+
+<script>    
+    $(document).ready(function () {
+        $(document).on('focus', ':input', function () {
+            $(this).attr('autocomplete', 'off');
+            
+        });
+    });
+    function RedirectToLogin()
+    {
+        window.location.href = "@Url.Action("Login", "Account")";
+    }
+
+    $(document).on('keypress', function (e) {
+        if (e.keyCode == 13) {
+            event.preventDefault();
+            VerifyCode();
+        }
+    });
+
+    function ResendOtp() {
+        var userId = $("#userId").val();
+    $.ajax({
+        type: 'POST',
+        url: '@Url.Action("ResendOtp", "Account")',
+        dataType: 'json',
+        data: { userId:userId},
+        success: function (data) {
+            if (data.result == "Failure") {
+                    toastr.error("Error Sending Email. Please Try Again.");                    
+                }
+            if (data.result == "Success") {
+                toastr.warning("2 Factor Verification code sent to your email address on file.");
+                }             
+        },
+        error: function (ex) {            
+            var r = jQuery.parseJSON(response.responseText);
+            alert("Message: " + r.Message);
+            alert("StackTrace: " + r.StackTrace);
+            alert("ExceptionType: " + r.ExceptionType);
+        }
+    });
+
+    }
+    function VerifyCode() {
+        var userId = $("#userId").val();
+        $.ajax({        
+        type: 'POST',
+        url: '@Url.Action("VerifyOTP", "Account")',
+        dataType: 'json',        
+            data: { code: $("#inputOTP").val(), userId : userId },
+            success: function (data) {
+                if (data.result == "Failure") {
+                    toastr.warning("OTP is not Valid.");
+                    $("#inputOTP").val("");
+                }
+                else if (data.result == "Empty") {
+                    toastr.warning("Please enter 2 factor verification code");
+                }
+                if (data.result == "Success") {
+                    window.location.href = "@Url.Action("Index", "Dashboard")";
+                }            
+        },
+        error: function (ex) {
+            var r = jQuery.parseJSON(response.responseText);
+            alert("Message: " + r.Message);
+            alert("StackTrace: " + r.StackTrace);
+            alert("ExceptionType: " + r.ExceptionType);
+        }
+    });
+    }
+
+</script>

@@ -1,0 +1,3290 @@
+﻿@model Nom1Done.DTO.BatchDetailDTO
+@{ 
+    Guid CurrentContractId = Guid.NewGuid();
+    Guid CurrentSupplyRowId = Guid.NewGuid();
+    Guid CurrentMarketRowId = Guid.NewGuid();
+
+    var shiperduns = @Model.ShiperDuns.ToString();
+    var shipperName = @Model.ShiperName.ToString();
+    var isSNG = (Model.Duns == "006900518" ? true : false);
+    var isElPaso = (Model.Duns == "008001703" ? true : false);
+}
+<style>
+    th {
+        min-width: 120px;
+    }
+
+    .cursor {
+        cursor: pointer;
+    }
+
+
+    #accordion .glyphicon {
+        margin-right: 10px;
+    }
+
+    .panel-collapse > .list-group .list-group-item:first-child {
+        border-top-right-radius: 0;
+        border-top-left-radius: 0;
+    }
+
+    .panel-collapse > .list-group .list-group-item {
+        border-width: 1px 0;
+    }
+
+    .panel-collapse > .list-group {
+        margin-bottom: 0;
+    }
+
+    .panel-collapse .list-group-item {
+        border-radius: 0;
+    }
+
+    .panel-collapse .list-group .list-group {
+        margin: 0;
+        margin-top: 10px;
+    }
+
+    .panel-collapse .list-group-item li.list-group-item {
+        margin: 0 -15px;
+        border-top: 1px solid #ddd !important;
+        border-bottom: 0;
+        padding-left: 30px;
+    }
+
+        .panel-collapse .list-group-item li.list-group-item:last-child {
+            padding-bottom: 0;
+        }
+
+    .panel-collapse div.list-group div.list-group {
+        margin: 0;
+    }
+
+    .panel-collapse div.list-group .list-group a.list-group-item {
+        border-top: 1px solid #ddd !important;
+        border-bottom: 0;
+        padding-left: 30px;
+    }
+
+    .panel-collapse .list-group-item li.list-group-item {
+        border-top: 1px solid #DDD !important;
+    }
+
+    .glyphicon-color{
+          color:#FF6C3A !important;
+     }
+
+</style>
+
+<div id="PntPartial">
+@using (Html.BeginForm("Index", "PNTNominations", FormMethod.Post))
+{
+    @Html.HiddenFor(a => a.PipelineId)
+    @Html.HiddenFor(a => a.Id)
+    @Html.HiddenFor(a => a.NomSubCycle)
+    @Html.HiddenFor(a => a.StartDateTime)
+    @Html.HiddenFor(a => a.EndDateTime)
+    @Html.HiddenFor(a => a.CycleId)
+    @Html.HiddenFor(a => a.Description)
+    @*<div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content" style="padding-top: 20px;">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="i-checks">
+                                <label> <input type="checkbox" value=""> <i></i> Ranking </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="i-checks">
+                                <label> <input type="checkbox" value=""> <i></i> Up Dn Contract </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="i-checks">
+                                <label> <input type="checkbox" value=""> <i></i> Up/Dn PKG ID </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content" style="padding-top: 20px;">
+                        <button type="button" id="validationPNT" class="btn btn-w-m btn-success btn-outline" onclick="ValidatePNT('N');"><i class="fa fa-check-square-o"></i> Validate</button>
+                        <button type="submit" id="sendPNTbtn" name="Send" class="btn btn-w-m btn-success btn-outline" onclick="return SendNom()"><i class="fa fa-plane"></i> Send</button>
+                        <button type="submit" name="Save" class="btn btn-w-m btn-success btn-outline" onclick="return OnSaveRankValidate();"><i class="fa fa-save"></i> Save</button>
+                        <a href="@Url.Action("Index","Batch",new {pipelineId = Model.PipelineId })" class="btn btn-w-m btn-success btn-outline"><i class="fa fa-bars"></i> Batch</a>
+                   </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                        <li class=""><a onclick="SerializeOtherTabsData(1,'@Model.PipelineId')" data-toggle="tab" href="#BatchTab">Batch Location</a></li>
+                        <li class="active"><a onclick="SerializeOtherTabsData(5,'@Model.PipelineId')" data-toggle="tab" href="#ContractPathTab">Contract Path</a></li>
+                        <li class=""><a onclick="SerializeOtherTabsData(3,'@Model.PipelineId')" data-toggle="tab" href="#SupplyTab">Supply</a></li>
+                        <li class=""><a onclick="SerializeOtherTabsData(4,'@Model.PipelineId')" data-toggle="tab" href="#MarketTab">Market</a></li>
+                        <li class=""><a onclick="SerializeOtherTabsData(2,'@Model.PipelineId')" data-toggle="tab" href="#NomMatrixTab">Nom Matrix</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="ContractPathTab" class="tab-pane active">
+                            <div class="panel-body">
+
+                                <!--Lucky-->
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="panel-group" id="accordion">
+                                            <input type="checkbox" value="0" class="headCheckbox" onclick="selectAllContractTransportPath(this);"> Select All &nbsp &nbsp &nbsp                                            @*<button type="button" onclick="selectAllContractTransportPath()" class="btn btn-w-m btn-success btn-outline"><i class="fa fa-recycle"></i>Select All Contract</button>*@
+                                            <button type="button" onclick="AddContractTransportPath('@Model.PipelineId')" class="btn btn-w-m btn-success btn-outline"><i class="fa fa-plus-sign"></i> Add New Contract(Path)</button>
+                                            <button type="button" onclick="removeContractTransportPath()" class="btn btn-w-m btn-success btn-outline"><i class="fa fa-recycle"></i> Remove Contract(Path)</button>
+
+                                            @*<a class="btn" onclick="AddContractTransportPath('@Model.PipelineId')"><span class="glyphicon glyphicon-plus-sign" title="Add ContractTransportPath"></span></a>
+                                                <a class="btn" onclick="removeContractTransportPath()" href="javascript:void(0)"><span class="glyphicon glyphicon-remove" title="Delete ContractTransportPath"></span></a>*@
+
+                                            @if (Model.ContractPath.Count > 0)
+                                            {
+                                              <!-- Start Foreach For ContractTransportDiv-->
+                                                foreach (var mainItem in Model.ContractPath)
+                                                {
+                                                    string ServiceRequestNo = "--Select--";
+                                                    string ServiceRequestType = "--Select--";
+                                                    Guid ContractTransportPathDivId = Guid.NewGuid();
+                                                    int sumDel = 0;
+                                                    int sumRec = 0;
+                                                    <div class="panel panel-default" id="@ContractTransportPathDivId" style="margin-top: 10px !important;">
+                                                        <div class="panel-heading">
+                                                            <h4 class="panel-title">
+                                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse_@ContractTransportPathDivId">
+                                                                    <span class="glyphicon glyphicon-minus">
+                                                                    </span>Contract
+                                                                </a>
+                                                            </h4>
+                                                            <br />
+                                                            <table id="Contract_@ContractTransportPathDivId" class="table table-bordered table-hover ServiceReqTablePart">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Select</th>
+                                                                        <th>*Svc Req K</th>
+                                                                        <th>Svc Type</th>
+                                                                        <th>Nominated</th>
+                                                                        <th>Overrun</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr class="gradeX" rel="@ContractTransportPathDivId">
+                                                                        @Html.Hidden("ContractPath.Index", ContractTransportPathDivId.ToString())
+                                                                        <td class="center">
+                                                                            <input type="checkbox" value="" class="mainchkboxes" rel="@ContractTransportPathDivId" onchange="OnChangeMainCheckBox();">
+                                                                        </td>
+
+                                                                        <td class="cursor">
+                                                                            <span data-toggle="modal" onclick="OpenPopUp('Contract','@ContractTransportPathDivId','ContractPath',@Model.PipelineId)">
+                                                                                @if (mainItem.ServiceRequestNo != null)
+                                                                                {
+                                                                                    ServiceRequestNo = mainItem.ServiceRequestNo;
+                                                                                }
+                                                                                @ServiceRequestNo
+                                                                            </span>@Html.Hidden("ContractPath[" + ContractTransportPathDivId + "].ServiceRequestNo", mainItem.ServiceRequestNo, new { @rel = ContractTransportPathDivId })
+                                                                        </td>
+                                                                        <td class="cursor">
+                                                                            <span data-toggle="modal" onclick="OpenPopUp('Contract','@ContractTransportPathDivId','ContractPath',@Model.PipelineId,'@ContractTransportPathDivId')">
+                                                                                @if (mainItem.ServiceRequestType != null)
+                                                                                {
+                                                                                    ServiceRequestType = mainItem.ServiceRequestType;
+                                                                                }
+                                                                                @ServiceRequestType
+                                                                            </span>
+                                                                            @Html.Hidden("ContractPath[" + ContractTransportPathDivId + "].ServiceRequestType", mainItem.ServiceRequestType, new { @rel = ContractTransportPathDivId })
+                                                                        </td>
+                                                                        <td>@Html.TextBox("ContractPath[" + ContractTransportPathDivId + "].NominatedQuantity", mainItem.NominatedQuantity, new { @class = "form-control", @rel = ContractTransportPathDivId })</td>
+                                                                        <td>@Html.TextBox("ContractPath[" + ContractTransportPathDivId + "].OverrunQuantity", mainItem.OverrunQuantity, new { @class = "form-control", @rel = ContractTransportPathDivId })</td>
+                                                                        @if (mainItem.FuelPercentage != null)
+                                                                        {
+                                                                            @Html.Hidden("HiddenFuelPercentage_" + ContractTransportPathDivId, mainItem.FuelPercentage)
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            @Html.Hidden("HiddenFuelPercentage_" + ContractTransportPathDivId, null)
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div id="collapse_@ContractTransportPathDivId" class="panel-collapse collapse in">
+                                                            <div class="ibox-content">
+                                                                <div class="btn-group">
+                                                                    <a class="btn" onclick="AddContractPathRow('@Model.PipelineId','@ContractTransportPathDivId');"><span class="glyphicon glyphicon-plus-sign glyphicon-color" title="Add"></span></a>
+                                                                    <a class="btn" onclick="CopyCotractNomRow('@Model.PipelineId','@ContractTransportPathDivId')" href="javascript:void(0)"><span class="glyphicon glyphicon-copy glyphicon-color" title="Copy"></span></a>
+                                                                    <a class="btn" onclick="removeContract('@ContractTransportPathDivId')" href="javascript:void(0)"><span class="glyphicon glyphicon-remove glyphicon-color" title="Delete"></span></a>
+                                                                </div>
+                                                                <div id="DivHeaderRow_@ContractTransportPathDivId" style="overflow:hidden">
+                                                                    <table class="table table-bordered table-hover"  style="padding-right:20px!important;margin-top:0px!important;">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th><input type="checkbox" class="selectallTranspose" value="0" onclick="selectAllTransport('@ContractTransportPathDivId',this);"> Select All</th>
+                                                                                <th>TT</th>
+                                                                                @*<th>Sched Qty</th>*@
+                                                                                <th>*RecLocProp</th>
+                                                                                <th>RecLocName</th>
+                                                                                <th>*RecLoc</th>
+                                                                                <th>*RecRank</th>
+                                                                                <th>RecZone</th>
+                                                                                <th>*DelLocProp</th>
+                                                                                <th>DelLocName</th>
+                                                                                <th>*DelLoc</th>
+                                                                                <th>*DelRank</th>
+                                                                                <th>DelZone</th>
+                                                                                <th>*RecDTH</th>
+                                                                                <th>FuelPercentage</th>
+                                                                                <th>FuelDTH</th>
+                                                                                <th>*DelDTH</th>
+                                                                                @if (isSNG == true || isElPaso == true)
+                                                                                {
+                                                                                    <th>*Route</th>
+                                                                                }
+                                                                                <th>PkgID</th>
+                                                                                <th>*PathRank</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                    </table>                                                                    
+                                                                </div>
+                                                                <div id="DivMainContent_@ContractTransportPathDivId" class="table-responsive" style="overflow:scroll;" onscroll="OnScrollDiv(this,'@ContractTransportPathDivId')">
+                                                                    <table id="transportTable_@ContractTransportPathDivId" rel="@ContractTransportPathDivId" class="table table-bordered table-hover contractPart">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th><input type="checkbox" class="selectallTranspose" value="0" onclick="selectAllTransport('@ContractTransportPathDivId',this);"> Select All</th>
+                                                                                <th>TT</th>
+                                                                                @*<th>Sched Qty</th>*@
+                                                                                <th>*RecLocProp</th>
+                                                                                <th>RecLocName</th>
+                                                                                <th>*RecLoc</th>
+                                                                                <th>*RecRank</th>
+                                                                                <th>RecZone</th>
+                                                                                <th>*DelLocProp</th>
+                                                                                <th>DelLocName</th>
+                                                                                <th>*DelLoc</th>
+                                                                                <th>*DelRank</th>
+                                                                                <th>DelZone</th>
+                                                                                <th>*RecDTH</th>
+                                                                                <th>FuelPercentage</th>
+                                                                                <th>FuelDTH</th>
+                                                                                <th>*DelDTH</th>
+                                                                                @if (isSNG == true || isElPaso==true)
+                                                                                {
+                                                                                    <th>*Route</th>
+                                                                                }
+                                                                                <th>PkgID</th>
+                                                                                <th>*PathRank</th>                                                                               
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            @foreach (var item in Model.Contract.Where(a => a.ServiceRequestNo == mainItem.ServiceRequestNo).ToList())
+                                                                            {
+
+                                                                                string ttDesc = "--Select--";
+                                                                                string tt = "--Select--";
+                                                                                string recProp = "--Select--";
+                                                                                string recName = "--Select--";
+                                                                                string recId = "--Select--";
+                                                                                string delProp = "--Select--";
+                                                                                string delName = "--Select--";
+                                                                                string delId = "--Select--";
+                                                                                string route = "--Select--";
+                                                                                sumRec = sumRec + Convert.ToInt32(item.ReceiptDth);
+                                                                                sumDel = sumDel + Convert.ToInt32(item.DeliveryDth);
+                                                                                <tr class="gradeX" id="transportTableRow_@CurrentContractId" rel="@CurrentContractId">
+                                                                                    @Html.Hidden("Contract.Index", CurrentContractId.ToString())
+                                                                                    <td class="center"><input type="checkbox" class="chkboxes" value="@CurrentContractId" rel="ContractPath" onclick="OnChangeCheckTransport('@ContractTransportPathDivId');" /></td>
+                                                                                    <td class="cursor">
+                                                                                        <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentContractId','ContractPath',@Model.PipelineId)">
+                                                                                            @if (item.TransactionType != null)
+                                                                                            {
+                                                                                                tt = item.TransactionType;
+                                                                                            }
+                                                                                            @tt
+                                                                                        </span>@Html.Hidden("Contract[" + CurrentContractId + "].TransactionType", item.TransactionType, new { @rel = CurrentContractId })
+                                                                                               @Html.Hidden("Contract[" + CurrentContractId + "].TransactionTypeDescription", item.TransactionTypeDescription, new { @rel = CurrentContractId })
+                                                                                    @Html.Hidden("Contract[" + CurrentContractId + "].TransactionId", item.TransactionId, new { @rel = CurrentContractId })
+                                                                                    @Html.Hidden("Contract[" + CurrentContractId + "].NominatorTrackingId", item.NominatorTrackingId, new { @rel = CurrentContractId })
+
+                                                                                    </td>
+                                                                                    @*<td>
+                                                                                        
+                                                                                        @if (Model.StatusId == 7)
+                                                                                        {
+                                                                                            <a href="javascript:void(0)" style="color:#FF6C3A !important;" onclick="ShowStsPopUp('@item.TransactionId','@item.NominatorTrackingId')">View Sched Qty</a>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <span></span>
+                                                                                        }
+                                                                                    </td>*@
+                                                                                    <td class="cursor">
+                                                                                        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentContractId','ContractPath',@Model.PipelineId)">
+                                                                                            @if (item.RecLocationProp != null)
+                                                                                            {
+                                                                                                recProp = item.RecLocationProp;
+                                                                                            }
+                                                                                            @recProp
+                                                                                        </span>@Html.Hidden("Contract[" + CurrentContractId + "].RecLocationProp", item.RecLocationProp, new { @rel = CurrentContractId })
+                                                                                    </td>
+                                                                                    <td class="cursor">
+                                                                                        <span class="center" data-toggle="modal" onclick="OpenPopUp('locations','@CurrentContractId','ContractPath',@Model.PipelineId)">
+                                                                                            @if (item.RecLocationName != null && item.RecLocationName != "")
+                                                                                            {
+                                                                                                recName = item.RecLocationName;
+                                                                                            }
+                                                                                            @recName
+                                                                                        </span>@Html.Hidden("Contract[" + CurrentContractId + "].RecLocationName", item.RecLocationName, new { @rel = CurrentContractId })
+                                                                                    </td>
+                                                                                    <td class="cursor">
+                                                                                        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentContractId','ContractPath',@Model.PipelineId)">
+                                                                                            @if (item.RecLocation != null)
+                                                                                            {
+                                                                                                recId = item.RecLocation;
+                                                                                            }
+                                                                                            @recId
+                                                                                        </span>@Html.Hidden("Contract[" + CurrentContractId + "].RecLocation", item.RecLocation, new { @rel = CurrentContractId })
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @Html.TextBox("Contract[" + CurrentContractId + "].RecRank", item.RecRank, new { @class = "form-control rank", @rel = CurrentContractId, maxlength = "3" })
+                                                                                    </td>
+                                                                                    <td>@Html.TextBox("Contract[" + CurrentContractId + "].RecZone", item.RecZone, new { @class = "form-control", @rel = CurrentContractId })</td>
+                                                                                    <td class="cursor">
+                                                                                        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentContractId','DelContractPath',@Model.PipelineId)">
+                                                                                            @if (item.DelLocationProp != null)
+                                                                                            {
+                                                                                                delProp = item.DelLocationProp;
+                                                                                            }
+                                                                                            @delProp
+                                                                                        </span>@Html.Hidden("Contract[" + CurrentContractId + "].DelLocationProp", item.DelLocationProp, new { @rel = CurrentContractId })
+                                                                                    </td>
+                                                                                    <td class="cursor">
+                                                                                        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentContractId','DelContractPath',@Model.PipelineId)">
+                                                                                            @if (item.DelLocationName != null && item.DelLocationName != "")
+                                                                                            {
+                                                                                                delName = item.DelLocationName;
+                                                                                            }
+                                                                                            @delName
+                                                                                        </span>@Html.Hidden("Contract[" + CurrentContractId + "].DelLocationName", item.DelLocationName, new { @rel = CurrentContractId })
+                                                                                    </td>
+                                                                                    <td class="cursor">
+                                                                                        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentContractId','DelContractPath',@Model.PipelineId)">
+                                                                                            @if (item.DelLocation != null)
+                                                                                            {
+                                                                                                delId = item.DelLocation;
+                                                                                            }
+                                                                                            @delId
+                                                                                        </span>@Html.Hidden("Contract[" + CurrentContractId + "].DelLocation", item.DelLocation, new { @rel = CurrentContractId })
+                                                                                    </td>
+                                                                                    <td>@Html.TextBox("Contract[" + CurrentContractId + "].DelRank", item.DelRank, new { @class = "form-control rank", @rel = CurrentContractId, maxlength = "3" })</td>
+                                                                                    <td>@Html.TextBox("Contract[" + CurrentContractId + "].DelZone", item.DelZone, new { @class = "form-control", @rel = CurrentContractId })</td>
+                                                                                    <td>@Html.TextBox("Contract[" + CurrentContractId + "].ReceiptDth", item.ReceiptDth, new { @class = "form-control cellTransRec", @rel = CurrentContractId, @type = "number", @min = "0", @oninput = "FuelValidationTransport(" + "'" + CurrentContractId + "','" + ContractTransportPathDivId + "'" + ")", @onchange = "FuelValidationTransport(" + "'" + CurrentContractId + "','" + ContractTransportPathDivId + "'" + ")", onblur = "OnTransRecQtyChange(" + "'" + ContractTransportPathDivId + "'" + ")" })</td>
+                                                                                    <td class="cursor">
+                                                                                        @*<span data-toggle="modal" onclick="OpenPopUp('Contract','@ContractTransportPathDivId','ContractPath',@Model.PipelineId)">
+                                                                                            @Html.TextBox("Contract[" + CurrentContractId + "].FuelPercentage", item.FuelPercentage, new { @class = "form-control", @rel = CurrentContractId, @readonly = true })
+                                                                                        </span>*@
+                                                                                        @Html.TextBox("Contract[" + CurrentContractId + "].FuelPercentage", item.FuelPercentage, new { @class = "form-control", @rel = CurrentContractId, @onblur = "FuelPercentChangeTransport(" + "'" + CurrentContractId + "','" + ContractTransportPathDivId + "'" + ")" })
+                                                                                    </td>
+                                                                                    <td>@Html.TextBox("Contract[" + CurrentContractId + "].FuelDth", item.FuelDth, new { @class = "form-control", @rel = CurrentContractId, @readonly = true })</td>
+                                                                                    <td>@Html.TextBox("Contract[" + CurrentContractId + "].DeliveryDth", item.DeliveryDth, new { @class = "form-control cellTransDel", @rel = CurrentContractId, @type = "number", @min = "0", @oninput = "FuelValidationTransportDelQTY(" + "'" + CurrentContractId + "','" + ContractTransportPathDivId + "'" + ")", @onchange = "FuelValidationTransportDelQTY(" + "'" + CurrentContractId + "','" + ContractTransportPathDivId + "'" + ")", onblur = "OnTransDelQtyChange(" + "'" + ContractTransportPathDivId + "'" + ")" })</td>
+
+
+                                                                                    @if (isSNG == true)
+                                                                                    {
+                                                                                        <td>
+                                                                                            @Html.DropDownList("Contract[" + CurrentContractId + "].Route", new SelectList(
+                                                                                                  new List<Object>{
+                                                                                              new { value = "" , text = "-select-"  },
+                                                                                               new { value = "Default" , text = "Default"  },
+                                                                                              new { value = "Cypress" , text = "Cypress" }
+                                                                                               }, "value", "text", item.Route), new { @class = "form-control" })
+                                                                                        </td>
+                                                                                    }
+                                                                                    @if (isElPaso == true)
+                                                                                    {
+                                                                                        <td class="cursor">
+                                                                                            <span data-toggle="modal" onclick="OpenPopUp('Routes','@CurrentContractId','ContractPath',@Model.PipelineId)">
+                                                                                                @if (item.Route != null)
+                                                                                                {
+                                                                                                    route = item.Route;
+                                                                                                }
+                                                                                                @route
+                                                                                            </span>@Html.Hidden("Contract[" + CurrentContractId + "].Route", item.Route, new { @rel = CurrentContractId })
+                                                                                        </td>
+                                                                                    } 
+                                                                                    <td>@Html.TextBox("Contract[" + CurrentContractId + "].PackageID", item.PackageID, new { @class = "form-control", @rel = CurrentContractId })</td>
+                                                                                    <td>@Html.TextBox("Contract[" + CurrentContractId + "].PathRank", item.PathRank, new { @class = "form-control rank", @rel = CurrentContractId, maxlength = "3" })</td>
+                                                                                    @*<td>@Html.TextBox("Contract[" + CurrentContractId + "].RecPointQty", item.RecPointQty, new { @class = "form-control", @rel = CurrentContractId, @readonly = "true" })</td>
+                                                                                    <td>@Html.TextBox("Contract[" + CurrentContractId + "].DelPointQty", item.DelPointQty, new { @class = "form-control", @rel = CurrentContractId, @readonly = "true" })</td>
+                                                                                    <td>@Html.TextBox("Contract[" + CurrentContractId + "].ReductionReason", item.ReductionReason, new { @class = "form-control", @rel = CurrentContractId, @readonly = "true" })</td>*@
+
+                                                                                    @Html.Hidden("Contract[" + CurrentContractId + "].IsHidden", item.IsHidden, new { @rel = CurrentContractId })
+                                                                                    @Html.Hidden("Contract[" + CurrentContractId + "].ServiceRequestNo", item.ServiceRequestNo, new { @rel = CurrentContractId })
+                                                                                </tr>
+                                                                                CurrentContractId = Guid.NewGuid();
+                                                                            }
+                                                                        </tbody>
+                                                                        <tfoot>
+                                                                            <tr>
+                                                                                <td colspan="12">Total</td>
+                                                                                <td><span id="transRecTotal_@ContractTransportPathDivId">@sumRec</span></td>
+                                                                                <td colspan="2"></td>
+                                                                                <td><span id="transDelTotal_@ContractTransportPathDivId">@sumDel</span></td>
+                                                                                @if (isSNG == true || isElPaso == true)
+                                                                                {
+                                                                                    <td colspan="6"></td>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <td colspan="5"></td>
+                                                                                }
+
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                }
+                                            <!-- End Foreach For ContractTransportDiv-->
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="SupplyTab" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-title">
+                                                <h5>Supply</h5>
+                                            </div>
+                                            <div class="ibox-content">
+                                                <div class="btn-group">
+                                                    <a class="btn" onclick="AddSupplyRow('@Model.PipelineId');"><span class="glyphicon glyphicon-plus-sign glyphicon-color" title="Add"></span></a>
+                                                    <a class="btn" onclick="CopySupplyNomRow(@Model.PipelineId)" href="javascript:void(0)"><span class="glyphicon glyphicon-copy glyphicon-color" title="Copy"></span></a>
+                                                    <a class="btn" onclick="removeSupply();"><span class="glyphicon glyphicon-remove glyphicon-color" title="Delete"></span></a>
+                                                </div>
+                                                <div id="DivHeaderRowSupply" style="overflow:hidden">
+                                                    <table class="table stripe row-border order-column table-bordered table-striped" style="margin-top:0px!important;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><input type="checkbox" class="selectallSupply" value="0"> Select All</th>
+                                                                @*<th>Sched Qty</th>*@
+                                                                <th>*LocProp</th>
+                                                                <th>LocName</th>
+                                                                <th>*Loc</th>
+                                                                @*<th>TT_Desc</th>*@
+                                                                <th>*TT</th>
+                                                                <th>*SVCReqK</th>
+                                                                <th>SVCType</th>
+                                                                <th>*UpID prop</th>
+                                                                <th>UpName</th>
+                                                                <th>*UpID</th>
+                                                                @*<th>Default_Ind</th>*@
+                                                                <th>*RecQty</th>
+                                                                <th>FuelPercentage</th>
+                                                                <th>FuelQty</th>
+                                                                <th>*DelQty</th>
+                                                                <th>*UpRank</th>
+                                                                <th>PkgID</th>
+                                                                <th>UpContract</th>
+                                                                <th>UpPkgID</th>
+                                                                @*<th>RecPointQty</th>
+                                                                <th>ReductionReason</th>*@
+                                                            </tr>
+                                                        </thead>
+                                                     </table>
+                                                </div>
+                                                    <div id="DivMainContentSupply" class="table-responsive" style="overflow:scroll;" onscroll="OnScrollDivSupply(this)">
+                                                        <table id="SupplyTable" class="table stripe row-border order-column table-bordered table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th><input type="checkbox" class="selectallSupply" value="0"> Select All</th>
+                                                                    @*<th>Sched Qty</th>*@
+                                                                    <th>*LocProp</th>
+                                                                    <th>LocName</th>
+                                                                    <th>*Loc</th>
+                                                                    @*<th>TT_Desc</th>*@
+                                                                    <th>*TT</th>
+                                                                    <th>*SVCReqK</th>
+                                                                    <th>SVCType</th>
+                                                                    <th>*UpID prop</th>
+                                                                    <th>UpName</th>
+                                                                    <th>*UpID</th>
+                                                                    @*<th>Default_Ind</th>*@
+                                                                    <th>*RecQty</th>
+                                                                    <th>FuelPercentage</th>
+                                                                    <th>FuelQty</th>
+                                                                    <th>*DelQty</th>
+                                                                    <th>*UpRank</th>
+                                                                    <th>PkgID</th>
+                                                                    <th>UpContract</th>
+                                                                    <th>UpPkgID</th>
+                                                                    @*<th>RecPointQty</th>
+                        <th>ReductionReason</th>*@
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var item in Model.SupplyList)
+                                                                {
+                                                                    var LocationProp = "--Select--";
+                                                                    var LocationName = "--Select--";
+                                                                    var Location = "--Select--";
+                                                                    var TransactionTypeDescription = "--Select--";
+                                                                    var TransactionType = "--Select--";
+                                                                    var ServiceRequestNo = "--Select--";
+                                                                    var ServiceRequestType = "--Select--";
+                                                                    var UpstreamIDProp = "--Select--";
+                                                                    var UpstreamIDName = "--Select--";
+                                                                    var UpstreamID = "--Select--";
+
+
+                                                                    <tr class="gradeX" rel="@CurrentSupplyRowId">
+                                                                        @Html.Hidden("SupplyList.Index", CurrentSupplyRowId.ToString())
+                                                                        <td><input type="checkbox" value="@CurrentSupplyRowId" class="supplychkboxes" onclick="SupplyTableChkBoxClicked(this);" onchange="supplychkboxesOnChange()"></td>
+                                                                        @*<td>
+                                @if (Model.StatusId == 7)
+                                {
+                                    <a href="javascript:void(0)" style="color:#FF6C3A !important;" onclick="ShowStsPopUp('@item.TransactionId','@item.NominatorTrackingId')">View Sched Qty</a>
+                                }
+                                else
+                                {
+                                    <span></span>
+                                }
+                            </td>*@
+                                                                        <td class="cursor">
+                                                                            <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentSupplyRowId','Supply',@Model.PipelineId)">
+                                                                                @if (item.LocationProp != null)
+                                                                                {
+                                                                                    LocationProp = item.LocationProp;
+                                                                                }
+                                                                                @LocationProp
+                                                                            </span>@Html.Hidden("SupplyList[" + CurrentSupplyRowId + "].LocationProp", item.LocationProp, new { @rel = CurrentSupplyRowId })
+                                                                        </td>
+                                                                        <td class="cursor">
+                                                                            <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentSupplyRowId','Supply',@Model.PipelineId)">
+                                                                                @if (item.LocationName != null && item.LocationName != "")
+                                                                                {
+                                                                                    LocationName = item.LocationName;
+                                                                                }
+                                                                                @LocationName
+                                                                            </span>@Html.Hidden("SupplyList[" + CurrentSupplyRowId + "].LocationName", item.LocationName, new { @rel = CurrentSupplyRowId })
+                                                                        </td>
+                                                                        <td class="cursor">
+                                                                            <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentSupplyRowId','Supply',@Model.PipelineId)">
+                                                                                @if (item.Location != null)
+                                                                                {
+                                                                                    Location = item.Location;
+                                                                                }
+                                                                                @Location
+                                                                            </span>@Html.Hidden("SupplyList[" + CurrentSupplyRowId + "].Location", item.Location, new { @rel = CurrentSupplyRowId })
+                                                                        </td>
+
+                                                                        @*<td class="cursor">
+                                <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentSupplyRowId','Supply',@Model.PipelineId)">
+                                    @if (item.TransactionTypeDescription != null && item.TransactionTypeDescription != "")
+                                    {
+                                        TransactionTypeDescription = item.TransactionTypeDescription;
+                                    }
+                                    @TransactionTypeDescription
+                                </span>@Html.Hidden("SupplyList[" + CurrentSupplyRowId + "].TransactionTypeDescription", item.TransactionTypeDescription, new { @rel = CurrentSupplyRowId })
+                            </td>*@
+                                                                        <td class="cursor">
+                                                                            <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentSupplyRowId','Supply',@Model.PipelineId)">
+                                                                                @if (item.TransactionType != null)
+                                                                                {
+                                                                                    TransactionType = item.TransactionType;
+                                                                                }
+                                                                                @TransactionType
+                                                                            </span>@Html.Hidden("SupplyList[" + CurrentSupplyRowId + "].TransactionType", item.TransactionType, new { @rel = CurrentSupplyRowId })
+                                                                            @Html.Hidden("SupplyList[" + CurrentSupplyRowId + "].TransTypeMapId", item.TransTypeMapId, new { @rel = CurrentSupplyRowId })
+                                                                            @Html.Hidden("SupplyList[" + CurrentSupplyRowId + "].TransactionTypeDescription", item.TransactionTypeDescription, new { @rel = CurrentSupplyRowId })
+                                                                        </td>
+
+                                                                        <td class="cursor">
+                                                                            <span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentSupplyRowId','Supply',@Model.PipelineId)">
+                                                                                @if (item.ServiceRequestNo != null)
+                                                                                {
+                                                                                    ServiceRequestNo = item.ServiceRequestNo;
+                                                                                }
+                                                                                @ServiceRequestNo
+                                                                            </span>@Html.Hidden("SupplyList[" + CurrentSupplyRowId + "].ServiceRequestNo", item.ServiceRequestNo, new { @rel = CurrentSupplyRowId })
+                                                                        </td>
+                                                                        <td class="cursor">
+                                                                            <span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentSupplyRowId','Supply',@Model.PipelineId)">
+                                                                                @if (item.ServiceRequestType != null)
+                                                                                {
+                                                                                    ServiceRequestType = item.ServiceRequestType;
+                                                                                }
+                                                                                @ServiceRequestType
+                                                                            </span>@Html.Hidden("SupplyList[" + CurrentSupplyRowId + "].ServiceRequestType", item.ServiceRequestType, new { @rel = CurrentSupplyRowId })
+                                                                        </td>
+
+
+
+                                                                        <td class="cursor">
+                                                                            <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentSupplyRowId','Supply',@Model.PipelineId)">
+                                                                                @if (item.UpstreamIDProp != null)
+                                                                                {
+                                                                                    UpstreamIDProp = item.UpstreamIDProp;
+                                                                                }
+                                                                                @UpstreamIDProp
+                                                                            </span>@Html.Hidden("SupplyList[" + CurrentSupplyRowId + "].UpstreamIDProp", item.UpstreamIDProp, new { @rel = CurrentSupplyRowId })
+                                                                        </td>
+                                                                        <td class="cursor">
+                                                                            <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentSupplyRowId','Supply',@Model.PipelineId)">
+                                                                                @if (item.UpstreamIDName != null && item.UpstreamIDName != "")
+                                                                                {
+                                                                                    UpstreamIDName = item.UpstreamIDName;
+                                                                                }
+                                                                                @UpstreamIDName
+                                                                            </span>@Html.Hidden("SupplyList[" + CurrentSupplyRowId + "].UpstreamIDName", item.UpstreamIDName, new { @rel = CurrentSupplyRowId })
+                                                                        </td>
+                                                                        <td class="cursor">
+                                                                            <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentSupplyRowId','Supply',@Model.PipelineId)">
+                                                                                @if (item.UpstreamID != null)
+                                                                                {
+                                                                                    UpstreamID = item.UpstreamID;
+                                                                                }
+                                                                                @UpstreamID
+                                                                            </span>@Html.Hidden("SupplyList[" + CurrentSupplyRowId + "].UpstreamID", item.UpstreamID, new { @rel = CurrentSupplyRowId })
+                                                                        </td>
+
+                                                                        @*<td><select><option>N</option><option>Y</option></select></td>*@
+                                                                        <td>@Html.TextBox("SupplyList[" + CurrentSupplyRowId + "].ReceiptQuantityGross", item.ReceiptQuantityGross, new { @class = "form-control cellSupplyRec", @type = "number", @rel = CurrentSupplyRowId, @min = "0", @oninput = "FuelValidationSupply(" + "'" + CurrentSupplyRowId + "'" + ")", @onkeyup = "FuelValidationSupply(" + "'" + CurrentSupplyRowId + "'" + ")", onblur = "OnSupRecQtyChange()" })</td>
+                                                                        <td class="cursor">
+                                                                            @*<span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentSupplyRowId','Supply',@Model.PipelineId)">
+                                    @Html.TextBox("SupplyList[" + CurrentSupplyRowId + "].FuelPercentage", item.FuelPercentage, new { @class = "form-control", @rel = CurrentSupplyRowId, @readonly = true })
+                                </span>*@
+                                                                            @Html.TextBox("SupplyList[" + CurrentSupplyRowId + "].FuelPercentage", item.FuelPercentage, new { @class = "form-control", @rel = CurrentSupplyRowId, @onblur = "FuelPercentChangeSupply(" + "'" + CurrentSupplyRowId + "'" + ")" })
+                                                                        </td>
+                                                                        <td>@Html.TextBox("SupplyList[" + CurrentSupplyRowId + "].FuelQunatity", item.FuelQunatity, new { @class = "form-control", @rel = CurrentSupplyRowId, @readonly = true })</td>
+                                                                        <td>@Html.TextBox("SupplyList[" + CurrentSupplyRowId + "].DeliveryQuantityNet", item.DeliveryQuantityNet, new { @class = "form-control cellSupplyDel", @type = "number", @rel = CurrentSupplyRowId, @min = "0", @oninput = "FuelValidationSupplyDelQty(" + "'" + CurrentSupplyRowId + "'" + ")", @onkeyup = "FuelValidationSupplyDelQty(" + "'" + CurrentSupplyRowId + "'" + ")", onblur = "OnSupDelQtyChange()" })</td>
+                                                                        <td>@Html.TextBox("SupplyList[" + CurrentSupplyRowId + "].UpstreamRank", item.UpstreamRank, new { @class = "form-control rank", @rel = CurrentSupplyRowId, maxlength = "3" })</td>
+
+                                                                        <td>@Html.TextBox("SupplyList[" + CurrentSupplyRowId + "].PackageID", item.PackageID, new { @class = "form-control", @rel = CurrentSupplyRowId })</td>
+                                                                        <td>@Html.TextBox("SupplyList[" + CurrentSupplyRowId + "].UpContractIdentifier", item.UpContractIdentifier, new { @class = "form-control", @rel = CurrentSupplyRowId })</td>
+
+                                                                        <td>
+                                                                            @if (item.PathType == "NP")
+                                                                            {
+                                                                                @Html.TextBox("SupplyList[" + CurrentSupplyRowId + "].UpPackageID", item.UpPackageID, new { @class = "form-control", @rel = CurrentSupplyRowId, @readonly = "true" })
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @Html.TextBox("SupplyList[" + CurrentSupplyRowId + "].UpPackageID", item.UpPackageID, new { @class = "form-control", @rel = CurrentSupplyRowId })
+                                                                            }
+                                                                        </td>
+
+                                                                        @*<td>@Html.TextBox("SupplyList[" + CurrentSupplyRowId + "].RecPointQty", item.RecPointQty, new { @class = "form-control", @rel = CurrentSupplyRowId, @readonly = "true" })</td>
+                            <td>@Html.TextBox("SupplyList[" + CurrentSupplyRowId + "].ReductionReason", item.ReductionReason, new { @class = "form-control", @rel = CurrentSupplyRowId, @readonly = "true" })</td>*@
+
+                                                                    </tr>
+                                                                    CurrentSupplyRowId = Guid.NewGuid();
+                                                                }
+
+
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <td colspan="10">Total</td>
+                                                                    <td><span id="supplyRecTotal">@Model.supplyRecTotal</span></td>
+                                                                    <td colspan="2"></td>
+                                                                    <td><span id="supplyDelTotal">@Model.supplyDelTotal</span></td>
+                                                                    <td colspan="6"></td>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </div>
+                                            
+                                                </div>
+                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="BatchTab" class="tab-pane">
+
+                        </div>
+                       
+
+                        <div id="MarketTab" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-title">
+                                                <h5>Market</h5>
+                                            </div>
+                                            <div class="ibox-content">
+                                                <div class="btn-group">
+                                                    <a class="btn" onclick="AddMarketRow('@Model.PipelineId');"><span class="glyphicon glyphicon-plus-sign glyphicon-color" title="Add"></span></a>
+                                                    <a class="btn" onclick="CopyMarketNomRow(@Model.PipelineId)" href="javascript:void(0)"><span class="glyphicon glyphicon-copy glyphicon-color" title="Copy"></span></a>
+                                                    <a class="btn" onclick="removeMarket();"><span class="glyphicon glyphicon-remove glyphicon-color" title="Delete"></span></a>
+                                                </div>
+                                                <div id="DivHeaderRowMarket" style="overflow:hidden">
+                                                     <table class="table table-bordered table-hover" style="margin-top:0px!important;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><input type="checkbox" class="selectallMarket" value="0"> Select All</th>
+                                                                @*<th>Sched Qty</th>*@
+                                                                <th>*LocProp</th>
+                                                                <th>LocName</th>
+                                                                <th>*Loc</th>
+                                                                @*<th>*TT_Desc</th>*@
+                                                                <th>TT</th>
+                                                                <th>*SVCReqK</th>
+                                                                <th>SVCType</th>
+                                                                <th>*DnIDProp</th>
+                                                                <th>DnName</th>
+                                                                <th>*DnID</th>
+                                                                @*<th>Default_Ind</th>*@
+                                                                <th>*RecQty</th>
+                                                                <th>FuelPercentage</th>
+                                                                <th>FuelQty</th>
+                                                                <th>*DelQty</th>
+                                                                <th>*DnRank</th>
+                                                                <th>PkgID</th>
+                                                                <th>DnContractID</th>
+                                                                <th>DnPkgID</th>
+                                                                @*<th>RecPointQty</th>*@
+                                                                @*<th>DelPointQty</th>
+                                                                 <th>ReductionReason</th>*@
+                                                            </tr>
+                                                           </thead>
+                                                         </table>
+                                                </div>
+                                                <div id="DivMainContentMarket" class="table-responsive" style="overflow:scroll;" onscroll="OnScrollDivMarket(this)">
+                                                    <table id="MarketTable" class="table table-bordered table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><input type="checkbox" class="selectallMarket" value="0"> Select All</th>
+                                                                @*<th>Sched Qty</th>*@
+                                                                <th>*LocProp</th>
+                                                                <th>LocName</th>
+                                                                <th>*Loc</th>
+                                                                @*<th>*TT_Desc</th>*@
+                                                                <th>TT</th>
+                                                                <th>*SVCReqK</th>
+                                                                <th>SVCType</th>
+                                                                <th>*DnIDProp</th>
+                                                                <th>DnName</th>
+                                                                <th>*DnID</th>
+                                                                @*<th>Default_Ind</th>*@
+                                                                <th>*RecQty</th>
+                                                                <th>FuelPercentage</th>
+                                                                <th>FuelQty</th>
+                                                                <th>*DelQty</th>
+                                                                <th>*DnRank</th>
+                                                                <th>PkgID</th>
+                                                                <th>DnContractID</th>
+                                                                <th>DnPkgID</th>
+                                                                @*<th>RecPointQty</th>*@
+                                                                @*<th>DelPointQty</th>
+                                                                    <th>ReductionReason</th>*@
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var item in Model.MarketList)
+                                                            {
+                                                                var MLocationProp = "--Select--";
+                                                                var MLocationName = "--Select--";
+                                                                var MLocation = "--Select--";
+                                                                var MTransactionTypeDescription = "--Select--";
+                                                                var MTransactionType = "--Select--";
+                                                                var MServiceRequestNo = "--Select--";
+                                                                var MServiceRequestType = "--Select--";
+                                                                var MDnstreamIDProp = "--Select--";
+                                                                var MDnstreamIDName = "--Select--";
+                                                                var MDnstreamID = "--Select--";
+
+                                                                <tr class="gradeX" rel="@CurrentMarketRowId">
+                                                                    @Html.Hidden("MarketList.Index", CurrentMarketRowId.ToString())
+                                                                    <td><input type="checkbox" value="@CurrentMarketRowId" class="marketchkboxes" onclick="MarketTableChkBoxClicked(this);" onchange="marketchkboxesOnChange()"></td>
+                                                                    @*<td>
+                                @if (Model.StatusId == 7)
+                                {
+                                    <a href="javascript:void(0)" style="color:#FF6C3A !important;" onclick="ShowStsPopUp('@item.TransactionId','@item.NominatorTrackingId')">View Sched Qty</a>
+                                }
+                                else
+                                {
+                                    <span></span>
+                                }
+                            </td>*@
+                                                                    <td class="cursor">
+                                                                        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentMarketRowId','Market',@Model.PipelineId)">
+                                                                            @if (item.LocationProp != null)
+                                                                            {
+                                                                                MLocationProp = item.LocationProp;
+                                                                            }
+                                                                            @MLocationProp
+                                                                        </span>@Html.Hidden("MarketList[" + CurrentMarketRowId + "].LocationProp", item.LocationProp, new { @rel = CurrentMarketRowId })
+                                                                    </td>
+                                                                    <td class="cursor">
+                                                                        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentMarketRowId','Market',@Model.PipelineId)">
+                                                                            @if (item.LocationName != null && item.LocationName != "")
+                                                                            {
+                                                                                MLocationName = item.LocationName;
+                                                                            }
+                                                                            @MLocationName
+                                                                        </span>@Html.Hidden("MarketList[" + CurrentMarketRowId + "].LocationName", item.LocationName, new { @rel = CurrentMarketRowId })
+                                                                    </td>
+                                                                    <td class="cursor">
+                                                                        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentMarketRowId','Market',@Model.PipelineId)">
+                                                                            @if (item.Location != null)
+                                                                            {
+                                                                                MLocation = item.Location;
+                                                                            }
+                                                                            @MLocation
+                                                                        </span>@Html.Hidden("MarketList[" + CurrentMarketRowId + "].Location", item.Location, new { @rel = CurrentMarketRowId })
+                                                                    </td>
+                                                                    @*<td class="cursor">
+                                <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentMarketRowId','Market',@Model.PipelineId)">
+                                    @if (item.TransactionTypeDescription != null && item.TransactionTypeDescription != "")
+                                    {
+                                        MTransactionTypeDescription = item.TransactionTypeDescription;
+                                    }
+                                    @MTransactionTypeDescription
+                                </span>@Html.Hidden("MarketList[" + CurrentMarketRowId + "].TransactionTypeDescription", item.TransactionTypeDescription, new { @rel = CurrentMarketRowId })
+                            </td>*@
+                                                                    <td class="cursor">
+                                                                        <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentMarketRowId','Market',@Model.PipelineId)">
+                                                                            @if (item.TransactionType != null)
+                                                                            {
+                                                                                MTransactionType = item.TransactionType;
+                                                                            }
+                                                                            @MTransactionType
+                                                                        </span>@Html.Hidden("MarketList[" + CurrentMarketRowId + "].TransactionType", item.TransactionType, new { @rel = CurrentMarketRowId })
+                                                                        @Html.Hidden("MarketList[" + CurrentMarketRowId + "].TransTypeMapId", item.TransTypeMapId, new { @rel = CurrentMarketRowId })
+                                                                        @Html.Hidden("MarketList[" + CurrentMarketRowId + "].TransactionTypeDescription", item.TransactionTypeDescription, new { @rel = CurrentMarketRowId })
+                                                                    </td>
+                                                                    <td class="cursor">
+                                                                        <span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentMarketRowId','Market',@Model.PipelineId)">
+                                                                            @if (item.ServiceRequestNo != null)
+                                                                            {
+                                                                                MServiceRequestNo = item.ServiceRequestNo;
+                                                                            }
+                                                                            @MServiceRequestNo
+                                                                        </span>@Html.Hidden("MarketList[" + CurrentMarketRowId + "].ServiceRequestNo", item.ServiceRequestNo, new { @rel = CurrentMarketRowId })
+                                                                    </td>
+                                                                    <td class="cursor">
+                                                                        <span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentMarketRowId','Market',@Model.PipelineId)">
+                                                                            @if (item.ServiceRequestType != null)
+                                                                            {
+                                                                                MServiceRequestType = item.ServiceRequestType;
+                                                                            }
+                                                                            @MServiceRequestType
+                                                                        </span>@Html.Hidden("MarketList[" + CurrentMarketRowId + "].ServiceRequestType", item.ServiceRequestType, new { @rel = CurrentMarketRowId })
+                                                                    </td>
+                                                                    <td class="cursor">
+                                                                        <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentMarketRowId','Market',@Model.PipelineId)">
+                                                                            @if (item.DownstreamIDProp != null)
+                                                                            {
+                                                                                MDnstreamIDProp = item.DownstreamIDProp;
+                                                                            }
+                                                                            @MDnstreamIDProp
+                                                                        </span>@Html.Hidden("MarketList[" + CurrentMarketRowId + "].DownstreamIDProp", item.DownstreamIDProp, new { @rel = CurrentMarketRowId })
+                                                                    </td>
+                                                                    <td class="cursor">
+                                                                        <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentMarketRowId','Market',@Model.PipelineId)">
+                                                                            @if (item.DownstreamIDName != null && item.DownstreamIDName != "")
+                                                                            {
+                                                                                MDnstreamIDName = item.DownstreamIDName;
+                                                                            }
+                                                                            @MDnstreamIDName
+                                                                        </span>@Html.Hidden("MarketList[" + CurrentMarketRowId + "].DownstreamIDName", item.DownstreamIDName, new { @rel = CurrentMarketRowId })
+                                                                    </td>
+                                                                    <td class="cursor">
+                                                                        <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentMarketRowId','Market',@Model.PipelineId)">
+                                                                            @if (item.DownstreamID != null)
+                                                                            {
+                                                                                MDnstreamID = item.DownstreamID;
+                                                                            }
+                                                                            @MDnstreamID
+                                                                        </span>@Html.Hidden("MarketList[" + CurrentMarketRowId + "].DownstreamID", item.DownstreamID, new { @rel = CurrentMarketRowId })
+                                                                    </td>
+                                                                    @*<td>@Html.TextBoxFor(a => a.MarketList[CurrentMarketRowId].DefaultInd, new { @class = "form-control", @rel = CurrentMarketRowId })</td>*@
+                                                                    <td>@Html.TextBox("MarketList[" + CurrentMarketRowId + "].ReceiptQuantityGross", item.ReceiptQuantityGross, new { @class = "form-control cellMarketRec", @type = "number", @rel = CurrentMarketRowId, @min = "0", @oninput = "FuelValidationMarket(" + "'" + CurrentMarketRowId + "'" + ")", @onkeyup = "FuelValidationMarket(" + "'" + CurrentMarketRowId + "'" + ")", onblur = "OnMarketRecQtyChange()" })</td>
+                                                                    <td class="cursor">
+                                                                        @*<span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentMarketRowId','Market',@Model.PipelineId)">
+                                    @Html.TextBox("MarketList[" + CurrentMarketRowId + "].FuelPercentage", item.FuelPercentage, new { @class = "form-control", @rel = CurrentMarketRowId, @readonly = true })
+                                </span>*@
+                                                                        @Html.TextBox("MarketList[" + CurrentMarketRowId + "].FuelPercentage", item.FuelPercentage, new { @class = "form-control", @rel = CurrentMarketRowId, @onblur = "FuelPercentChangeMarket(" + "'" + CurrentMarketRowId + "'" + ")" })
+                                                                    </td>
+                                                                    <td>@Html.TextBox("MarketList[" + CurrentMarketRowId + "].FuelQunatity", item.FuelQunatity, new { @class = "form-control", @rel = CurrentMarketRowId, @readonly = true })</td>
+                                                                    <td>@Html.TextBox("MarketList[" + CurrentMarketRowId + "].DeliveryQuantityNet", item.DeliveryQuantityNet, new { @class = "form-control cellMarketDel", @type = "number", @rel = CurrentMarketRowId, @min = "0", @oninput = "FuelValidationMarketDelQty(" + "'" + CurrentMarketRowId + "'" + ")", @onkeyup = "FuelValidationMarketDelQty(" + "'" + CurrentMarketRowId + "'" + ")", onblur = "OnMarketDelQtyChange()" })</td>
+                                                                    <td>@Html.TextBox("MarketList[" + CurrentMarketRowId + "].DnstreamRank", item.DnstreamRank, new { @class = "form-control rank", @rel = CurrentMarketRowId, maxlength = "3" })</td>
+                                                                    <td>@Html.TextBox("MarketList[" + CurrentMarketRowId + "].PackageID", item.PackageID, new { @class = "form-control", @rel = CurrentMarketRowId })</td>
+                                                                    <td>@Html.TextBox("MarketList[" + CurrentMarketRowId + "].DnContractIdentifier", item.DnContractIdentifier, new { @class = "form-control", @rel = CurrentMarketRowId })</td>
+
+
+                                                                    <td>
+                                                                        @if (item.PathType == "NP")
+                                                                        {
+                                                                            @Html.TextBox("MarketList[" + CurrentMarketRowId + "].DnPackageID", item.DnPackageID, new { @class = "form-control", @rel = CurrentMarketRowId, @readonly = "true" })
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            @Html.TextBox("MarketList[" + CurrentMarketRowId + "].DnPackageID", item.DnPackageID, new { @class = "form-control", @rel = CurrentMarketRowId })
+                                                                        }
+                                                                    </td>
+
+                                                                    @*<td>@Html.TextBoxFor(a => a.MarketList[CurrentMarketRowId].RecPointQty, new { @class = "form-control", @rel = CurrentMarketRowId, @readonly="true" })</td>*@
+                                                                    @*<td>@Html.TextBox("MarketList[" + CurrentMarketRowId + "].DelPointQty", item.DelPointQty, new { @class = "form-control", @rel = CurrentMarketRowId, @readonly = "true" })</td>
+                            <td>@Html.TextBox("MarketList[" + CurrentMarketRowId + "].ReductionReason", item.ReductionReason, new { @class = "form-control", @rel = CurrentMarketRowId, @readonly = "true" })</td>*@
+
+                                                                </tr>
+                                                                CurrentMarketRowId = Guid.NewGuid(); ;
+
+                                                            }
+
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td colspan="10">Total</td>
+                                                                <td><span id="marketRecTotal">@Model.marketRecTotal</span></td>
+                                                                <td colspan="2"></td>
+                                                                <td><span id="marketDelTotal">@Model.marketDelTotal</span></td>
+                                                                <td colspan="6"></td>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="NomMatrixTab" class="tab-pane">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+}
+</div>
+<!--  PNT batch detail script File-->
+
+<script>
+    function MakeStaticHeader(gridId, height, width, headerHeight, isFooter) {
+        var tbl = $("#transportTable_" + gridId);
+        if (tbl) {
+            var DivHR = $('#DivHeaderRow_' + gridId);
+            var DivMC = $('#DivMainContent_' + gridId);
+
+            //*** Set divMainContent Properties ****
+            DivMC.width("100%");
+            DivMC.css('max-height', height + 'px');
+            DivMC.css({ position: 'relative', top: -headerHeight + 1 + 'px', zIndex: '1' });
+
+            //*** Set divheaderRow Properties ****
+            DivHR.height(headerHeight);
+            DivHR.width("98%");
+            DivHR.css({ position: 'relative', top: '0px', zIndex: '10' });
+
+        }
+    }
+
+    function OnScrollDiv(Scrollablediv,index) {
+        $("#DivHeaderRow_"+index).scrollLeft($(Scrollablediv).scrollLeft());
+    }
+
+    function SupplyMakeStaticHeader(gridId, height, width, headerHeight, isFooter) {
+        var tbl = $(gridId);
+        if (tbl) {
+            var DivHR = $('#DivHeaderRowSupply');
+            var DivMC = $('#DivMainContentSupply');
+
+            //*** Set divMainContent Properties ****
+            DivMC.width("100%");
+            DivMC.css('max-height', height + 'px');
+            DivMC.css({ position: 'relative', top: -headerHeight + 1 + 'px', zIndex: '1' });
+
+            //*** Set divheaderRow Properties ****
+            DivHR.height(headerHeight);
+            DivHR.width("98%");
+            DivHR.css({ position: 'relative', top: '0px', zIndex: '10' });
+
+        }
+    }
+
+    function OnScrollDivSupply(Scrollablediv) {
+        $("#DivHeaderRowSupply").scrollLeft($(Scrollablediv).scrollLeft());
+    }
+
+    function MarketMakeStaticHeader(gridId, height, width, headerHeight, isFooter) {
+        var tbl = $(gridId);
+        if (tbl) {
+            var DivHR = $('#DivHeaderRowMarket');
+            var DivMC = $('#DivMainContentMarket');
+
+            //*** Set divMainContent Properties ****
+            DivMC.width("100%");
+            DivMC.css('max-height', height + 'px');
+            DivMC.css({ position: 'relative', top: -headerHeight + 1 + 'px', zIndex: '1' });
+
+            //*** Set divheaderRow Properties ****
+            DivHR.height(headerHeight);
+            DivHR.width("98%");
+            DivHR.css({ position: 'relative', top: '0px', zIndex: '10' });
+
+        }
+    }
+
+    function OnScrollDivMarket(Scrollablediv) {
+        $("#DivHeaderRowMarket").scrollLeft($(Scrollablediv).scrollLeft());
+    }
+
+</script>
+<script >
+    //src="~/Scripts/PNTScript/BatchDetailPnt.js"
+    ///// Pnt Batch-Detail Screen JavaScript////
+    /// used in _Pnt Patial view /////
+
+    $(document).ready(function () {
+        $('.contractPart').each(function () {
+            var index = $(this).attr("rel");
+            MakeStaticHeader(index, 300, 1080, 50, false); 
+        });
+
+        SupplyMakeStaticHeader("#SupplyTable", 300, 1080, 50, false);
+        MarketMakeStaticHeader("#MarketTable", 300, 1080, 50, false);
+        //MakeStaticHeader('.contractPart', 300, 1080, 63, false); 
+
+        $("input:text").attr("autocomplete", "off");
+
+
+        $(".selectallMarket").click(function () {
+            $(".marketchkboxes").prop('checked', $(this).prop('checked'));
+        });
+
+        $(".selectallSupply").click(function () {
+            $(".supplychkboxes").prop('checked', $(this).prop('checked'));
+        });
+
+
+        var value = "@ViewBag.Status";
+
+        if (value != "") {
+            toastr.success("", "@ViewBag.Status");
+        }
+
+        $('a[data-toggle="tab"]').on('hide.bs.tab', function (e) {
+            var preTab = $(e.target).attr("href")
+              
+            // Condition for Rank in market tab
+            if (preTab == "#MarketTab") {
+                var marketRankFlag = marketRankValidation();
+                if (marketRankFlag == false) {
+                    toastr.warning("", "Empty Ranks are in MarketTab.");
+                    var r1 = confirm('Nomination Rank must be between 1 and 999. Default Rank will be applied to rows with Empty or Invalid Rank. Do you want to continue?');
+                    if (r1 == true) {
+                        var isMarketFill = marketRankdefaultValue();
+                        if (isMarketFill) {
+                            toastr.info("", "Empty Ranks are filled by Default Vlaue(500) in MarketTab.");
+                        }
+                    } else {
+                        toastr.info("", "Please Fill Empty Ranks in MarketTab.");
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+            }  // Condition for Rank in supply tab
+            else if (preTab == "#SupplyTab") {
+                var supplyRankFlag = supplyRankValidation();
+                if (supplyRankFlag == false) {
+                    toastr.warning("", "Empty Ranks are in SupplyTab.");
+                    var r11 = confirm('Nomination Rank must be between 1 and 999. Default Rank will be applied to rows with Empty or Invalid Rank. Do you want to continue?');
+                    if (r11 == true) {
+                        var isSuppyFill = supplyRankDefaultValue();
+                        if (isSuppyFill) {
+                            toastr.info("", "Empty Ranks are filled by Default Vlaue(500) in SupplyTab.");
+                        }
+                    } else {
+                        toastr.info("", "Please Fill Empty Ranks in SupplyTab.");
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+            }  // condition for rank and Loc in ContractPath tab
+            else if (preTab == "#ContractPathTab") {
+                var flagForRank = contractRankValidation();
+                var flagForLocValidation = contractLocValidation();
+                if (flagForRank == false) {
+                    toastr.warning("", "Empty Ranks are in ContractPath.");
+                    var r = confirm('Nomination Rank must be between 1 and 999. Default Rank will be applied to rows with Empty or Invalid Rank. Do you want to continue?');
+                    if (r == true) {
+                        var isfilled = contractRankDefaultValue();
+                        if (isfilled) {
+                            toastr.info("", "Empty Ranks are filled by Default Vlaue(500) in ContractPath!");
+                        }
+                    } else {
+                        toastr.info("", "Please Fill Empty Ranks in ContractPath.");
+                        e.preventDefault();
+                        isPreTabContract = true;
+                        return false;
+
+                    }
+                } if (flagForLocValidation == false) {
+                    toastr.warning("", "Please select Receipt/Delivery Location in ContractPath");
+                    e.preventDefault();
+                    return false;
+
+                }
+            }
+        });
+
+    });
+
+
+    function marketchkboxesOnChange() {
+        if ($(".marketchkboxes:checked").length == $(".marketchkboxes").length) {
+            $(".selectallMarket").prop("checked", true);
+        } else {
+            $(".selectallMarket").prop("checked", false);
+        }
+    }
+
+    function supplychkboxesOnChange() {
+        if ($(".supplychkboxes:checked").length == $(".supplychkboxes").length) {
+            $(".selectallSupply").prop("checked", true);
+        } else {
+            $(".selectallSupply").prop("checked", false);
+        }
+    }
+
+    function selectAllContractTransportPath(element) {
+        $(".mainchkboxes").prop('checked', $(element).prop('checked'));
+    }
+
+    function OnChangeMainCheckBox() {
+        if ($(".mainchkboxes:checked").length == $(".mainchkboxes").length) {
+            $(".headCheckbox").prop("checked", true);
+        } else {
+            $(".headCheckbox").prop("checked", false);
+        }
+    }
+
+
+    function OnChangeCheckTransport(id) {
+        var CheckedCheckBoxes = "#transportTable_" + id + " .chkboxes:checkbox:checked";
+        var UncheckCheckboxes = "#transportTable_" + id + " .chkboxes:checkbox";
+        var uncheckTotal = $(UncheckCheckboxes).length;
+        var checkTotal = $(CheckedCheckBoxes).length;
+        var SelectAllCheckBox = "#transportTable_" + id + " .selectallTranspose";
+        if (checkTotal == uncheckTotal) {
+            $(SelectAllCheckBox).prop("checked", true);
+        } else {
+            $(SelectAllCheckBox).prop("checked", false);
+        }
+
+    }
+
+
+    function selectAllTransport(id, element) {
+        var tableID = "#transportTable_" + id + " tbody input:checkbox";
+        $(tableID).prop('checked', $(element).prop('checked'));
+    }
+
+
+    function OnSaveRankValidate() {
+        var marketRankFlag = marketRankValidation();
+        var supplyRankFlag = supplyRankValidation();
+        var flagForRank = contractRankValidation();
+        if (flagForRank == false) {
+            toastr.warning("", "Empty Ranks are in ContractPath.");
+            var r = confirm('Nomination Rank must be between 1 and 999. Default Rank will be applied to rows with Empty or Invalid Rank. Do you want to continue?');
+            if (r == true) {
+                var isfilled = contractRankDefaultValue();
+                if (isfilled) {
+                    toastr.info("", "Empty Ranks are filled by Default Vlaue(500) in ContractPath!");
+                }
+            } else {
+                toastr.info("", "Please Fill Empty Ranks in ContractPath.");
+                e.preventDefault();
+                return false;
+
+            }
+        }
+        if (marketRankFlag == false) {
+            toastr.warning("", "Empty Ranks are in MarketTab.");
+            var r1 = confirm('Nomination Rank must be between 1 and 999. Default Rank will be applied to rows with Empty or Invalid Rank. Do you want to continue?');
+            if (r1 == true) {
+                var isMarketFill = marketRankdefaultValue();
+                if (isMarketFill) {
+                    toastr.info("", "Empty Ranks are filled by Default Vlaue(500) in MarketTab.");
+                }
+            } else {
+                toastr.info("", "Please Fill Empty Ranks in MarketTab.");
+                e.preventDefault();
+                return false;
+            }
+        }
+        if (supplyRankFlag == false) {
+            toastr.warning("", "Empty Ranks are in SupplyTab.");
+            var r11 = confirm('Nomination Rank must be between 1 and 999. Default Rank will be applied to rows with Empty or Invalid Rank. Do you want to continue?');
+            if (r11 == true) {
+                var isSuppyFill = supplyRankDefaultValue();
+                if (isSuppyFill) {
+                    toastr.info("", "Empty Ranks are filled by Default Value(500) in SupplyTab.");
+                }
+            } else {
+                toastr.info("", "Please Fill Empty Ranks in SupplyTab.");
+                e.preventDefault();
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    function OnTransDelQtyChange(Id) {
+        var sum = 0;
+        var TransportTableid = "#transportTable_" + Id + " > tbody tr";
+        $(TransportTableid).each(function () {
+
+            var rowId = $(this).attr("rel");
+            var delDTHId = "#Contract_" + rowId + "__DeliveryDth";
+            sum += Number($(delDTHId).val());
+              
+        });
+        $("#transDelTotal_" + Id).html(sum);
+    }
+    function OnTransRecQtyChange(Id) {
+        var sum = 0;
+        var TransportTableid = "#transportTable_" + Id + " > tbody tr";
+        $(TransportTableid).each(function () {
+            var rowId = $(this).attr("rel");
+            var recDTHId = "#Contract_" + rowId + "__ReceiptDth";
+            sum += Number($(recDTHId).val());
+              
+        });
+        $("#transRecTotal_" + Id).html(sum);
+    }
+    function OnSupRecQtyChange() {
+        var sum = 0;
+        $('.cellSupplyRec').each(function () {
+            sum += Number($(this).val());
+        });
+        //alert(sum);
+        $("#supplyRecTotal").html(sum);
+    }
+    function OnSupDelQtyChange() {
+        var sum = 0;
+        $('.cellSupplyDel').each(function () {
+            sum += Number($(this).val());
+        });
+        //alert(sum);
+        $("#supplyDelTotal").html(sum);
+    }
+    function OnMarketRecQtyChange() {
+        var sum = 0;
+        $('.cellMarketRec').each(function () {
+            sum += Number($(this).val());
+        });
+        //alert(sum);
+        $("#marketRecTotal").html(sum);
+    }
+    function OnMarketDelQtyChange() {
+        var sum = 0;
+        $('.cellMarketDel').each(function () {
+            sum += Number($(this).val());
+        });
+        //alert(sum);
+        $("#marketDelTotal").html(sum);
+    }
+
+    function FuelPercentChangeTransport(forRow,conPathId) {
+        console.log("Transport " + forRow);
+        FuelValidationTransport(forRow, conPathId);
+        FuelValidationTransportDelQTY(forRow, conPathId);
+    }
+    function FuelPercentChangeSupply(e) {
+        console.log("Supply " + e);
+        FuelValidationSupply(e);
+        FuelValidationSupplyDelQty(e);
+    }
+    function FuelPercentChangeMarket(e) {
+        console.log("market " + e);
+        FuelValidationMarket(e);
+        FuelValidationMarketDelQty(e);
+    }
+    var SupplyObj = [];
+    var ContractObj = [];
+    var MarketObj = [];
+
+   // var existsLocationPropCode = "";
+
+    //function CheckExistsLocation(ClickedRow, PopUpFor) {
+          
+    //    var recLocProp = "#Contract_" + ClickedRow + "__RecLocationProp";
+    //    var delLocProp = "#Contract_" + ClickedRow + "__DelLocationProp";
+    //    var recPropCode = $(recLocProp).val();
+    //    var delPropCode = $(delLocProp).val();
+    //    if (PopUpFor == "ContractPath") {
+    //        existsLocationPropCode = $(delLocProp).val();
+    //        // existsLocationPropCode = $(recLocProp).val();
+    //    } else if (PopUpFor == "DelContractPath") {
+    //        //existsLocationPropCode = $(delLocProp).val();
+    //        existsLocationPropCode = $(recLocProp).val();
+    //    }
+
+    //}
+
+    function OpenPopUp(partialName, ClickedRow, PopUpFor, pipelineID) {
+       // CheckExistsLocation(ClickedRow, PopUpFor);
+
+        $.ajax({
+            url: '/PNTNominations/NotimationsPartials',//?partial=' + partialName + "",
+            type: 'GET',
+            data: { partial: partialName, clickedRow: ClickedRow, popUpFor: PopUpFor, PipelineID: pipelineID },
+            dataType: 'html',
+            contentType: 'application/html;charset=utf-8'
+        })
+            .success(function (result) {
+
+                if (partialName == 'locations') {
+                    $('#LocationPopUpModal').html(result);
+                    $('#LocationPopUpModal').modal('show');
+                    //$('#locationModalTable').DataTable({
+                    //    pageLength: 4,
+                    //    "lengthMenu": [[4, 10, 25, 50, -1], ["Default", 10, 25, 50, "All"]]
+                    //});
+                }
+                else if (partialName == 'Contract') {
+                    $('#ContractPopUpModal').html(result);
+                    $('#ContractPopUpModal').modal('show');
+                    $('#ContactModalTable').DataTable();
+                }
+                else if (partialName == 'CounterParties') {
+                    $('#CounterPartyPopUpModal').html(result);
+                    $('#CounterPartyPopUpModal').modal('show');
+                    $('#CounterPartyModalTable').DataTable();
+                } else if (partialName == 'TransactionType') {
+                    $('#TransactionTypePopUpModal').html(result);
+                    $('#TransactionTypePopUpModal').modal('show');
+                    $('#TransactionTypeModalTable').DataTable();
+                }
+                else if (partialName == 'Routes') {
+                    $('#RoutesPopUpModal').html(result);
+                    $('#RoutesPopUpModal').modal('show');
+                    $('#RoutesModalTable').DataTable();
+                }
+            })
+            .error(function (xhr, status) {
+                alert(status);
+            })
+    }
+
+    function AddMarketRow(pipelineid) {
+        // var rowCount = $('#MarketTable tbody tr').length;
+        $.ajax({
+            url: '/PNTNominations/AddMarketRow',
+            data: { PipelineID: pipelineid },
+            type: 'GET',
+            success: function (html) {
+                $('#MarketTable > tbody').append(html);
+            }
+        });
+    }
+    function RemoveMarketRows() {
+        jQuery('#MarketTable tbody input:checkbox:checked').parents("tr").remove();
+    }
+
+
+    function AddSupplyRow(pipelineid) {
+        $.ajax({
+            url: '/PNTNominations/AddSupplyRow',
+            data: { PipelineID: pipelineid },
+            type: 'GET',
+            success: function (html) {
+                $('#SupplyTable > tbody').append(html);
+            }
+        });
+    }
+    function RemoveSupplyRows() {
+        jQuery('#SupplyTable tbody input:checkbox:checked').parents("tr").remove();
+    }
+
+
+    function AddContractPathRow(pipelineid, TableId) {
+          
+        var servReqNo = "#ContractPath_" + TableId + "__ServiceRequestNo";
+        var servReqType = "#ContractPath_" + TableId + "__ServiceRequestType";
+        if (($(servReqNo).val() == "--Select--") || ($(servReqNo).val() == "")) {
+            columnValidation($(servReqNo));
+            columnValidation($(servReqType));
+            toastr.warning("Please fill Contract Request Number/Type in Contract(*).");
+        } else {
+            $.ajax({
+                url: '/PNTNominations/AddContractPathRow',
+                data: { PipelineID: pipelineid, TableID: TableId },
+                type: 'GET',
+                success: function (html) {
+                      
+                    var id = "#transportTable_" + TableId + " > tbody";
+                    $(id).append(html);
+                    fillcontractReqNumber(TableId);
+                }
+            });
+        }
+    }
+
+
+    function fillcontractReqNumber(TableId) {
+        var contractServiceReqNumber = "#ContractPath_" + TableId + "__ServiceRequestNo";
+        var serReqNoValue = $(contractServiceReqNumber).val();
+        var TransportTableid = "#transportTable_" + TableId + " > tbody tr";
+        $(TransportTableid).each(function () {
+              
+            var RowId = $(this).attr("rel");
+            var serviceReqNoHidden = "#Contract_" + RowId + "__ServiceRequestNo";
+            $(serviceReqNoHidden).val(serReqNoValue);
+        });
+    }
+
+    function AddContractTransportPath(pipelineid) {
+
+        $.ajax({
+            url: '/PNTNominations/AddContractTransportPath',
+            data: { PipelineID: pipelineid },
+            type: 'GET',
+            success: function (html) {
+                $('#accordion').append(html);
+            }
+        });
+    }
+
+
+    var isSpecialTTSelectedSupply = "0";
+    var isSpecialTTSelectedMarket = "0";
+
+    function CntrTransactionPopUpSelect(transactionCode, TransactionDesc, RowNo, TransactionPopUpFrom, PathType, ttMapId) {
+          
+        if (PathType == "S" || PathType == "M" || PathType == "C") {
+            var CurrentBusinessTTSell = "01";   // "Current Business (Sell)";  //01
+            var CurrentBusinessTTBuy = "01";  //"Current Business (Buy)";    //01
+            var OffsystemMarket = "117";      // "Off-system Market";  //117
+            var offsystemSupply = "118";     // "Off-system Supply";   //118
+
+            var Loan = "28";
+            var ParkWithdrawal = "27";
+            var StorageWithdrawal = "07";
+
+            var LoanPayBack = "29";
+            var Park = "26";
+            var StorageInjection = "06";
+
+            if (TransactionPopUpFrom == "ContractPath") {
+                var TransactionTypeDesc = "#Contract_" + RowNo + "__TransactionTypeDescription";
+                var TransactionTypeId = "#Contract_" + RowNo + "__TransactionType";
+                $('#TransactionTypePopUpModal').modal('hide');
+                $(TransactionTypeDesc).val(TransactionDesc); //$(TransactionTypeDesc).parent().find('span').html(TransactionDesc);
+                $(TransactionTypeId).val(transactionCode); $(TransactionTypeId).parent().find('span').html(transactionCode);
+            }
+            else if (TransactionPopUpFrom == "Market") {
+
+                // enable all disabled properties from Hybrid
+                ToEnableAllDisabledProperties("Market", RowNo);
+
+                var TransactionTypeDesc = "#MarketList_" + RowNo + "__TransactionTypeDescription";
+                var TransactionTypeId = "#MarketList_" + RowNo + "__TransactionType";
+                var TransTypeMapId = "#MarketList_" + RowNo + "__TransTypeMapId";
+                $(TransTypeMapId).val(ttMapId);
+                $('#TransactionTypePopUpModal').modal('hide');
+                $(TransactionTypeDesc).val(TransactionDesc); //$(TransactionTypeDesc).parent().find('span').html(TransactionDesc);
+                $(TransactionTypeId).val(transactionCode); $(TransactionTypeId).parent().find('span').html(transactionCode);
+                  
+                if (transactionCode == CurrentBusinessTTSell || transactionCode == OffsystemMarket) {
+                    isSpecialTTSelectedMarket = "1";
+                    ContractPopUpClick("@shiperduns", "", 0.00, RowNo, "Market");
+                } else {
+                    if (isSpecialTTSelectedMarket == "1") {
+                        var select = "--Select--";
+                        var SvcReqNo = "#MarketList_" + RowNo + "__ServiceRequestNo";
+                        var SvcReqType = "#MarketList_" + RowNo + "__ServiceRequestType";
+                        $(SvcReqNo).val(select); $(SvcReqNo).parent().find('span').html(select);
+                        $(SvcReqType).val(select); $(SvcReqType).parent().find('span').html(select);
+                    }
+                    isSpecialTTSelectedMarket = "0";
+                }
+
+                if (transactionCode == LoanPayBack || transactionCode == StorageInjection || transactionCode == Park) {
+                    CounterPartyPopUpSelect("@shiperduns", "@shipperName", "@shiperduns", RowNo, "Market");
+                }
+
+            }
+            else if (TransactionPopUpFrom == "Supply") {
+
+                // enable all disabled properties from Hybrid
+                ToEnableAllDisabledProperties("Supply", RowNo);
+
+                var TransactionTypeDesc = "#SupplyList_" + RowNo + "__TransactionTypeDescription";
+                var TransactionTypeId = "#SupplyList_" + RowNo + "__TransactionType";
+                var TransTypeMapId1 = "#SupplyList_" + RowNo + "__TransTypeMapId";
+                $(TransTypeMapId1).val(ttMapId);
+                $('#TransactionTypePopUpModal').modal('hide');
+                $(TransactionTypeDesc).val(TransactionDesc); //$(TransactionTypeDesc).parent().find('span').html(TransactionDesc);
+                $(TransactionTypeId).val(transactionCode); $(TransactionTypeId).parent().find('span').html(transactionCode);
+                if (transactionCode == CurrentBusinessTTBuy || transactionCode == offsystemSupply) {
+                    isSpecialTTSelectedSupply = "1";
+                    ContractPopUpClick("@shiperduns", "", 0.00, RowNo, "Supply");
+
+                } else {
+                    if (isSpecialTTSelectedSupply == "1") {
+                        var select = "--Select--";
+                        var SvcReqNo = "#SupplyList_" + RowNo + "__ServiceRequestNo";
+                        var SvcReqType = "#SupplyList_" + RowNo + "__ServiceRequestType";
+                        // $('#ContractPopUpModal').modal('hide');
+                        $(SvcReqNo).val(select); $(SvcReqNo).parent().find('span').html(select);
+                        $(SvcReqType).val(select); $(SvcReqType).parent().find('span').html(select);
+                    }
+                    isSpecialTTSelectedSupply = "0";
+                }
+
+                if (transactionCode == Loan || transactionCode == ParkWithdrawal || transactionCode == StorageWithdrawal) {
+                    CounterPartyPopUpSelect("@shiperduns", "@shipperName", "@shiperduns", RowNo, "Supply");
+                }
+
+            }
+
+        } else if (PathType == "NP") {
+            if (TransactionPopUpFrom == "Supply") {
+                var TransactionTypeDesc = "#SupplyList_" + RowNo + "__TransactionTypeDescription";
+                var TransactionTypeId = "#SupplyList_" + RowNo + "__TransactionType";
+                var TransTypeMapId = "#SupplyList_" + RowNo + "__TransTypeMapId";
+                $(TransTypeMapId).val(ttMapId);
+                $('#TransactionTypePopUpModal').modal('hide');
+                $(TransactionTypeDesc).val(TransactionDesc); //$(TransactionTypeDesc).parent().find('span').html(TransactionDesc);
+                $(TransactionTypeId).val(transactionCode); $(TransactionTypeId).parent().find('span').html(transactionCode);
+
+                // disableProperties
+                var data = GetPropertiesofReceiptNonPathedToDisable();
+                for (var i = 0; i < data.length; i++) {
+                    TodisableFieldNonPathedhybrid("SupplyList", RowNo, data[i]);
+                }
+
+            }
+            else if (TransactionPopUpFrom == "Market") {
+                var TransactionTypeDesc = "#MarketList_" + RowNo + "__TransactionTypeDescription";
+                var TransactionTypeId = "#MarketList_" + RowNo + "__TransactionType";
+                var TransTypeMapId = "#MarketList_" + RowNo + "__TransTypeMapId";
+                $(TransTypeMapId).val(ttMapId);
+                $('#TransactionTypePopUpModal').modal('hide');
+                $(TransactionTypeDesc).val(TransactionDesc); //$(TransactionTypeDesc).parent().find('span').html(TransactionDesc);
+                $(TransactionTypeId).val(transactionCode); $(TransactionTypeId).parent().find('span').html(transactionCode);
+
+                // disableProperties
+                var data = GetPropertiesofDeliveryNonPathedToDisable();
+                for (var i = 0; i < data.length; i++) {
+                    TodisableFieldNonPathedhybrid("MarketList", RowNo, data[i]);
+                }
+            }
+        }
+    }
+
+
+    function GetPropertiesofReceiptNonPathedToDisable() {
+        var property = ["ServiceRequestType", "UpPackageID", "RecPointQty"];
+        return property;
+    }
+
+
+    function GetPropertiesofDeliveryNonPathedToDisable() {
+        var property = ["ServiceRequestType", "DnPackageID", "DelPointQty"];
+        return property;
+    }
+
+    function TodisableFieldNonPathedhybrid(tabListname, RowCount, propertyName) {
+          
+        var property = "#" + tabListname + "_" + RowCount + "__" + propertyName;
+        if (propertyName == "ServiceRequestType") {
+            $(property).parent().find('span').html("");
+            $(property).parent("td").removeClass('cursor');
+            $(property).val("");
+        } else {
+            $(property).val("");
+            $(property).attr("disabled", "disabled");
+        }
+    }
+
+    function ToEnableFieldNonPathedhybrid(tabListname, RowCount, propertyName) {
+          
+        var property = "#" + tabListname + "_" + RowCount + "__" + propertyName;
+        if (propertyName == "ServiceRequestType") {
+            $(property).parent().find('span').html("--Select--");
+            $(property).parent("td").addClass('cursor');
+        } else {
+            $(property).removeAttr("disabled");
+        }
+    }
+
+    function ToEnableAllDisabledProperties(tabName, RowNo) {
+        if (tabName == "Market") {
+            var data = GetPropertiesofDeliveryNonPathedToDisable();
+            for (var i = 0; i < data.length; i++) {
+                ToEnableFieldNonPathedhybrid("MarketList", RowNo, data[i]);
+            }
+        } else if (tabName == "Supply") {
+            var data = GetPropertiesofReceiptNonPathedToDisable();
+            for (var i = 0; i < data.length; i++) {
+                ToEnableFieldNonPathedhybrid("SupplyList", RowNo, data[i]);
+            }
+        }
+    }
+
+
+    function RoutePopUpClick(EdiId,RouteDesc,DirId,DirDesc,RowId,popupFrom) {
+        var Route = "#Contract_" + RowId + "__Route";
+        $('#RoutesPopUpModal').modal('hide');
+        $(Route).val(DirId); $(Route).parent().find('span').html(DirId);
+    }
+
+
+    function CntrLocationPopUpSelect(Name, Id, PropCode, RowNo, LocationPopUpFrom) {
+          
+        if (LocationPopUpFrom == "ContractPath") {
+            //if (PropCode == existsLocationPropCode) {
+            //    $('#LocationPopUpModal').modal('hide');
+            //    toastr.warning("This Location is already selected as Delivery Location.");
+            //} else {
+                var LocProp = "#Contract_" + RowNo + "__RecLocationProp";
+                var LocName = "#Contract_" + RowNo + "__RecLocationName";
+                var LocId = "#Contract_" + RowNo + "__RecLocation";
+                $('#LocationPopUpModal').modal('hide');
+                $(LocProp).val(PropCode); $(LocProp).parent().find('span').html(PropCode);
+                $(LocName).val(Name); $(LocName).parent().find('span').html(Name);
+                $(LocId).val(Id); $(LocId).parent().find('span').html(Id);
+          //  }
+        }
+        else if (LocationPopUpFrom == "Market") {
+            var LocProp = "#MarketList_" + RowNo + "__LocationProp";
+            var LocName = "#MarketList_" + RowNo + "__LocationName";
+            var LocId = "#MarketList_" + RowNo + "__Location";
+            $('#LocationPopUpModal').modal('hide');
+            $(LocProp).val(PropCode); $(LocProp).parent().find('span').html(PropCode);
+            $(LocName).val(Name); $(LocName).parent().find('span').html(Name);
+            $(LocId).val(Id); $(LocId).parent().find('span').html(Id);
+        }
+        else if (LocationPopUpFrom == "Supply") {
+            var LocProp = "#SupplyList_" + RowNo + "__LocationProp";
+            var LocName = "#SupplyList_" + RowNo + "__LocationName";
+            var LocId = "#SupplyList_" + RowNo + "__Location";
+            $('#LocationPopUpModal').modal('hide');
+            $(LocProp).val(PropCode); $(LocProp).parent().find('span').html(PropCode);
+            $(LocName).val(Name); $(LocName).parent().find('span').html(Name);
+            $(LocId).val(Id); $(LocId).parent().find('span').html(Id);
+        }
+        else if (LocationPopUpFrom == "DelContractPath") {
+            //if (PropCode == existsLocationPropCode) {
+            //    $('#LocationPopUpModal').modal('hide');
+            //    toastr.warning("This Location is already selected as Receipt Location.");
+            //} else {
+                var LocProp = "#Contract_" + RowNo + "__DelLocationProp";
+                var LocName = "#Contract_" + RowNo + "__DelLocationName";
+                var LocId = "#Contract_" + RowNo + "__DelLocation";
+                $('#LocationPopUpModal').modal('hide');
+                $(LocProp).val(PropCode); $(LocProp).parent().find('span').html(PropCode);
+                $(LocName).val(Name); $(LocName).parent().find('span').html(Name);
+                $(LocId).val(Id); $(LocId).parent().find('span').html(Id);
+          //  }
+        }
+    }
+
+    function FuelValidationTransport(ForRow, TableId) {
+        //   
+        var hidenFuelId = "#HiddenFuelPercentage_" + TableId;
+        var hiddenFuelPercentag = $(hidenFuelId);
+        var HiddenfuelPerValue = $(hiddenFuelPercentag).val();
+        var fuelPer = "#Contract_" + ForRow + "__FuelPercentage";
+        var delQuantity = "#Contract_" + ForRow + "__DeliveryDth";
+        var FuelDTH = "#Contract_" + ForRow + "__FuelDth";
+        var recQuantity = "#Contract_" + ForRow + "__ReceiptDth";
+        var delQtyMinus = $(delQuantity).val();
+        var recQtyValue = $(recQuantity).val();
+        if ($(fuelPer).val() == "") {
+            $(fuelPer).val(HiddenfuelPerValue);
+        }
+        var fuelPerValue = $(fuelPer).val();
+
+        if (fuelPerValue != "") {
+            if (recQtyValue > 0) {
+                var delQtyValue = (recQtyValue * ((100 - fuelPerValue) / 100)).toFixed();
+                var Fueldth = recQtyValue * (fuelPerValue / 100);
+                $(delQuantity).val(delQtyValue);
+                $(FuelDTH).val(Fueldth);
+            } else {
+                toastr.remove();
+                toastr.warning("Please fill value greater than zero");
+                $(delQuantity).val("0");
+                $(recQuantity).val("0");
+            }
+        } else {
+            toastr.remove();
+            toastr.warning("Please Select Contract.");
+            $(recQuantity).val("0")
+        }
+        $("#transDelTotal_" + TableId).html(parseInt($("#transDelTotal_" + TableId).html()) - parseInt(delQtyMinus));
+        $("#transDelTotal_" + TableId).html(parseInt($("#transDelTotal_" + TableId).html()) + parseInt($(delQuantity).val()));
+    }
+
+    function FuelValidationTransportDelQTY(ForRow, TableId) {
+        var hidenFuelId = "#HiddenFuelPercentage_" + TableId;
+        var hiddenFuelPercentag = $(hidenFuelId);
+        var HiddenfuelPerValue = $(hiddenFuelPercentag).val();
+
+        var fuelPer = "#Contract_" + ForRow + "__FuelPercentage";
+        var delQuantity = "#Contract_" + ForRow + "__DeliveryDth";
+        var FuelDTH = "#Contract_" + ForRow + "__FuelDth";
+        var recQuantity = "#Contract_" + ForRow + "__ReceiptDth";
+        var recQtyMinus = $(recQuantity).val();
+        var delQtyValue = $(delQuantity).val();
+        var recQtyValue = $(recQuantity).val();
+        if ($(fuelPer).val() == "") {
+            $(fuelPer).val(HiddenfuelPerValue);
+        }
+        var fuelPerValue = $(fuelPer).val();
+        if (fuelPerValue != "") {
+            if (delQtyValue > 0) {
+                recQtyValue = ((delQtyValue / (100 - fuelPerValue)) * 100).toFixed();
+                var Fueldth = recQtyValue * (fuelPerValue / 100);
+                $(recQuantity).val(recQtyValue);
+                $(FuelDTH).val(Fueldth);
+            } else {
+                toastr.remove();
+                toastr.warning("Please fill value greater than zero");
+                $(recQuantity).val("0");
+                $(delQuantity).val("0");
+            }
+        } else {
+            toastr.remove();
+            toastr.warning("Please Select Contract.");
+            $(delQuantity).val("0");
+
+        }
+        $("#transRecTotal_" + TableId).html(parseInt($("#transRecTotal_" + TableId).html()) - parseInt(recQtyMinus));
+        $("#transRecTotal_" + TableId).html(parseInt($("#transRecTotal_" + TableId).html()) + parseInt($(recQuantity).val()));
+    }
+
+    function FuelValidationSupply(ForRow) {
+        var fuelPer = "#SupplyList_" + ForRow + "__FuelPercentage";
+        var delQuantity = "#SupplyList_" + ForRow + "__DeliveryQuantityNet";
+        var FuelDTH = "#SupplyList_" + ForRow + "__FuelQunatity";
+        var recQuantity = "#SupplyList_" + ForRow + "__ReceiptQuantityGross";
+        var recQtyValue = $(recQuantity).val();
+        var fuelPerValue = $(fuelPer).val();
+        var delQtyMinus = $(delQuantity).val();
+        if ((fuelPerValue != "")) {
+            if (recQtyValue > 0) {
+                var delQtyValue = (recQtyValue * ((100 - fuelPerValue) / 100)).toFixed();
+                var Fueldth = recQtyValue * (fuelPerValue / 100);
+                $(delQuantity).val(delQtyValue);
+                $(FuelDTH).val(Fueldth);
+            } else {
+                toastr.remove();
+                toastr.warning("Please fill value greater than zero");
+                $(delQuantity).val("0");
+                $(recQuantity).val("0");
+            }
+        } else {
+            toastr.remove();
+            toastr.warning("Please Select Contract.");
+            $(recQuantity).val("0");
+        }
+        $("#supplyDelTotal").html(parseInt($("#supplyDelTotal").html()) - parseInt(delQtyMinus));
+        $("#supplyDelTotal").html(parseInt($("#supplyDelTotal").html()) + parseInt($(delQuantity).val()));
+    }
+
+    function FuelValidationSupplyDelQty(ForRow) {
+        var fuelPer = "#SupplyList_" + ForRow + "__FuelPercentage";
+        var delQuantity = "#SupplyList_" + ForRow + "__DeliveryQuantityNet";
+        var FuelDTH = "#SupplyList_" + ForRow + "__FuelQunatity";
+        var recQuantity = "#SupplyList_" + ForRow + "__ReceiptQuantityGross";
+        var recQtyValue = $(recQuantity).val();
+        var fuelPerValue = $(fuelPer).val();
+        var delQtyValue = $(delQuantity).val();
+        var recQtyMinus = $(recQuantity).val();
+        if ((fuelPerValue != "")) {
+            if (delQtyValue > 0) {
+                recQtyValue = ((delQtyValue / (100 - fuelPerValue)) * 100).toFixed();
+                var Fueldth = recQtyValue * (fuelPerValue / 100);
+                $(recQuantity).val(recQtyValue);
+                $(FuelDTH).val(Fueldth);
+            } else {
+                toastr.remove();
+                toastr.warning("Please fill value greater than zero");
+                $(recQuantity).val("0");
+                $(delQuantity).val("0");
+            }
+        } else {
+            toastr.remove();
+            toastr.warning("Please Select Contract.");
+            $(delQuantity).val("0");
+        }
+        $("#supplyRecTotal").html(parseInt($("#supplyRecTotal").html()) - parseInt(recQtyMinus));
+        $("#supplyRecTotal").html(parseInt($("#supplyRecTotal").html()) + parseInt($(recQuantity).val()));
+    }
+
+
+    function FuelValidationMarket(ForRow) {
+
+        var fuelPer = "#MarketList_" + ForRow + "__FuelPercentage";
+        var delQuantity = "#MarketList_" + ForRow + "__DeliveryQuantityNet";
+        var FuelDTH = "#MarketList_" + ForRow + "__FuelQunatity";
+        var recQuantity = "#MarketList_" + ForRow + "__ReceiptQuantityGross";
+        var recQtyValue = $(recQuantity).val();
+        var fuelPerValue = $(fuelPer).val();
+        var delQtyMinus = $(delQuantity).val();
+        if ((fuelPerValue != "")) {
+            if (recQtyValue > 0) {
+                var delQtyValue = (recQtyValue * ((100 - fuelPerValue) / 100)).toFixed();
+                var Fueldth = recQtyValue * (fuelPerValue / 100);
+                $(delQuantity).val(delQtyValue);
+                $(FuelDTH).val(Fueldth);
+            } else {
+                toastr.remove();
+                toastr.warning("Please fill value greater than zero");
+                $(delQuantity).val("0");
+                $(recQuantity).val("0");
+            }
+        } else {
+            toastr.remove();
+            toastr.warning("Please Select Contract.");
+            $(recQuantity).val("0");
+        }
+        $("#marketDelTotal").html(parseInt($("#marketDelTotal").html()) - parseInt(delQtyMinus));
+        $("#marketDelTotal").html(parseInt($("#marketDelTotal").html()) + parseInt($(delQuantity).val()));
+    }
+
+
+    function FuelValidationMarketDelQty(ForRow) {
+
+        var fuelPer = "#MarketList_" + ForRow + "__FuelPercentage";
+        var delQuantity = "#MarketList_" + ForRow + "__DeliveryQuantityNet";
+        var FuelDTH = "#MarketList_" + ForRow + "__FuelQunatity";
+        var recQuantity = "#MarketList_" + ForRow + "__ReceiptQuantityGross";
+        var recQtyValue = $(recQuantity).val();
+        var fuelPerValue = $(fuelPer).val();
+        var delQtyValue = $(delQuantity).val();
+        var recQtyMinus = $(recQuantity).val();
+        if ((fuelPerValue != "")) {
+            if (delQtyValue > 0) {
+                recQtyValue = ((delQtyValue / (100 - fuelPerValue)) * 100).toFixed();
+                var Fueldth = recQtyValue * (fuelPerValue / 100);
+                $(recQuantity).val(recQtyValue);
+                $(FuelDTH).val(Fueldth);
+            } else {
+                toastr.remove();
+                toastr.warning("Please fill value greater than zero");
+                $(recQuantity).val("0");
+                $(delQuantity).val("0");
+            }
+        } else {
+            toastr.remove();
+            toastr.warning("Please Select Contract.");
+            $(delQuantity).val("0");
+        }
+        $("#marketRecTotal").html(parseInt($("#marketRecTotal").html()) - parseInt(recQtyMinus));
+        $("#marketRecTotal").html(parseInt($("#marketRecTotal").html()) + parseInt($(recQuantity).val()));
+    }
+
+
+    function ContractPopUpClick(RequestNo, RequestTypeID, FuelPercentage, ForRow, ContractFrom) {
+        if (ContractFrom == "ContractPath") {
+            var hiddenFuelPerId = "#HiddenFuelPercentage_" + ForRow;
+            var hiddenFuelPercentag = $(hiddenFuelPerId);
+            $(hiddenFuelPercentag).val(FuelPercentage);
+            var SvcReqNo = "#ContractPath_" + ForRow + "__ServiceRequestNo";
+            var SvcReqType = "#ContractPath_" + ForRow + "__ServiceRequestType";
+            $('#ContractPopUpModal').modal('hide');
+            $(SvcReqNo).val(RequestNo); $(SvcReqNo).parent().find('span').html(RequestNo);
+            $(SvcReqType).val(RequestTypeID); $(SvcReqType).parent().find('span').html(RequestTypeID);
+            var tableID = "#transportTable_" + ForRow + " tbody tr";
+            $(tableID).each(function () {
+                var RowCount = $(this).attr("rel");
+                var fuelPer = "#Contract_" + RowCount + "__FuelPercentage";
+                var delQuantity = "#Contract_" + RowCount + "__DeliveryDth";
+                var FuelDTH = "#Contract_" + RowCount + "__FuelDth";
+                var recQuantity = "#Contract_" + RowCount + "__ReceiptDth";
+                $(fuelPer).val(FuelPercentage);
+                var recVal = $(recQuantity).val();
+                var DelVal = $(delQuantity).val();
+                if (recVal != 0) {
+                    FuelValidationTransport(RowCount);
+                } else if (DelVal != 0) {
+                    FuelValidationTransportDelQTY(RowCount);
+                }
+            });
+            fillcontractReqNumber(ForRow);
+            OnTransRecQtyChange(ForRow);
+            OnTransDelQtyChange(ForRow);
+        }
+        else if (ContractFrom == "Market") {
+
+            var fuelPer = "#MarketList_" + ForRow + "__FuelPercentage";
+            $(fuelPer).val(FuelPercentage);
+            var delQuantity = "#MarketList_" + ForRow + "__DeliveryQuantityNet";
+            var FuelDTH = "#MarketList_" + ForRow + "__FuelQunatity";
+            var recQuantity = "#MarketList_" + ForRow + "__ReceiptQuantityGross";
+            var recQtyValue = $(recQuantity).val();
+            var fuelPerValue = $(fuelPer).val();
+            var delQtyValue = $(delQuantity).val();
+            if (recQtyValue != 0) {
+                FuelValidationMarket(ForRow);
+
+            } else if (delQtyValue != 0) {
+                FuelValidationMarketDelQty(ForRow);
+            }
+            var SvcReqNo = "#MarketList_" + ForRow + "__ServiceRequestNo";
+            var SvcReqType = "#MarketList_" + ForRow + "__ServiceRequestType";
+            $('#ContractPopUpModal').modal('hide');
+            $(SvcReqNo).val(RequestNo); $(SvcReqNo).parent().find('span').html(RequestNo);
+            $(SvcReqType).val(RequestTypeID); $(SvcReqType).parent().find('span').html(RequestTypeID);
+
+        }
+        else if (ContractFrom == "Supply") {
+
+            var fuelPer = "#SupplyList_" + ForRow + "__FuelPercentage";
+            $(fuelPer).val(FuelPercentage);
+            var delQuantity = "#SupplyList_" + ForRow + "__DeliveryQuantityNet";
+            var FuelDTH = "#SupplyList_" + ForRow + "__FuelQunatity";
+            var recQuantity = "#SupplyList_" + ForRow + "__ReceiptQuantityGross";
+            var recQtyValue = $(recQuantity).val();
+            var fuelPerValue = $(fuelPer).val();
+            var delQtyValue = $(delQuantity).val();
+            if (recQtyValue != 0) {
+                FuelValidationSupply(ForRow);
+
+            } else if (delQtyValue != 0) {
+                FuelValidationSupplyDelQty(ForRow);
+            }
+            var SvcReqNo = "#SupplyList_" + ForRow + "__ServiceRequestNo";
+            var SvcReqType = "#SupplyList_" + ForRow + "__ServiceRequestType";
+            $('#ContractPopUpModal').modal('hide');
+            $(SvcReqNo).val(RequestNo); $(SvcReqNo).parent().find('span').html(RequestNo);
+            $(SvcReqType).val(RequestTypeID); $(SvcReqType).parent().find('span').html(RequestTypeID);
+
+        }
+    }
+
+    function CounterPartyPopUpSelect(Identifier, Name, PropCode, ForRow, PopUpFor) {
+        if (PopUpFor == "Supply") {
+            var UpStreamProp = "#SupplyList_" + ForRow + "__UpstreamIDProp";
+            var UpStreamIDName = "#SupplyList_" + ForRow + "__UpstreamIDName";
+            var UpStreamId = "#SupplyList_" + ForRow + "__UpstreamID";
+            $('#CounterPartyPopUpModal').modal('hide');
+            $(UpStreamProp).val(PropCode); $(UpStreamProp).parent().find('span').html(PropCode);
+            $(UpStreamIDName).val(Name); $(UpStreamIDName).parent().find('span').html(Name);
+            $(UpStreamId).val(Identifier); $(UpStreamId).parent().find('span').html(Identifier);
+        }
+        else if (PopUpFor == "Market") {
+            var DwStreamProp = "#MarketList_" + ForRow + "__DownstreamIDProp";
+            var DwStreamIDName = "#MarketList_" + ForRow + "__DownstreamIDName";
+            var DwStreamId = "#MarketList_" + ForRow + "__DownstreamID";
+            $('#CounterPartyPopUpModal').modal('hide');
+            $(DwStreamProp).val(PropCode); $(DwStreamProp).parent().find('span').html(PropCode);
+            $(DwStreamIDName).val(Name); $(DwStreamIDName).parent().find('span').html(Name);
+            $(DwStreamId).val(Identifier); $(DwStreamId).parent().find('span').html(Identifier);
+
+        }
+    }
+
+    function ChkBoxClicked(element) {
+        if ($(element).prop("checked") == true) {
+
+        }
+    }
+
+
+
+    function ValidatePNT(isFromSend) {
+        var flag = false;
+        var flag1 = true;
+        var flag2 = true;
+        var flag3 = true;
+        var flag4 = true;
+
+        $('.ServiceReqTablePart tbody').find('tr').each(function () {
+            var RowCount = $(this).attr("rel");
+            var servReqNo = "#ContractPath_" + RowCount + "__ServiceRequestNo";
+            var servReqType = "#ContractPath_" + RowCount + "__ServiceRequestType";
+            if (($(servReqNo).val() == "--Select--") || ($(servReqNo).val() == "")) {
+                flag4 = false;
+                columnValidation($(servReqNo));
+                columnValidation($(servReqType));
+            }
+        });
+        if (flag4 == false) {
+            toastr.warning("Please fill Service Request Number/Type in Contract(*).");
+        }
+
+        var marketNomCount= $('#MarketTable tbody').find('tr').length;
+        var supplyNomCount = $('#SupplyTable tbody').find('tr').length;        
+
+        var contractPathRowCount = $('.contractPart tbody').find('tr').length;
+        if (contractPathRowCount > 0) {           
+            flag3 = Validate_Contract();
+        } else {
+            flag3 = false;
+            toastr.warning("No data available to validate in Contract.");
+        }     
+
+        if (marketNomCount > 0) {
+            flag1 = Validate_Market();
+        } else {
+            flag1 = false;
+            toastr.warning("No data available to validate in market.");
+        }
+
+        if (supplyNomCount > 0) {
+            flag2 = Validate_Supply();
+        } else {
+            flag2 = false;
+            toastr.warning("No data available to validate in supply.");
+        }  
+       
+       
+        if (flag1 && flag2 && flag3 && flag4) {
+            flag = true;
+            if (isFromSend != "Y") {
+                toastr.success("", "Validate successfully.");
+            }
+        }
+        $('#validationPNT').blur();
+        return flag;
+    }
+
+
+    function columnValidation(column) {
+
+        var flag = false;
+        var columnID = $(column);
+        if ($(column).val() == "" || $(column).val() == "--Select--") {
+            flag = true;
+            if (!columnID.parent("td").hasClass("danger")) {
+                columnID.parent("td").addClass("danger");
+            }
+        } else {
+            if (columnID.parent("td").hasClass("danger")) {
+                columnID.parent("td").removeClass("danger");
+            }
+        }
+        return flag;
+    }
+
+
+
+
+    function Validate_Market() {
+        var flag = true;
+        var count = 0;
+        var ttcounter = 0;
+        $('#MarketTable tbody').find('tr').each(function () {
+            var RowCount = $(this).attr("rel");
+            var LocProp = "#MarketList_" + RowCount + "__LocationProp";
+            var LocPropName = "#MarketList_" + RowCount + "__LocationName";
+            var LocPropId = "#MarketList_" + RowCount + "__Location";
+           // var TTDes = "#MarketList_" + RowCount + "__TransactionTypeDescription";
+            var TT = "#MarketList_" + RowCount + "__TransactionType";
+            var ServiceReqNo = "#MarketList_" + RowCount + "__ServiceRequestNo";
+            var ServiceReqType = "#MarketList_" + RowCount + "__ServiceRequestType";
+            var DownStreamIDProp = "#MarketList_" + RowCount + "__DownstreamIDProp";
+            var DownStreamIDName = "#MarketList_" + RowCount + "__DownstreamIDName";
+            var DownStreamId = "#MarketList_" + RowCount + "__DownstreamID";
+            var RecQtyGross = "#MarketList_" + RowCount + "__ReceiptQuantityGross";
+            var DelQtyNet = "#MarketList_" + RowCount + "__DeliveryQuantityNet";
+            var downstreamRank = "#MarketList_" + RowCount + "__DnstreamRank";
+
+            columnValidation(LocProp);
+            columnValidation(LocPropName);
+            columnValidation(LocPropId);
+           // columnValidation(TTDes);
+            columnValidation(TT);
+            columnValidation(ServiceReqNo);
+            // columnValidation(ServiceReqType);
+            columnValidation(DownStreamIDProp);
+            // columnValidation(DownStreamIDName);
+            columnValidation(DownStreamId);
+            columnValidation(RecQtyGross);
+            columnValidation(DelQtyNet);
+            columnValidation(downstreamRank);
+
+            if (($(LocProp).val() == "") || ($(LocPropId).val() == "") || ($(TT).val() == "") || ($(ServiceReqNo).val() == "") || ($(DownStreamIDProp).val() == "") || ($(DownStreamId).val() == "") || ($(RecQtyGross).val() == "") || ($(DelQtyNet).val() == "") || ($(downstreamRank).val() == "")) {
+                flag = false;
+                count = count + 1;
+                if (flag == false && count == 1) {
+                    toastr.warning("Please fill all required data in Market(*).");
+                }
+            }
+
+            if ($(RecQtyGross).val() < 0) {
+                flag = false;
+                toastr.warning("Please fill positive value in RecQty in Market(*).");
+            }
+
+            if ($(TT).val() != "") {
+                var transLength = $(TT).val().length;
+                if (transLength == 1 && $(TT).val != 0) {
+                    flag = false;
+                    ttcounter = ttcounter + 1;
+                    if (!$(TT).parent("td").hasClass("danger")) {
+                        $(TT).parent("td").addClass("danger");
+                    }
+                    if (flag == false && ttcounter == 1) {
+                        toastr.warning("Invalid Trans Type in Market");
+                    }
+
+                } else {
+                    if ($(TT).parent("td").hasClass("danger")) {
+                        $(TT).parent("td").removeClass("danger");
+                    }
+                }
+            }
+
+
+
+
+        })
+
+        return flag;
+    }
+
+
+    function Validate_Supply() {
+        var flag = true;
+        var count = 0;
+        var ttcounter = 0;
+        $('#SupplyTable tbody').find('tr').each(function () {
+            var RowCount = $(this).attr("rel");
+            var LocProp = "#SupplyList_" + RowCount + "__LocationProp";
+            var LocPropName = "#SupplyList_" + RowCount + "__LocationName";
+            var LocPropId = "#SupplyList_" + RowCount + "__Location";
+           // var TTDes = "#SupplyList_" + RowCount + "__TransactionTypeDescription";
+            var TT = "#SupplyList_" + RowCount + "__TransactionType";
+            var ServiceReqNo = "#SupplyList_" + RowCount + "__ServiceRequestNo";
+            //var ServiceReqType = "#SupplyList_" + RowCount + "__ServiceRequestType";
+            //var DownStreamIDProp = "#SupplyList_" + RowCount + "__UpstreamIDProp";
+            //var DownStreamIDName = "#SupplyList_" + RowCount + "__UpstreamIDName";
+            var DownStreamId = "#SupplyList_" + RowCount + "__UpstreamID";
+            var RecQtyGross = "#SupplyList_" + RowCount + "__ReceiptQuantityGross";
+            var DelQtyNet = "#SupplyList_" + RowCount + "__DeliveryQuantityNet";
+            var downstreamRank = "#SupplyList_" + RowCount + "__UpstreamRank";
+
+            columnValidation(LocProp);
+            columnValidation(LocPropName);
+            columnValidation(LocPropId);
+           // columnValidation(TTDes);
+            columnValidation(TT);
+            columnValidation(ServiceReqNo);
+            //columnValidation(ServiceReqType);
+            // columnValidation(DownStreamIDProp);
+            //columnValidation(DownStreamIDName);
+            columnValidation(DownStreamId);
+            columnValidation(RecQtyGross);
+            columnValidation(DelQtyNet);
+            columnValidation(downstreamRank);
+
+            if (($(LocProp).val() == "") || ($(LocPropId).val() == "") || ($(TT).val() == "") || ($(ServiceReqNo).val() == "") || ($(DownStreamId).val() == "") || ($(RecQtyGross).val() == "") || ($(DelQtyNet).val() == "") || ($(downstreamRank).val() == "")) {
+                flag = false;
+                count = count + 1;
+                if (flag == false && count == 1) {
+                    toastr.warning("Please fill all required data in Supply(*).");
+                }
+            }
+
+
+            if ($(TT).val() != "") {
+              
+                var transLength = $(TT).val().length;
+                if (transLength == 1 && $(TT).val != 0) {
+                    flag = false;
+                    ttcounter = ttcounter + 1;
+                    if (!$(TT).parent("td").hasClass("danger")) {
+                        $(TT).parent("td").addClass("danger");
+                    }
+                    if (flag == false && ttcounter == 1) {
+                        toastr.warning("Invalid Trans Type in Supply");
+                    }
+
+                } else {
+                    if ($(TT).parent("td").hasClass("danger")) {
+                        $(TT).parent("td").removeClass("danger");
+                    }
+                }
+            }
+
+            
+
+
+            if ($(RecQtyGross).val() < 0) {
+                flag = false;
+                toastr.warning("Please fill positive value for RecQty in Supply(*).");
+            }
+        })
+        return flag;
+    }
+
+
+    function Validate_Contract() {
+
+        var flag = true;
+        var count = 0;
+        var ttcounter = 0;
+        $('.contractPart tbody').find('tr').each(function () {
+            var RowCount = $(this).attr("rel");
+          //  var TTDes = "#Contract_" + RowCount + "__TransactionTypeDescription";
+            var TT = "#Contract_" + RowCount + "__TransactionType";
+            var RecLocProp = "#Contract_" + RowCount + "__RecLocationProp";
+            var RecLocPropName = "#Contract_" + RowCount + "__RecLocationName";
+            var RecLocPropId = "#Contract_" + RowCount + "__RecLocation";
+            var RecRank = "#Contract_" + RowCount + "__RecRank";
+            var DelLocProp = "#Contract_" + RowCount + "__DelLocationProp";
+            var DelLocPropName = "#Contract_" + RowCount + "__DelLocationName";
+            var DelLocPropId = "#Contract_" + RowCount + "__DelLocation";
+            var DelRank = "#Contract_" + RowCount + "__DelRank";
+
+            var RecDTH = "#Contract_" + RowCount + "__ReceiptDth";
+            var DelDTH = "#Contract_" + RowCount + "__DeliveryDth";
+            var Route = "";
+              
+            var IsSng = "@isSNG";
+            var isElPaso = '@isElPaso';
+            if (IsSng == "True" || isElPaso == "True") {
+                Route = "#Contract_" + RowCount + "__Route";
+            }
+
+            //var PackageID = "#Contract_" + RowCount + "__PackageID";
+            var PathRank = "#Contract_" + RowCount + "__PathRank";
+
+           // columnValidation(TTDes);
+            columnValidation(TT);
+            columnValidation(RecLocProp);
+            // columnValidation(RecLocPropName);
+            columnValidation(RecLocPropId);
+            columnValidation(RecRank);
+            columnValidation(DelLocProp);
+            //  columnValidation(DelLocPropName);
+            columnValidation(DelLocPropId);
+            columnValidation(DelRank);
+            columnValidation(RecDTH);
+            columnValidation(DelDTH);
+            if (IsSng == "True" || isElPaso == "True") {
+                columnValidation(Route);
+            }
+            //columnValidation(PackageID);
+            columnValidation(PathRank);
+
+              
+
+            if (($(TT).val() == "") || ($(RecLocProp).val() == "") || ($(RecLocPropId).val() == "") || ($(RecRank).val() == "") || ($(DelLocProp).val() == "") || ($(DelLocPropId).val() == "") || ($(DelRank).val() == "") || ($(RecDTH).val() == "") || ($(DelDTH).val() == "") || ($(PathRank).val() == "")) {
+                flag = false;
+                count = count + 1;
+                if (flag == false && count == 1) {
+                    toastr.warning("Please fill all required data in Contract(*).");
+                }
+            } else if (((IsSng == "True") ||( isElPaso == "True")) && ($(Route).val() == "")) {
+                flag = false;
+                count = count + 1;
+                if (flag == false && count == 1) {
+                    toastr.warning("Please fill Route in Contract(*).");
+                }
+            }
+
+            if ($(RecDTH).val() < 0) {
+                flag = false;
+                toastr.warning("Please fill positive value for RecDTH in Contract(*).");
+            }
+           
+            if ($(TT).val() != "") {
+                var transLength = $(TT).val().length;
+                if (transLength == 1 && $(TT).val != 0) {
+                    flag = false;
+                    ttcounter = ttcounter + 1;
+                    if (!$(TT).parent("td").hasClass("danger")) {
+                        $(TT).parent("td").addClass("danger");
+                    }
+                    if (flag == false && ttcounter == 1) {
+                        toastr.warning("Invalid Trans Type in Contract");
+                    }
+
+                } else {
+                    if ($(TT).parent("td").hasClass("danger")) {
+                        $(TT).parent("td").removeClass("danger");
+                    }
+                }
+            }
+          
+        })
+        return flag;
+    }
+
+
+    function ContractPathChkBoxClicked(element) {
+        if ($(element).prop("checked") == false) {
+            //if ($(element).parent().parent("tr").hasClass("danger")) {
+            //    $(element).parent().parent("tr").removeClass("danger");
+            //}
+        }
+    }
+
+
+    function SupplyTableChkBoxClicked(element) {
+        if ($(element).prop("checked") == false) {
+
+        }
+    }
+
+    function MarketTableChkBoxClicked(element) {
+        if ($(element).prop("checked") == false) {
+            //if ($(element).parent().parent("tr").hasClass("danger")) {
+            //    $(element).parent().parent("tr").removeClass("danger");
+            //}
+        }
+    }
+
+    function ContractChkBoxClicked(element) {
+        if ($(element).prop("checked") == false) {
+            //if ($(element).parent().parent("tr").hasClass("danger")) {
+            //    $(element).parent().parent("tr").removeClass("danger");
+            //}
+        }
+    }
+
+    function DatesValidate(StartDateId, EndDateId) {      
+        var flag = true;
+        var startDate = $(StartDateId).val();
+        var endDate = $(EndDateId).val();
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var sDate = new Date(startDate);
+        var eDate = new Date(endDate);
+        if (sDate < today || eDate < today) {
+            flag = false;
+            toastr.warning("Beg and End date should not be in Past.");
+        }         
+        return flag;
+    }
+
+
+    function SendNom() {
+        $('#sendPNTbtn').blur();
+        var isValidDates = DatesValidate("#StartDateTime", "#EndDateTime")
+        return isValidDates;
+
+        //TODO: Uncomment this code to apply variance-validation. 
+        //var flag = true;
+        //var isValid = ValidatePNT("Y");
+        //if (isValid) {
+        //    //var marketRowCount = $('#MarketTable tbody').find('tr').length;
+        //    //var contractPathRowCount = $('.contractPart tbody').find('tr').length;
+        //    //var supplyRowCount = $('#SupplyTable tbody').find('tr').length;
+
+        //    //if (marketRowCount == 0) {
+        //    //    toastr.warning("Please fill at least one row in Market(*).");
+        //    //    flag = false;
+        //    //    return flag;
+        //    //}
+        //    //if (supplyRowCount == 0) {
+        //    //    toastr.warning("Please fill at least one row in Supply(*).");
+        //    //    flag = false;
+        //    //    return flag;
+        //    //}
+           
+
+        //    //GrabSupplyTable();
+        //    //GrabContractTable();
+        //    //GrabMarketTable();
+        //    //$.ajax({
+        //    //    url: '/PNTNominations/ValidateVariance',
+        //    //    async: false,
+        //    //    data: { SupplyRecords: SupplyObj, TransportRecords: ContractObj, MarketRecords: MarketObj },
+        //    //    type: 'POST',
+        //    //    success: function (result) {
+        //    //          
+        //    //        if (result == "False") {
+        //    //            toastr.warning("Variance in Rec/Del Quantities are not balanced. Variance should be zero for every location");
+        //    //            flag = false;
+        //    //        }
+        //    //    },
+        //    //    error: function (error) {
+        //    //        flag = false;
+        //    //        console.log(error);
+        //    //    }
+        //    //});
+
+        //} else {
+        //    return false;
+        //}
+        //return flag;
+
+    }
+
+
+    function VarianceValidation() {
+
+        GrabSupplyTable();
+        GrabContractTable();
+        GrabMarketTable();
+        $.ajax({
+            url: '/PNTNominations/ValidateVariance',
+            data: { SupplyRecords: SupplyObj, TransportRecords: ContractObj, MarketRecords: MarketObj },
+            type: 'POST',
+            success: function (result) {
+                return result;
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+
+
+    var isPreTabContract = true;
+    var isAutoSave = false;
+
+    function SerializeOtherTabsData(tabid, pipelineId) {
+        if ((isPreTabContract == true) && (tabid == 3 || tabid == 4)) {
+            var r1 = confirm('Save changes or Continue without saving? Choose OK for Save Changes. And Cancel for Continue without saving.');
+            if (r1 == true) {
+                isAutoSave = true;
+                serializedData(tabid, pipelineId);
+            } else {
+                isAutoSave = false;
+            }
+        } else {
+            if ((tabid == 3 || tabid == 4) && isAutoSave == true) {
+                serializedData(tabid, pipelineId);
+            }
+        }
+        if (tabid == 1 || tabid == 2) {
+            serializedData(tabid, pipelineId);
+        }
+
+        if ((tabid == 1 || tabid == 2 || tabid == 3 || tabid == 4)) {
+            isPreTabContract = false;
+        } else {
+            isPreTabContract = true;
+        }
+
+    }
+
+    function serializedData(tabid, pipelineId) {
+        var flag = false;
+        if (tabid == 3 || tabid == 4) {
+            flag = contractLocValidation();
+        }
+        if ((flag == true) || (tabid == 1 || tabid == 2)) {
+              
+            GrabSupplyTable();
+            GrabContractTable();
+            GrabMarketTable();
+            $.ajax({
+                url: '/PNTNominations/DynamicTabs',
+                data: { SupplyRecords: SupplyObj, TransportRecords: ContractObj, MarketRecords: MarketObj, tab: tabid, PipelineID: pipelineId },
+                type: 'POST',
+                success: function (html) {
+                      
+                    if (tabid == 1) {
+                        $('#BatchTab').html(html);
+                    }
+                    if (tabid == 2) {
+                        $('#NomMatrixTab').html(html);
+                    }
+                    if (tabid == 3) {
+                        $('#SupplyTable > tbody').append(html);
+                    }
+                    if (tabid == 4) {
+                        $('#MarketTable > tbody').append(html);
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    }
+
+
+    function GrabSupplyTable() {
+        SupplyObj = [];
+        $('#SupplyTable tbody').find('tr').each(function () {
+            var Index = $(this).attr("rel");
+            var RowCount = $(this).attr("rel");
+            var obj = {
+                LocProp: $("#SupplyList_" + RowCount + "__LocationProp").val(),
+                LocName: $("#SupplyList_" + RowCount + "__LocationName").val(),
+                Loc: $("#SupplyList_" + RowCount + "__Location").val(),
+                TT_Desc: $("#SupplyList_" + RowCount + "__TransactionTypeDescription").val(),
+                TT: $("#SupplyList_" + RowCount + "__TransactionType").val(),
+                SVCRe: $("#SupplyList_" + RowCount + "__ServiceRequestNo").val(),
+                SVCTyp: $("#SupplyList_" + RowCount + "__ServiceRequestType").val(),
+
+                UpIDP: $("#SupplyList_" + RowCount + "__UpstreamIDProp").val(),
+                UpName: $("#SupplyList_" + RowCount + "__UpstreamIDName").val(),
+                UpID: $("#SupplyList_" + RowCount + "__UpstreamID").val(),
+
+                RecQty: $("#SupplyList_" + RowCount + "__ReceiptQuantityGross").val(),
+                DelQty: $("#SupplyList_" + RowCount + "__DeliveryQuantityNet").val(),
+
+                UpRank: $("#SupplyList_" + RowCount + "__UpstreamRank").val()
+            };
+            SupplyObj.push(obj);
+        });
+    }
+
+    function GrabContractTable() {
+        ContractObj = [];
+        $('.contractPart tbody').find('tr').each(function () {
+            var RowCount = $(this).attr("rel");
+            var obj = {
+                TT_Desc: $("#Contract_" + RowCount + "__TransactionTypeDescription").val(),
+                TT: $("#Contract_" + RowCount + "__TransactionType").val(),
+                RecLocProp: $("#Contract_" + RowCount + "__RecLocationProp").val(),
+                RecLocName: $("#Contract_" + RowCount + "__RecLocationName").val(),
+                RecLoc: $("#Contract_" + RowCount + "__RecLocation").val(),
+                ReRank: $("#Contract_" + RowCount + "__RecRank").val(),
+                DelLocProp: $("#Contract_" + RowCount + "__DelLocationProp").val(),
+                DelLocName: $("#Contract_" + RowCount + "__DelLocationName").val(),
+                DelLoc: $("#Contract_" + RowCount + "__DelLocation").val(),
+                DelRank: $("#Contract_" + RowCount + "__DelRank").val(),
+                RecDTH: $("#Contract_" + RowCount + "__ReceiptDth").val(),
+                DelDTH: $("#Contract_" + RowCount + "__DeliveryDth").val(),
+                PkgID: $("#Contract_" + RowCount + "__PackageID").val(),
+                PathRank: $("#Contract_" + RowCount + "__PathRank").val(),
+                Contract: $("#Contract_" + RowCount + "__ServiceRequestNo").val()
+            };
+            ContractObj.push(obj);
+        });
+    }
+
+    function GrabMarketTable() {
+        MarketObj = [];
+        $('#MarketTable tbody').find('tr').each(function () {
+            var RowCount = $(this).attr("rel");
+            var obj = {
+                LocProp: $("#MarketList_" + RowCount + "__LocationProp").val(),
+                LocName: $("#MarketList_" + RowCount + "__LocationName").val(),
+                Loc: $("#MarketList_" + RowCount + "__Location").val(),
+                TT_Desc: $("#MarketList_" + RowCount + "__TransactionTypeDescription").val(),
+                TT: $("#MarketList_" + RowCount + "__TransactionType").val(),
+                SVCRe: $("#MarketList_" + RowCount + "__ServiceRequestNo").val(),
+                SVCTyp: $("#MarketList_" + RowCount + "__ServiceRequestType").val(),
+                DnIDProp: $("#MarketList_" + RowCount + "__DownstreamIDProp").val(),
+                DnName: $("#MarketList_" + RowCount + "__DownstreamIDName").val(),
+                DnID: $("#MarketList_" + RowCount + "__DownstreamID").val(),
+                RecQty: $("#MarketList_" + RowCount + "__ReceiptQuantityGross").val(),
+                DelQty: $("#MarketList_" + RowCount + "__DeliveryQuantityNet").val(),
+                DnRank: $("#MarketList_" + RowCount + "__DnstreamRank").val()
+            };
+            MarketObj.push(obj);
+        });
+    }
+
+    function CopyMarketNomRow(pipelineId) {
+
+        var SelectedChkBox = $('.marketchkboxes:checkbox:checked').length;
+        if (SelectedChkBox > 1) {
+            toastr.info("", "Please select only one nomination at a time.");
+        }
+        else if (SelectedChkBox == 0) {
+            toastr.warning("", "Please select one nomination.");
+        } else {
+            $.ajax({
+                url: '/PNTNominations/AddMarketRow',
+                data: { PipelineID: pipelineId },
+                type: 'GET',
+                success: function (html) {
+                    $('#MarketTable > tbody').append(html);
+                    fillDataInMarket();
+                    OnMarketRecQtyChange();
+                    OnMarketDelQtyChange();
+                }
+            });
+
+        }
+    }
+
+    function fillDataInMarket() {
+        var rowIndex = $('#MarketTable tbody tr:last').attr('rel');
+        var RowCount = $('.marketchkboxes:checkbox:checked').attr("value");
+        $('.marketchkboxes:checkbox:checked').attr('checked', false);
+        var obj = {
+            LocationProp: $("#MarketList_" + RowCount + "__LocationProp").val(),
+            LocationName: $("#MarketList_" + RowCount + "__LocationName").val(),
+            Location: $("#MarketList_" + RowCount + "__Location").val(),
+            TransactionTypeDescription: $("#MarketList_" + RowCount + "__TransactionTypeDescription").val(),
+            TransactionType: $("#MarketList_" + RowCount + "__TransactionType").val(),
+            TransTypeMapId: $("#MarketList_" + RowCount + "__TransTypeMapId").val(),
+            ServiceRequestNo: $("#MarketList_" + RowCount + "__ServiceRequestNo").val(),
+            ServiceRequestType: $("#MarketList_" + RowCount + "__ServiceRequestType").val(),
+            DownstreamIDProp: $("#MarketList_" + RowCount + "__DownstreamIDProp").val(),
+            DownstreamIDName: $("#MarketList_" + RowCount + "__DownstreamIDName").val(),
+            DownstreamID: $("#MarketList_" + RowCount + "__DownstreamID").val(),
+            ReceiptQuantityGross: $("#MarketList_" + RowCount + "__ReceiptQuantityGross").val(),
+            DeliveryQuantityNet: $("#MarketList_" + RowCount + "__DeliveryQuantityNet").val(),
+            DnstreamRank: $("#MarketList_" + RowCount + "__DnstreamRank").val(),
+            FuelPercentage: $("#MarketList_" + RowCount + "__FuelPercentage").val(),
+            FuelQunatity: $("#MarketList_" + RowCount + "__FuelQunatity").val(),
+            PackageID: $("#MarketList_" + RowCount + "__PackageID").val(),
+            DnContractIdentifier: $("#MarketList_" + RowCount + "__DnContractIdentifier").val(),
+            DnPackageID: $("#MarketList_" + RowCount + "__DnPackageID").val()
+        }
+        var tempValue = "--Select--";
+        var hiddenTTDes = $("#MarketList_" + rowIndex + "__TransactionTypeDescription");
+        hiddenTTDes.val(obj.TransactionTypeDescription);
+        //  
+        //if (obj.TransactionTypeDescription == "" || obj.TransactionTypeDescription == "--Select--") {
+        //    hiddenTTDes.parent().find('span:first').text(tempValue);
+        //} else {
+        //    hiddenTTDes.parent().find('span:first').text(obj.TransactionTypeDescription);
+        //}
+
+        $("#MarketList_" + rowIndex + "__TransTypeMapId").val(obj.TransTypeMapId);
+
+        $("#MarketList_" + rowIndex + "__TransactionType").val(obj.TransactionType);
+        if (obj.TransactionType == "") {
+            $("#MarketList_" + rowIndex + "__TransactionType").parent().find('span:first').text(tempValue);
+        } else {
+            $("#MarketList_" + rowIndex + "__TransactionType").parent().find('span:first').text(obj.TransactionType);
+        }
+        $("#MarketList_" + rowIndex + "__LocationProp").val(obj.LocationProp);
+        if (obj.LocationProp == "") {
+            $("#MarketList_" + rowIndex + "__LocationProp").parent().find('span:first').text(tempValue);
+        } else {
+            $("#MarketList_" + rowIndex + "__LocationProp").parent().find('span:first').text(obj.LocationProp);
+        }
+        $("#MarketList_" + rowIndex + "__LocationName").val(obj.LocationName);
+        if (obj.LocationName == "") {
+            $("#MarketList_" + rowIndex + "__LocationName").parent().find('span:first').text(tempValue);
+        } else {
+            $("#MarketList_" + rowIndex + "__LocationName").parent().find('span:first').text(obj.LocationName);
+        }
+        $("#MarketList_" + rowIndex + "__Location").val(obj.Location);
+        if (obj.Location == "") {
+            $("#MarketList_" + rowIndex + "__Location").parent().find('span:first').text(tempValue);
+        } else {
+            $("#MarketList_" + rowIndex + "__Location").parent().find('span:first').text(obj.Location);
+        }
+
+
+        $("#MarketList_" + rowIndex + "__ServiceRequestNo").val(obj.ServiceRequestNo);
+        if (obj.ServiceRequestNo == "") {
+            $("#MarketList_" + rowIndex + "__ServiceRequestNo").parent().find('span:first').text(tempValue);
+        } else {
+            $("#MarketList_" + rowIndex + "__ServiceRequestNo").parent().find('span:first').text(obj.ServiceRequestNo);
+        }
+
+
+        $("#MarketList_" + rowIndex + "__ServiceRequestType").val(obj.ServiceRequestType);
+        if (obj.ServiceRequestType == "") {
+            $("#MarketList_" + rowIndex + "__ServiceRequestType").parent().find('span:first').text(tempValue);
+        } else {
+            $("#MarketList_" + rowIndex + "__ServiceRequestType").parent().find('span:first').text(obj.ServiceRequestType);
+        }
+
+
+        $("#MarketList_" + rowIndex + "__DownstreamIDProp").val(obj.DownstreamIDProp);
+        if (obj.DownstreamIDProp == "") {
+            $("#MarketList_" + rowIndex + "__DownstreamIDProp").parent().find('span:first').text(tempValue);
+        } else {
+            $("#MarketList_" + rowIndex + "__DownstreamIDProp").parent().find('span:first').text(obj.DownstreamIDProp);
+        }
+
+
+        $("#MarketList_" + rowIndex + "__DownstreamIDName").val(obj.DownstreamIDName);
+        if (obj.DownstreamIDName == "") {
+            $("#MarketList_" + rowIndex + "__DownstreamIDName").parent().find('span:first').text(tempValue);
+        } else {
+            $("#MarketList_" + rowIndex + "__DownstreamIDName").parent().find('span:first').text(obj.DownstreamIDName);
+        }
+
+
+        $("#MarketList_" + rowIndex + "__DownstreamID").val(obj.DownstreamID);
+        if (obj.DownstreamID == "") {
+            $("#MarketList_" + rowIndex + "__DownstreamID").parent().find('span:first').text(tempValue);
+        } else {
+            $("#MarketList_" + rowIndex + "__DownstreamID").parent().find('span:first').text(obj.DownstreamID);
+        }
+
+        $("#MarketList_" + rowIndex + "__ReceiptQuantityGross").val(obj.ReceiptQuantityGross);
+        $("#MarketList_" + rowIndex + "__DeliveryQuantityNet").val(obj.DeliveryQuantityNet);
+        $("#MarketList_" + rowIndex + "__DnstreamRank").val(obj.DnstreamRank);
+        $("#MarketList_" + rowIndex + "__FuelPercentage").val(obj.FuelPercentage);
+        $("#MarketList_" + rowIndex + "__FuelQunatity").val(obj.FuelQunatity);
+        $("#MarketList_" + rowIndex + "__PackageID").val(obj.PackageID);
+        $("#MarketList_" + rowIndex + "__DnContractIdentifier").val(obj.DnContractIdentifier);
+        $("#MarketList_" + rowIndex + "__DnPackageID").val(obj.DnPackageID);
+    }
+
+
+
+
+    function CopySupplyNomRow(pipelineId) {
+        var SelectedChkBox = $('.supplychkboxes:checkbox:checked').length;
+        if (SelectedChkBox > 1) {
+            toastr.info("", "Please select only one nomination at a time.");
+        }
+        else if (SelectedChkBox == 0) {
+            toastr.warning("", "Please select one nomination.");
+        } else {
+            // var rowCount = $('#SupplyTable tbody tr').length;
+            $.ajax({
+                url: '/PNTNominations/AddSupplyRow',
+                data: { PipelineID: pipelineId },
+                type: 'GET',
+                success: function (html) {
+                    $('#SupplyTable > tbody').append(html);
+
+                    fillDataInSupply();
+                    OnSupRecQtyChange();
+                    OnSupDelQtyChange();
+                }
+            });
+
+        }
+    }
+
+
+    function fillDataInSupply() {
+
+        var rowIndex = $('#SupplyTable tbody tr:last').attr('rel');
+        var RowCount = $('.supplychkboxes:checkbox:checked').attr("value");
+        $('.supplychkboxes:checkbox:checked').attr('checked', false);
+        var obj = {
+            LocationProp: $("#SupplyList_" + RowCount + "__LocationProp").val(),
+            LocationName: $("#SupplyList_" + RowCount + "__LocationName").val(),
+            Location: $("#SupplyList_" + RowCount + "__Location").val(),
+            TransactionTypeDescription: $("#SupplyList_" + RowCount + "__TransactionTypeDescription").val(),
+            TransactionType: $("#SupplyList_" + RowCount + "__TransactionType").val(),
+            TransTypeMapId: $("#SupplyList_" + RowCount + "__TransTypeMapId").val(),
+            ServiceRequestNo: $("#SupplyList_" + RowCount + "__ServiceRequestNo").val(),
+            ServiceRequestType: $("#SupplyList_" + RowCount + "__ServiceRequestType").val(),
+            UpstreamIDProp: $("#SupplyList_" + RowCount + "__UpstreamIDProp").val(),
+            UpstreamIDName: $("#SupplyList_" + RowCount + "__UpstreamIDName").val(),
+            UpstreamID: $("#SupplyList_" + RowCount + "__UpstreamID").val(),
+            ReceiptQuantityGross: $("#SupplyList_" + RowCount + "__ReceiptQuantityGross").val(),
+            DeliveryQuantityNet: $("#SupplyList_" + RowCount + "__DeliveryQuantityNet").val(),
+            UpstreamRank: $("#SupplyList_" + RowCount + "__UpstreamRank").val(),
+            FuelPercentage: $("#SupplyList_" + RowCount + "__FuelPercentage").val(),
+            FuelQunatity: $("#SupplyList_" + RowCount + "__FuelQunatity").val(),
+            PackageID: $("#SupplyList_" + RowCount + "__PackageID").val(),
+            UpContractIdentifier: $("#SupplyList_" + RowCount + "__UpContractIdentifier").val(),
+            UpPackageID: $("#SupplyList_" + RowCount + "__UpPackageID").val()
+        }
+        var tempValue = "--Select--";
+        var hiddenTTDes = $("#SupplyList_" + rowIndex + "__TransactionTypeDescription");
+        hiddenTTDes.val(obj.TransactionTypeDescription);
+        //if (obj.TransactionTypeDescription == "") {
+        //    hiddenTTDes.parent().find('span:first').text(tempValue);
+        //} else {
+        //    hiddenTTDes.parent().find('span:first').text(obj.TransactionTypeDescription);
+        //}
+
+        $("#SupplyList_" + rowIndex + "__TransTypeMapId").val(obj.TransTypeMapId);
+
+        $("#SupplyList_" + rowIndex + "__TransactionType").val(obj.TransactionType);
+        if (obj.TransactionType == "") {
+            $("#SupplyList_" + rowIndex + "__TransactionType").parent().find('span:first').text(tempValue);
+        } else {
+            $("#SupplyList_" + rowIndex + "__TransactionType").parent().find('span:first').text(obj.TransactionType);
+        }
+
+
+        $("#SupplyList_" + rowIndex + "__LocationProp").val(obj.LocationProp);
+        if (obj.LocationProp == "") {
+            $("#SupplyList_" + rowIndex + "__LocationProp").parent().find('span:first').text(tempValue);
+        } else {
+            $("#SupplyList_" + rowIndex + "__LocationProp").parent().find('span:first').text(obj.LocationProp);
+        }
+
+        $("#SupplyList_" + rowIndex + "__LocationName").val(obj.LocationName);
+        if (obj.LocationName == "") {
+            $("#SupplyList_" + rowIndex + "__LocationName").parent().find('span:first').text(tempValue);
+        } else {
+            $("#SupplyList_" + rowIndex + "__LocationName").parent().find('span:first').text(obj.LocationName);
+        }
+
+        $("#SupplyList_" + rowIndex + "__Location").val(obj.Location);
+        if (obj.Location == "") {
+            $("#SupplyList_" + rowIndex + "__Location").parent().find('span:first').text(tempValue);
+        } else {
+            $("#SupplyList_" + rowIndex + "__Location").parent().find('span:first').text(obj.Location);
+        }
+
+
+        $("#SupplyList_" + rowIndex + "__ServiceRequestNo").val(obj.ServiceRequestNo);
+        if (obj.ServiceRequestNo == "") {
+            $("#SupplyList_" + rowIndex + "__ServiceRequestNo").parent().find('span:first').text(tempValue);
+        } else {
+            $("#SupplyList_" + rowIndex + "__ServiceRequestNo").parent().find('span:first').text(obj.ServiceRequestNo);
+        }
+
+
+        $("#SupplyList_" + rowIndex + "__ServiceRequestType").val(obj.ServiceRequestType);
+        if (obj.ServiceRequestType == "") {
+            $("#SupplyList_" + rowIndex + "__ServiceRequestType").parent().find('span:first').text(tempValue);
+        } else {
+            $("#SupplyList_" + rowIndex + "__ServiceRequestType").parent().find('span:first').text(obj.ServiceRequestType);
+        }
+
+
+        $("#SupplyList_" + rowIndex + "__UpstreamIDProp").val(obj.UpstreamIDProp);
+        if (obj.UpstreamIDProp == "") {
+            $("#SupplyList_" + rowIndex + "__UpstreamIDProp").parent().find('span:first').text(tempValue);
+        } else {
+            $("#SupplyList_" + rowIndex + "__UpstreamIDProp").parent().find('span:first').text(obj.UpstreamIDProp);
+        }
+
+
+        $("#SupplyList_" + rowIndex + "__UpstreamIDName").val(obj.UpstreamIDName);
+        if (obj.UpstreamIDName == "") {
+            $("#SupplyList_" + rowIndex + "__UpstreamIDName").parent().find('span:first').text(tempValue);
+        } else {
+            $("#SupplyList_" + rowIndex + "__UpstreamIDName").parent().find('span:first').text(obj.UpstreamIDName);
+        }
+
+
+        $("#SupplyList_" + rowIndex + "__UpstreamID").val(obj.UpstreamID);
+        if (obj.UpstreamID == "") {
+            $("#SupplyList_" + rowIndex + "__UpstreamID").parent().find('span:first').text(tempValue);
+        } else {
+            $("#SupplyList_" + rowIndex + "__UpstreamID").parent().find('span:first').text(obj.UpstreamID);
+        }
+
+
+        $("#SupplyList_" + rowIndex + "__ReceiptQuantityGross").val(obj.ReceiptQuantityGross);
+        $("#SupplyList_" + rowIndex + "__DeliveryQuantityNet").val(obj.DeliveryQuantityNet);
+        $("#SupplyList_" + rowIndex + "__UpstreamRank").val(obj.UpstreamRank);
+        $("#SupplyList_" + rowIndex + "__FuelPercentage").val(obj.FuelPercentage);
+        $("#SupplyList_" + rowIndex + "__FuelQunatity").val(obj.FuelQunatity);
+        $("#SupplyList_" + rowIndex + "__PackageID").val(obj.PackageID);
+        $("#SupplyList_" + rowIndex + "__UpContractIdentifier").val(obj.UpContractIdentifier);
+        $("#SupplyList_" + rowIndex + "__UpPackageID").val(obj.UpPackageID);
+
+    }
+
+
+
+    function CopyCotractNomRow(pipelineId, TableId) {
+
+        var SelectedChkBox = $('.chkboxes:checkbox:checked').length;
+        if (SelectedChkBox > 1) {
+            toastr.info("", "Please select only one nomination at a time.");
+        }
+        else if (SelectedChkBox == 0) {
+            toastr.warning("", "Please select one nomination.");
+        } else {
+            var servReqNo = "#ContractPath_" + TableId + "__ServiceRequestNo";
+            var servReqType = "#ContractPath_" + TableId + "__ServiceRequestType";
+            if (($(servReqNo).val() == "--Select--") || ($(servReqNo).val() == "")) {
+                columnValidation($(servReqNo));
+                columnValidation($(servReqType));
+                toastr.warning("Please fill Contract Request Number/Type in Contract(*).");
+            } else {
+                $.ajax({
+                    url: '/PNTNominations/AddContractPathRow',
+                    data: { PipelineID: pipelineId, TableID: TableId },
+                    type: 'GET',
+                    success: function (html) {
+                        var id = "#transportTable_" + TableId + " > tbody";
+                        $(id).append(html);
+                        fillcontractReqNumber(TableId);
+                        fillDataInContract(TableId);
+                        OnTransRecQtyChange(TableId);
+                        OnTransDelQtyChange(TableId);
+                    }
+                });
+            }
+
+        }
+    }
+
+
+    function fillDataInContract(TableId) {
+
+        var id = "#transportTable_" + TableId + " tbody tr:last";
+        var rowIndex = $(id).attr('rel');
+        var RowCount = $('.chkboxes:checkbox:checked').attr("value");
+        $('.chkboxes:checkbox:checked').attr('checked', false);
+        var obj = {
+            TransactionTypeDescription: $("#Contract_" + RowCount + "__TransactionTypeDescription").val(),
+            TransactionType: $("#Contract_" + RowCount + "__TransactionType").val(),
+            RecLocationProp: $("#Contract_" + RowCount + "__RecLocationProp").val(),
+            RecLocationName: $("#Contract_" + RowCount + "__RecLocationName").val(),
+            RecLocation: $("#Contract_" + RowCount + "__RecLocation").val(),
+            RecRank: $("#Contract_" + RowCount + "__RecRank").val(),
+            RecZone: $("#Contract_" + RowCount + "__RecZone").val(),
+            DelLocationProp: $("#Contract_" + RowCount + "__DelLocationProp").val(),
+            DelLocationName: $("#Contract_" + RowCount + "__DelLocationName").val(),
+            DelLocation: $("#Contract_" + RowCount + "__DelLocation").val(),
+            DelRank: $("#Contract_" + RowCount + "__DelRank").val(),
+            DelZone: $("#Contract_" + RowCount + "__DelZone").val(),
+            ReceiptDth: $("#Contract_" + RowCount + "__ReceiptDth").val(),
+            DeliveryDth: $("#Contract_" + RowCount + "__DeliveryDth").val(),
+            Route: "",
+            PackageID: $("#Contract_" + RowCount + "__PackageID").val(),
+            PathRank: $("#Contract_" + RowCount + "__PathRank").val(),
+            FuelPercentage: $("#Contract_" + RowCount + "__FuelPercentage").val(),
+            FuelDth: $("#Contract_" + RowCount + "__FuelDth").val()
+        }
+          
+        var IsSng = "@isSNG";
+        var isElPaso = '@isElPaso';
+        if (IsSng == "True" || isElPaso == "True") {
+            obj.Route = $("#Contract_" + RowCount + "__Route").val();
+        }
+
+
+        var tempValue = "--Select--";
+        var hiddenTTDes = $("#Contract_" + rowIndex + "__TransactionTypeDescription");
+        hiddenTTDes.val(obj.TransactionTypeDescription);
+        //if (obj.TransactionTypeDescription == "") {
+        //    hiddenTTDes.parent().find('span:first').text(tempValue);
+        //} else {
+        //    hiddenTTDes.parent().find('span:first').text(obj.TransactionTypeDescription);
+        //}
+
+        $("#Contract_" + rowIndex + "__TransactionType").val(obj.TransactionType);
+
+        if (obj.TransactionType == "") {
+            $("#Contract_" + rowIndex + "__TransactionType").parent().find('span:first').text(tempValue);
+        } else {
+            $("#Contract_" + rowIndex + "__TransactionType").parent().find('span:first').text(obj.TransactionType);
+        }
+
+
+        $("#Contract_" + rowIndex + "__RecLocationProp").val(obj.RecLocationProp);
+        if (obj.RecLocationProp == "") {
+            $("#Contract_" + rowIndex + "__RecLocationProp").parent().find('span:first').text(tempValue);
+        } else {
+            $("#Contract_" + rowIndex + "__RecLocationProp").parent().find('span:first').text(obj.RecLocationProp);
+        }
+
+        $("#Contract_" + rowIndex + "__RecLocationName").val(obj.RecLocationName);
+        if (obj.RecLocationName == "") {
+            $("#Contract_" + rowIndex + "__RecLocationName").parent().find('span:first').text(tempValue);
+        } else {
+            $("#Contract_" + rowIndex + "__RecLocationName").parent().find('span:first').text(obj.RecLocationName);
+        }
+
+        $("#Contract_" + rowIndex + "__RecLocation").val(obj.RecLocation);
+        if (obj.RecLocation == "") {
+            $("#Contract_" + rowIndex + "__RecLocation").parent().find('span:first').text(tempValue);
+        } else {
+            $("#Contract_" + rowIndex + "__RecLocation").parent().find('span:first').text(obj.RecLocation);
+        }
+
+
+        $("#Contract_" + rowIndex + "__RecRank").val(obj.RecRank);
+        $("#Contract_" + rowIndex + "__RecZone").val(obj.RecZone);
+
+        $("#Contract_" + rowIndex + "__DelLocationProp").val(obj.DelLocationProp);
+        if (obj.DelLocationProp == "") {
+            $("#Contract_" + rowIndex + "__DelLocationProp").parent().find('span:first').text(tempValue);
+        } else {
+            $("#Contract_" + rowIndex + "__DelLocationProp").parent().find('span:first').text(obj.DelLocationProp);
+        }
+
+
+        $("#Contract_" + rowIndex + "__DelLocationName").val(obj.DelLocationName);
+        if (obj.DelLocationName == "") {
+            $("#Contract_" + rowIndex + "__DelLocationName").parent().find('span:first').text(tempValue);
+        } else {
+            $("#Contract_" + rowIndex + "__DelLocationName").parent().find('span:first').text(obj.DelLocationName);
+        }
+
+
+        $("#Contract_" + rowIndex + "__DelLocation").val(obj.DelLocation);
+        if (obj.DelLocation == "") {
+            $("#Contract_" + rowIndex + "__DelLocation").parent().find('span:first').text(tempValue);
+        } else {
+            $("#Contract_" + rowIndex + "__DelLocation").parent().find('span:first').text(obj.DelLocation);
+        }
+
+
+        $("#Contract_" + rowIndex + "__DelRank").val(obj.DelRank);
+        $("#Contract_" + rowIndex + "__DelZone").val(obj.DelZone);
+        $("#Contract_" + rowIndex + "__ReceiptDth").val(obj.ReceiptDth);
+        $("#Contract_" + rowIndex + "__DeliveryDth").val(obj.DeliveryDth);
+
+        if ((IsSng == "True" || isElPaso == "True") && obj.Route != "") {
+            $("#Contract_" + rowIndex + "__Route").val(obj.Route);
+        }
+
+        $("#Contract_" + rowIndex + "__PackageID").val(obj.PackageID);
+        $("#Contract_" + rowIndex + "__PathRank").val(obj.PathRank);
+        $("#Contract_" + rowIndex + "__FuelPercentage").val(obj.FuelPercentage);
+        $("#Contract_" + rowIndex + "__FuelDth").val(obj.FuelDth);
+    }
+
+
+
+    function removeContract(id) {
+        var tableID = "#transportTable_" + id + " tbody input:checkbox:checked";
+        var SelectedChkBox = $(tableID).length;
+        if (SelectedChkBox == 0) {
+            toastr.warning("", "Please select one nomination.");
+        } else {
+            var TransportTableid = "#transportTable_" + id + " tbody input:checkbox:checked";
+            $(TransportTableid).each(function () {
+                var itemId = $(this).val();
+                var delQuantity = "#Contract_" + itemId + "__DeliveryDth";
+                var recQuantity = "#Contract_" + itemId + "__ReceiptDth";
+                var delQtyMinus = $(delQuantity).val();
+                var recQtyMinus = $(recQuantity).val();
+                var transDelTotal = "#transDelTotal_" + id;
+                var transRecTotal = "#transRecTotal_" + id;
+                jQuery(this).parents("tr").remove();
+                $(transDelTotal).html(parseInt($(transDelTotal).html()) - parseInt(delQtyMinus));
+                $(transRecTotal).html(parseInt($(transRecTotal).html()) - parseInt(recQtyMinus));
+            });
+            toastr.success("", "Successfully deleted");
+            var SelectAllCheckBox = "#transportTable_" + id + " .selectallTranspose";
+            $(SelectAllCheckBox).prop("checked", false);
+        }
+
+    }
+
+    function removeContractTransportPath() {
+        var SelectedChkBox = $('.mainchkboxes:checkbox:checked').length;
+        if (SelectedChkBox == 0) {
+            toastr.remove();
+            toastr.warning("", "Please select one contract path.");
+        } else {
+            $('.mainchkboxes:checkbox:checked').each(function () {
+                var itemId = $(this).attr('rel');
+                var item = "#" + itemId;
+                jQuery(item).remove();
+            });
+            toastr.success("", "Successfully deleted");
+            $(".headCheckbox").prop("checked", false);
+        }
+
+    }
+
+    function removeSupply() {
+
+        var SelectedChkBox = $('.supplychkboxes:checkbox:checked').length;
+        if (SelectedChkBox == 0) {
+            toastr.remove();
+            toastr.warning("", "Please select one nomination.");
+        } else {
+            $('#SupplyTable tbody input:checkbox:checked').each(function () {
+                var itemId = $(this).val();
+                var delQuantity = "#SupplyList_" + itemId + "__DeliveryQuantityNet";
+                var recQuantity = "#SupplyList_" + itemId + "__ReceiptQuantityGross";
+                var delQtyMinus = $(delQuantity).val();
+                var recQtyMinus = $(recQuantity).val();
+                $("#supplyDelTotal").html(parseInt($("#supplyDelTotal").html()) - parseInt(delQtyMinus));
+                $("#supplyRecTotal").html(parseInt($("#supplyRecTotal").html()) - parseInt(recQtyMinus));
+                jQuery(this).parents("tr").remove();
+            });
+            toastr.success("", "Successfully deleted");
+            $(".selectallSupply").prop("checked", false);
+        }
+
+    }
+
+    function removeMarket() {
+
+        var SelectedChkBox = $('.marketchkboxes:checkbox:checked').length;
+
+        if (SelectedChkBox == 0) {
+            toastr.remove();
+            toastr.warning("", "Please select one nomination.");
+        } else {
+            $('#MarketTable tbody input:checkbox:checked').each(function () {
+                var itemId = $(this).val();
+                var delQuantity = "#MarketList_" + itemId + "__DeliveryQuantityNet";
+                var recQuantity = "#MarketList_" + itemId + "__ReceiptQuantityGross";
+                var delQtyMinus = $(delQuantity).val();
+                var recQtyMinus = $(recQuantity).val();
+                $("#marketDelTotal").html(parseInt($("#marketDelTotal").html()) - parseInt(delQtyMinus));
+                $("#marketRecTotal").html(parseInt($("#marketRecTotal").html()) - parseInt(recQtyMinus));
+                jQuery(this).parents("tr").remove();
+            });
+            $(".selectallMarket").prop("checked", false);
+            toastr.success("", "Successfully deleted");
+
+        }
+
+    }
+
+    function RankValidation() {
+        var flag = false;
+        alert("Rank validated.");
+        return true;
+    }
+
+    function marketRankValidation() {
+        var flag = true;
+        $('#MarketTable tbody').find('tr').each(function () {
+            var RowCount = $(this).attr("rel");
+            var dnRank = "#MarketList_" + RowCount + "__DnstreamRank";
+            if ($(dnRank).val() == "") {
+                flag = false;
+            }
+        });
+        return flag;
+    }
+
+    function marketRankdefaultValue() {
+        var flag = false;
+        var temp = 500;
+        $('#MarketTable tbody').find('tr').each(function () {
+            var RowCount = $(this).attr("rel");
+            var dnRank = "#MarketList_" + RowCount + "__DnstreamRank";
+            if ($(dnRank).val() == "") {
+                $(dnRank).val(temp);
+                flag = true;
+            }
+        });
+        return flag;
+    }
+
+    function supplyRankValidation() {
+        var flag = true;
+        $('#SupplyTable tbody').find('tr').each(function () {
+            var RowCount = $(this).attr("rel");
+            var upRank = "#SupplyList_" + RowCount + "__UpstreamRank";
+            if ($(upRank).val() == "") {
+                flag = false;
+            }
+        });
+        return flag;
+
+    }
+
+    function supplyRankDefaultValue() {
+        var flag = false;
+        var defaultVal = 500;
+        $('#SupplyTable tbody').find('tr').each(function () {
+            var RowCount = $(this).attr("rel");
+            var upRank = "#SupplyList_" + RowCount + "__UpstreamRank";
+            if ($(upRank).val() == "") {
+                $(upRank).val(defaultVal);
+                flag = true;
+            }
+        });
+        return flag;
+
+    }
+
+    function contractLocValidation() {
+        var flag = true;
+
+        $('.contractPart tbody').find('tr').each(function () {
+            var RowCount = $(this).attr("rel");
+            var recLoc = "#Contract_" + RowCount + "__RecLocationProp";
+            var delLoc = "#Contract_" + RowCount + "__DelLocationProp";
+            var recLocVal = $(recLoc).val();
+            var delLocVal = $(delLoc).val();
+
+            if ((recLocVal == "") || (typeof recLocVal === "undefined")) {
+                flag = false;
+                // toastr.warning("", "Please select Receipt Location in ContractPath");
+            }
+            if ((delLocVal == "") || (typeof delLocVal === "undefined")) {
+                flag = false;
+                // toastr.warning("", "Please select Delivery Location in ContractPath");
+            }
+        });
+        return flag;
+    }
+
+
+
+    function contractRankValidation() {
+        var flag = true;
+        $('.contractPart tbody').find('tr').each(function () {
+            var RowCount = $(this).attr("rel");
+            var recRank = "#Contract_" + RowCount + "__RecRank";
+            var delRank = "#Contract_" + RowCount + "__DelRank";
+            var pathRank = "#Contract_" + RowCount + "__PathRank";
+            if (($(recRank).val() == "") || ($(delRank).val() == "") || ($(pathRank).val() == "")) {
+                flag = false;
+            }
+        });
+        return flag;
+    }
+
+    function contractRankDefaultValue() {
+        var flag = false;
+        var defaultValue = 500;
+        $('.contractPart tbody').find('tr').each(function () {
+            var RowCount = $(this).attr("rel");
+            var recRank = "#Contract_" + RowCount + "__RecRank";
+            var delRank = "#Contract_" + RowCount + "__DelRank";
+            var pathRank = "#Contract_" + RowCount + "__PathRank";
+            if ($(recRank).val() == "") {
+                $(recRank).val(defaultValue);
+            }
+            if ($(delRank).val() == "") {
+                $(delRank).val(defaultValue);
+            }
+            if ($(pathRank).val() == "") {
+                $(pathRank).val(defaultValue);
+            }
+            flag = true;
+        });
+        return flag;
+    }
+
+    //$('.rank').attr("maxlength",3);
+    $('.rank').keypress(function (e) {
+        var regex = new RegExp("^[0-9]+$");
+
+        var charCode = e.which;
+
+        if (charCode == 8 || charCode == 0) {
+            return;
+        }
+        else {
+            var keyChar = String.fromCharCode(charCode);
+            if (regex.test(keyChar)) {
+                return true;
+            }
+        }
+        e.preventDefault();
+        return false;
+    });
+
+
+    $('.collapse').on('shown.bs.collapse', function () {
+        $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+    }).on('hidden.bs.collapse', function () {
+        $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+    });
+
+
+
+
+
+
+</script>
+<!--  **********  -->

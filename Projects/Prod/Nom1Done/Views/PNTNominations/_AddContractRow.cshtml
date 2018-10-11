@@ -1,0 +1,154 @@
+﻿@model Nom1Done.DTO.BatchDetailDTO
+
+@{
+    Guid CurrentRowId = Guid.NewGuid();
+    // int CurrentRowId = Model.CurrentContractRow;
+    string ttDesc = "--Select--";
+    string tt = "--Select--";
+    string recProp = "--Select--";
+    string recName = "--Select--";
+    string recId = "--Select--";
+    string delProp = "--Select--";
+    string delName = "--Select--";
+    string delId = "--Select--";
+    string route = "--Select--";
+    string currentTableId = Model.CurrentTableId;
+    var isSNG = (Model.Duns == "006900518" ? true : false);
+    var isElPaso = (Model.Duns == "008001703" ? true : false);
+}
+
+<tr class="gradeX newContractRow" id="transportTableRow_@CurrentRowId" rel="@CurrentRowId">
+    @Html.Hidden("Contract.Index", CurrentRowId.ToString())
+    <td class="center"><input type="checkbox" class="chkboxes" value="@CurrentRowId" rel="ContractPath" onclick="OnChangeCheckTransport('@currentTableId');" /></td>
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentRowId','ContractPath',@Model.PipelineId)">
+            @if (Model.Contract[0].TransactionType != null)
+            {
+                tt = Model.Contract[0].TransactionType;
+            }
+            @tt
+        </span>@Html.Hidden("Contract[" + CurrentRowId + "].TransactionType", Model.Contract[0].TransactionType, new { @rel = CurrentRowId })
+   @Html.Hidden("Contract[" + CurrentRowId + "].TransactionTypeDescription", Model.Contract[0].TransactionTypeDescription, new { @rel = CurrentRowId })
+     </td>
+    @*<td>
+        <span></span>
+    </td>*@
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','ContractPath',@Model.PipelineId)">
+            @if (Model.Contract[0].RecLocationProp != null)
+            {
+                recProp = Model.Contract[0].RecLocationProp;
+            }
+            @recProp
+        </span>@Html.Hidden("Contract[" + CurrentRowId + "].RecLocationProp", Model.Contract[0].RecLocationProp, new { @rel = CurrentRowId })
+    </td>
+    <td class="cursor">
+        <span class="center" data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','ContractPath',@Model.PipelineId)">
+            @if (Model.Contract[0].RecLocationName != null)
+            {
+                recName = Model.Contract[0].RecLocationName;
+            }
+            @recName
+        </span>@Html.Hidden("Contract[" + CurrentRowId + "].RecLocationName", Model.Contract[0].RecLocationName, new { @rel = CurrentRowId })
+    </td>
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','ContractPath',@Model.PipelineId)">
+            @if (Model.Contract[0].RecLocation != null)
+            {
+                recId = Model.Contract[0].RecLocation;
+            }
+            @recId
+        </span>@Html.Hidden("Contract[" + CurrentRowId + "].RecLocation", Model.Contract[0].RecLocation, new { @rel = CurrentRowId })
+    </td>
+    <td>@Html.TextBox("Contract[" + CurrentRowId + "].RecRank", Model.Contract[0].RecRank, new { @class = "form-control rank", @rel = CurrentRowId, maxlength = "3" })</td>
+    <td>@Html.TextBox("Contract[" + CurrentRowId + "].RecZone", Model.Contract[0].RecZone, new { @class = "form-control", @rel = CurrentRowId })</td>
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','DelContractPath',@Model.PipelineId)">
+            @if (Model.Contract[0].DelLocationProp != null)
+            {
+                delProp = Model.Contract[0].DelLocationProp;
+            }
+            @delProp
+        </span>@Html.Hidden("Contract[" + CurrentRowId + "].DelLocationProp", Model.Contract[0].DelLocationProp, new { @rel = CurrentRowId })
+    </td>
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','DelContractPath',@Model.PipelineId)">
+            @if (Model.Contract[0].DelLocationName != null)
+            {
+                delName = Model.Contract[0].DelLocationName;
+            }
+            @delName
+        </span>@Html.Hidden("Contract[" + CurrentRowId + "].DelLocationName", Model.Contract[0].DelLocationName, new { @rel = CurrentRowId })
+    </td>
+    <td class="cursor">
+        <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','DelContractPath',@Model.PipelineId)">
+            @if (Model.Contract[0].DelLocation != null)
+            {
+                delId = Model.Contract[0].DelLocation;
+            }
+            @delId
+        </span>@Html.Hidden("Contract[" + CurrentRowId + "].DelLocation", Model.Contract[0].DelLocation, new { @rel = CurrentRowId })
+    </td>
+    <td>@Html.TextBox("Contract[" + CurrentRowId + "].DelRank", Model.Contract[0].DelRank, new { @class = "form-control rank", @rel = CurrentRowId, maxlength = "3" })</td>
+    <td>@Html.TextBox("Contract[" + CurrentRowId + "].DelZone", Model.Contract[0].DelZone, new { @class = "form-control", @rel = CurrentRowId })</td>
+    <td>@Html.TextBox("Contract[" + CurrentRowId + "].ReceiptDth", Model.Contract[0].ReceiptDth, new { @class = "form-control cellTransRec", @rel = CurrentRowId, @type = "number", @min = "0", @oninput = "FuelValidationTransport(" + "'" + CurrentRowId + "','" + currentTableId + "'" + ")", @onkeyup = "FuelValidationTransport(" + "'" + CurrentRowId + "','" + currentTableId + "'" + ")", onblur = "OnTransRecQtyChange(" + "'" + currentTableId + "'" + ")" })</td>
+    <td>@Html.TextBox("Contract[" + CurrentRowId + "].FuelPercentage", Model.Contract[0].FuelPercentage, new { @class = "form-control", @rel = CurrentRowId, @onblur = "FuelPercentChangeTransport(" + "'" + CurrentRowId + "','" + currentTableId + "'" + ")" })</td>
+    <td>@Html.TextBox("Contract[" + CurrentRowId + "].FuelDth", Model.Contract[0].FuelDth, new { @class = "form-control", @rel = CurrentRowId, @readonly = true })</td>
+    <td>@Html.TextBox("Contract[" + CurrentRowId + "].DeliveryDth", Model.Contract[0].DeliveryDth, new { @class = "form-control cellTransDel", @rel = CurrentRowId, @type = "number", @min = "0", @oninput = "FuelValidationTransportDelQTY(" + "'" + CurrentRowId + "','" + currentTableId + "'" + ")", @onchange = "FuelValidationTransportDelQTY(" + "'" + CurrentRowId + "','" + currentTableId + "'" + ")", onblur = "OnTransDelQtyChange(" + "'" + currentTableId + "'" + ")" })</td>
+   
+    @if (isSNG == true)
+    {
+      <td>
+        @Html.DropDownList("Contract[" + CurrentRowId + "].Route", new SelectList(
+                       new List<Object>{
+                       new { value = "" , text = "-select-"  },
+                       new { value = "Default" , text = "Default"  },
+                       new { value = "Cypress" , text = "Cypress" }
+                         }, "value", "text", Model.Contract[0].Route), new { @class = "form-control" })
+
+      </td>
+    }
+
+    @if (isElPaso == true)
+    {
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('Routes','@CurrentRowId','ContractPath',@Model.PipelineId)">
+                @if (Model.Contract[0].Route != null && !string.IsNullOrEmpty(Model.Contract[0].Route))
+                {
+                    route = Model.Contract[0].Route;
+                }
+                @route
+            </span>@Html.Hidden("Contract[" + CurrentRowId + "].Route", Model.Contract[0].Route, new { @rel = CurrentRowId })
+        </td>
+    }
+
+    <td>@Html.TextBox("Contract[" + CurrentRowId + "].PackageID", Model.Contract[0].PackageID, new { @class = "form-control", @rel = CurrentRowId })</td>
+    <td>@Html.TextBox("Contract[" + CurrentRowId + "].PathRank", Model.Contract[0].PathRank, new { @class = "form-control rank", @rel = CurrentRowId, maxlength = "3" })</td>
+    @Html.Hidden("Contract[" + CurrentRowId + "].IsHidden", Model.Contract[0].IsHidden, new { @rel = CurrentRowId })
+    @Html.Hidden("Contract[" + CurrentRowId + "].ServiceRequestNo", Model.Contract[0].ServiceRequestNo, new { @rel = CurrentRowId })
+</tr>
+<script>
+    function recDTHdelDTH(e) {
+        var valueRecDTH = $("#Contract_" + e + "__ReceiptDth").val();
+        $("#Contract_" + e + "__DeliveryDth").val(valueRecDTH);
+    }
+    $('.rank').keypress(function (e) {
+        var regex = new RegExp("^[0-9]+$");
+
+        var charCode = e.which;
+         
+        if (charCode == 8 || charCode == 0) {
+            return;
+        }
+        else {
+            var keyChar = String.fromCharCode(charCode);
+            if (regex.test(keyChar)) {
+                return true;
+            }
+        }
+        e.preventDefault();
+        return false;
+    });
+
+</script>
+

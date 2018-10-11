@@ -1,0 +1,44 @@
+﻿@model Nom1Done.DTO.BatchTabModel
+
+<div class="panel-body">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Batch Location</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table  table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>LocProp</th>
+                                    <th>Loc Name</th>
+                                    @*<th>RecQty</th>*@
+                                    @*<th>DelQty</th>*@
+                                    <th>Nominated QTY</th>
+                                    <th>Variance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Lst)
+                                {
+                                    <tr>
+                                        <td>@item.LocProp</td>
+                                        <td>@item.Location</td>
+                                        @*<td>@item.RecQty</td>*@
+                                        @*<td>@item.DelQty</td>*@
+                                        <td>@string.Format("{0:#,##0}", item.NominatiedQty)</td>
+                                        <td>@string.Format("{0:#,##0}", item.Variance)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

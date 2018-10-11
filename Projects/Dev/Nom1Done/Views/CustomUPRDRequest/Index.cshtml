@@ -1,0 +1,154 @@
+﻿@model Nom1Done.DTO.CustomUPRDReqDTO
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("Index", "CustomUPRDRequest", FormMethod.Post))
+{
+    @Html.Hidden("UprdStatusNotifierEntity", (object)ViewBag.NotifierEntity)
+    <div class="row">
+        <div class="ibox-content m-b-sm border-bottom">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        @Html.HiddenFor(a => a.pipelineId, Model.pipelineId)
+                        @Html.HiddenFor(a => a.pipeDuns, Model.pipeDuns)
+                        @Html.HiddenFor(a => a.shipperDuns,Model.shipperDuns)
+                        <label class="control-label" for="status">StartDate</label>
+                        @Html.TextBoxFor(a => a.StartDate, "{0:MM/dd/yyyy}", new { @class = "form-control StartDate", @readonly = "true" })
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label" for="status">EndDate</label>
+                        @Html.TextBoxFor(a => a.EndDate, "{0:MM/dd/yyyy}", new { @class = "form-control EndDate", @readonly = "true" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label class="control-label" for="status">Request For</label>
+                        @Html.DropDownListFor(a => a.RequestFor, new SelectList(
+       new List<Object>{
+         new { value = "1" , text = "OACY"  },
+         new { value = "2" , text = "UNSC" },
+         new { value = "3" , text = "SWNT" }
+      }, "value", "text", 0), "-Select-", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group" style="margin-top:22px;">
+                        <button type="submit" onclick="return validationOnSearch();" id="Search" name="Search" class="btn btn-primary"><i class="glyphicon glyphicons-refresh"></i>SETReq</button>
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+}
+<br />
+<hr />
+<br />
+<div class="row">
+    @*<div class="col-sm-2"></div>*@
+    <div class="col-sm-3">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="FetchUPRDList();">
+            Show All Pipeline Status
+        </button>
+    </div>
+    <div class="col-sm-2">
+        <b>UPRD Status on Date:</b> 
+    </div>
+    <div class="col-sm-3">
+        <input type="date" id="uprdStatusOnDate" />
+    </div>
+
+</div>
+<br />
+<br />
+<div class="row">
+    <div id="data">
+
+    </div>
+</div>
+    <script>
+        
+    $(document).ready(function () {
+        $(function () {
+            $("#StartDate").datepicker({
+                todayBtn: 1,
+                autoclose: true,
+            }).on('changeDate', function (selected) {
+                var minDate = new Date(selected.date.valueOf());
+                $('#EndDate').datepicker('setStartDate', minDate);
+            });
+
+            $("#EndDate").datepicker({ autoclose: true })
+                .on('changeDate', function (selected) {
+                    var maxDate = new Date(selected.date.valueOf());
+                    $('#StartDate').datepicker('setEndDate', maxDate);
+                });
+        });
+        InitializeSignalRHubStoreUprdStatus();
+        });
+        var signalRHubInitializedUprd = false;
+        function InitializeSignalRHubStoreUprdStatus() {
+            if (signalRHubInitializedUprd)
+                return;
+            try {
+                var clientHub = $.connection.nomDoneHub;
+                clientHub.client.updateUprdStatus = function (message) {
+                    if (message === "Refresh")
+                        FetchUPRDList();
+                };
+
+                $.connection.hub.start().done(function () {
+                    clientHub.server.initializeUprdStatus($("#UprdStatusNotifierEntity").val());
+                    signalRHubInitializedUprd = true;
+                });
+
+            } catch (err) {
+                signalRHubInitializedUprd = false;
+            }
+        };
+        function FetchUPRDList() {
+            var date = $("#uprdStatusOnDate").val();
+            var model = $('#data');
+            if (date == "")
+                model.empty().append('<div class="row text-center text-green"><b>"Please select any Date."</b></div>');
+            else {
+                console.log("Date entered");
+                
+                 $.ajax({
+                     url: '/CustomUPRDRequest/GetUpdatedUprdList?date=' + date ,
+                     contentType: 'application/html ; charset:utf-8',
+                     type: 'GET',
+                     dataType: 'html'
+                 })
+                    .success(function (result) {
+                        model.empty().append(result);
+                        if (!signalRHubInitializedUprd)
+                            InitializeSignalRHubStoreUprdStatus();
+                    })
+            }
+    }
+    function validationOnSearch() {
+        var flag = true;
+        var end = $('#EndDate');
+        var start = $('#StartDate');
+        var requestFor = $('#RequestFor');
+        var requestForVal = requestFor.val();
+        var enddate = end.val();
+        var startdate = start.val();
+        if (enddate == "") {
+            toastr.warning("Please Fill End Date.");
+            flag = false;
+        }
+        if (startdate == "") {
+            toastr.warning("Please Fill Start Date.");
+            flag = false;
+        }
+        return flag;
+    }
+    </script>
+

@@ -1,0 +1,294 @@
+﻿@model Nom1Done.DTO.WatchListDTO
+    @using Nom1Done.Enums
+    @using Nom1Done.DTO;
+
+@{
+    Guid CurrentRowId = Guid.NewGuid();
+    var LocOrNoticeType = "";
+    var addbtnText = "Add Points";
+    var LocProp = "";
+}
+<hr />
+
+@Html.HiddenFor(a => a.DatasetId, new { id = "WatchListDataSetId" })
+ 
+@*<h3 style="margin:25px !important;">Define Points</h3>*@
+<div class="row"  style="margin:25px !important;">
+    <div class="row">
+           <div class="col-md-3">  
+                <label>WatchList Name</label>             
+                @Html.TextBoxFor(a => a.ListName, "", new { @class = "form-control", @placeholder = "Enter WatchList Name" })
+            </div>
+            <div class="col-md-3">
+                <br/>  
+                @if (Model.DatasetId == EnercrossDataSets.SWNT) { addbtnText = "Add Pipes"; }                       
+                <button style="margin-top:5px !important;" type="button" id="addRuleSetting" class="btn btn-w-m btn-success btn-outline">@addbtnText</button>
+            </div>
+           <div class="col-md-3">
+               <label>Email for Alerts:</label> 
+               @Html.TextBoxFor(a => a.UserEmail,"", new { @class = "form-control", @readonly="true" })
+           </div>
+        </div>
+    <br />
+    <br />
+    <div id="RuleTableDiv" class="RuleTableScrollBar">
+        <table class="table" id="WatchListRuleTable">
+            <thead>
+                <tr>
+                    <th class="minWidth"> Pipeline</th>
+                    <th class="minWidth">
+                        @if (Model.DatasetId != EnercrossDataSets.SWNT)
+                        {
+                            LocOrNoticeType = "Location";
+                        }
+                        else
+                        {
+                            LocOrNoticeType = "Notice Type";
+                        }
+                        @LocOrNoticeType
+                    </th>
+                    <th style="min-width:120px;">Get Email Alerts</th>
+                    <th class="minWidth"> Alert Frequency</th>
+                    @if (Model.DatasetId == EnercrossDataSets.SWNT)
+                    {
+                        <th class="minWidth"> Field (optional)</th>
+                        <th class="minWidth"> Operator (optional)</th>
+                        <th class="minWidth"> Value (optional)&nbsp;&nbsp;<i id="imgtooltip" data-toggle="tooltip" title="Type exact word or phrase with no quotes for e.g. Shadyside meter" alt="ToolTip" class="fa fa-info-circle" style="width:60px; height:20px;"></i></th>
+                    }
+                    else if (Model.DatasetId == EnercrossDataSets.OACY)
+                    {
+                        <th class="minWidth">Field</th>
+                        <th class="">Operator</th>
+                        <th class="minWidth">Lower Value<br>(must be an integer)</th>
+                        <th class="minWidth">Upper Value<br>(must be an integer)</th>
+                    }
+                    else
+                    {
+                        <th class="minWidth"> Field</th>
+                        <th class="minWidth"> *Operator</th>
+                        <th class="minWidth"> *Percent</th>
+                    }
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @if (Model.RuleList != null && Model.RuleList.Count > 0)
+                {
+                    foreach (var item in Model.RuleList)
+                    {
+                        List<WatchListProperty> list = ViewBag.Properties;
+                        var prop = list.Where(a => a.Id == item.PropertyId).FirstOrDefault();
+                        LocProp = "-Select-";
+                <tr id="RuleListItem_@CurrentRowId" rel="@CurrentRowId">
+                    @Html.TextBox("RuleList[" + CurrentRowId + "].id", item.id, new { @class = "form-control", @Type = "Hidden", @rel = CurrentRowId })
+                    @Html.Hidden("RuleList.Index", CurrentRowId.ToString())
+                    <td>
+                        @Html.DropDownList("RuleList[" + CurrentRowId + "].PipelineDuns", new SelectList(ViewBag.PipelineId, "DUNSNo", "Name", item.PipelineDuns), "-Select Pipeline-", new { @class = "WatchListPipeDropdown form-control", rel = CurrentRowId, @onChange = "OnChangePipelineSelect(" + "'" + CurrentRowId + "'" + ")" })
+                    </td>
+                    @if (Model.DatasetId != EnercrossDataSets.SWNT)
+                    { 
+                    <td class="cursor">
+                        <button type="button" class="btn btn-success btn-outline" style="text-align:start; width:200px !important;" onclick="OpenPopUp('@Model.DatasetId','@CurrentRowId')"></button>
+                        @*<span data-toggle="modal" onclick="OpenPopUp('@Model.DatasetId','@CurrentRowId')"></span>*@
+                        @Html.Hidden("RuleList[" + CurrentRowId + "].LocationIdentifier", item.LocationIdentifier, new { @rel = CurrentRowId, @class = "locationSelect" })
+                    </td>
+                    }
+                    else
+                    {
+                        <td>
+                            @Html.DropDownList("RuleList[" + CurrentRowId + "].IsCriticalNotice", new SelectList(new List<Object>{
+                     new { value = "true" , text = "Critical"  },
+                     new { value = "false" , text = "Non-Critical" }
+                    }, "value", "text", item.IsCriticalNotice), "-Select NoticeType-", new { @class = "WatchlistNoticeTypeDropDown form-control", rel = CurrentRowId })
+                        </td>
+                    }
+                    <td>
+                        @Html.CheckBox("RuleList[" + CurrentRowId + "].AlertSent", @item.AlertSent, new { @class = "toggleBtn" })
+                    </td>
+                    <td class="col-md-2">
+                        @Html.DropDownList("RuleList[" + CurrentRowId + "].AlertFrequency", new SelectList(new List<Object>{
+                        new { value = WatchlistAlertFrequency.Daily , text = "Daily"  },
+                        new { value = WatchlistAlertFrequency.WhenAvailable , text = "WhenAvailable" }
+                        }, "value", "text", item.AlertFrequency), "-Select-", new { @class = "WatchlistAlertFreq form-control", rel = CurrentRowId })
+                    </td>
+                    <td class="col-md-2">
+                        @if (Model.DatasetId == EnercrossDataSets.UNSC)
+                        {
+                            <span data-toggle="modal">
+                                @prop.Title
+                            </span>
+                            @Html.Hidden("RuleList[" + CurrentRowId + "].PropertyId", item.PropertyId, new { @rel = CurrentRowId })
+                        }
+                        else
+                        {
+                            @Html.DropDownList("RuleList[" + CurrentRowId + "].PropertyId", new SelectList(ViewBag.Properties, "Id", "Title", item.PropertyId), "-Select Field-", new { @class = "WatchlistField form-control propertySelect", rel = CurrentRowId, @onChange = "OnChangePropertySelect(" + "'" + CurrentRowId + "'" + ")" })
+                        }
+                        @if (prop != null)
+                        {
+                            <input id="PropertyDataType_@CurrentRowId" type="hidden" value="@prop.DatatypeId" />
+                        }
+
+                    </td>
+
+                    @if (Model.DatasetId == EnercrossDataSets.OACY)
+                    {
+                        <td class="col-md-2">
+                            @Html.Label("Is Between", new { @class = ".col-md-1" })
+                        </td>
+                        <td class="col-md-2">
+                            @Html.TextBox("RuleList[" + CurrentRowId + "].value", item.value, new { @class = "form-control", @rel = CurrentRowId })
+                        </td>
+                        <td class="col-md-2">
+                            @Html.TextBox("RuleList[" + CurrentRowId + "].UpperValue", item.UpperValue, new { @class = "form-control", @rel = CurrentRowId })
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="col-md-2">
+                            @Html.DropDownList("RuleList[" + CurrentRowId + "].ComparatorsId", new SelectList(ViewBag.Operators, "Id", "Title", item.ComparatorsId), "-Select Operator-", new { @class = "WatchlistOper form-control OperatorSelect", rel = CurrentRowId })
+                            @Html.TextBox("RuleList[" + CurrentRowId + "].ComparatorsId", item.ComparatorsId, new { @Id = "ComparatorsId_" + CurrentRowId, @Type = "Hidden", @rel = CurrentRowId })
+
+                        </td>
+                        <td class="col-md-2">
+                            @Html.TextBox("RuleList[" + CurrentRowId + "].value", item.value, new { @class = "form-control", @rel = CurrentRowId })
+                        </td>
+                    }
+                    <td class="col-md-1">
+                        <a class="btn" href="#" onclick="onclickDeleteRule(this);">
+                            <i class="fa fa-times-circle glyphicon-color" aria-hidden="true" title="Delete"></i>
+                        </a>
+                    </td>
+                </tr>
+                    CurrentRowId = Guid.NewGuid();
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+  </div>
+
+<br />
+<div class="row">
+    <div class="col-md-2 col-md-offset-3">
+        <input type="submit" value="Update" name="Save" onclick="return validation();" class="btn btn-w-m btn-success btn-outline" />
+    </div>
+    <div class="col-md-3 pull-left">
+        <input type="button" value="Cancel" onclick="cancelbtn();" class="btn btn-w-m btn-success btn-outline" />
+    </div>
+</div>
+
+<script>
+    $(document).ready(function ()
+    {
+     
+    $(".WatchListPipeDropdown,.WatchListLocDropdown,.WatchlistNoticeTypeDropDown,.WatchlistAlertFreq, .WatchlistField, .WatchlistOper").select2();
+
+      toggelBtn();  
+      $(function () {
+          $('.listbox').multiselect({
+              includeSelectAllOption: true,
+              buttonWidth: '240px',
+              maxHeight: 200,
+          });
+      }); 
+     $("#addRuleSetting").click(function () {
+            event.preventDefault();
+            $.ajax({
+                url: '@Url.Action("AddRuleSettings", "WatchList")' + "?datasetId=" + $("#DatasetId").val(),
+                cache: false,
+                success: function (html) {
+                    $("#WatchListRuleTable tbody").append(html);
+                }
+            });
+     });
+
+        $(".locationSelect").each(function () {        
+        if ($("#WatchListDataSetId").val() == "SWNT") { return; }
+        var CurrentRowId = $(this).attr("rel");
+        var PipelineDropdownId = "#RuleList_" + CurrentRowId + "__PipelineDuns";
+        var selectedPipelineduns = $(PipelineDropdownId).val();
+        if (selectedPipelineduns == "") { return; }
+        var LocDropDown = "#RuleList_" + CurrentRowId + "__LocationIdentifier";
+        var select2Id = "#select2-RuleList_" + CurrentRowId + "__LocationIdentifier-container";
+            var selectedLocid = $(LocDropDown).val(); 
+        var watchListDataSet = $("#WatchListDataSetId").val();   
+        $.ajax({
+            url: "WatchList/GetLocations",
+            data: { pipelineduns: selectedPipelineduns, Keyword: selectedLocid },
+            type: "POST",
+            success: function (data) {                
+                $(LocDropDown).empty();
+                var listItems = "";
+                for (var i = 0; i < data.length; i++) {                  
+                    if (selectedLocid == data[i].Identifier) {                         
+                        var namelength = data[i].Name.length;
+                        if (namelength > 20) {
+                            $(LocDropDown).parent().find('button').html(data[i].Name.substring(0, 20) + "...");
+                        } else {
+                            $(LocDropDown).parent().find('button').html(data[i].Name + " / " + data[i].Identifier);
+                        }
+                       // $(LocDropDown).parent().find('button').html(data[i].Name +" / "+ data[i].Identifier);
+                        break;                      
+                    }                 
+                }
+            }
+        });
+    });
+
+
+
+        $(".OperatorSelect").each(function () {
+            if ($("#WatchListDataSetId").val() == "OACY" || $("#WatchListDataSetId").val() == "UNSC") { return; }
+            var CurrentRowId = $(this).attr("rel");
+            var PropertyDropdownId = "#RuleList_" + CurrentRowId + "__PropertyId";
+            var selectedPropertyId = $(PropertyDropdownId).val();
+            if (selectedPropertyId == "") { return; }
+            var OperatordropdownId = "#RuleList_" + CurrentRowId + "__ComparatorsId";
+            var Select2Idoperator = "#select2-RuleList_" + CurrentRowId + "__ComparatorsId-container";
+            var OperatorSelectedId = $("#ComparatorsId_" + CurrentRowId).val();
+            if (selectedPropertyId == "") { return; }
+            var fieldValueId = "#RuleList_" + CurrentRowId + "__value";
+            var fieldvalue = $(fieldValueId).val();
+
+            $.ajax({
+                url: "WatchList/GetOperator?propertyId=" + selectedPropertyId,
+                datatype: "JSON",
+                type: "POST",
+                success: function (result) {
+                    var data = result.Operators;
+                    $(OperatordropdownId).empty();
+                    var listItems = "";
+                    listItems += "<option value='0'>-Select Operator-</option>";
+                    for (var i = 0; i < data.length; i++) {
+                        if (OperatorSelectedId == data[i].Id)
+                        {
+                            listItems += "<option selected='selected' value='" + data[i].Id + "'>" + data[i].Title + "</option>";
+                            $(Select2Idoperator).text(data[i].Title);
+                        } else {
+                            listItems += "<option value='" + data[i].Id + "'>" + data[i].Title + "</option>";
+                        }                      
+                      
+                    }
+                    $(OperatordropdownId).html(listItems);
+                    var dataType = result.DatatypeId;
+                    if (dataType == 3) {                       
+                        $(fieldValueId).attr('readonly', true); $(fieldValueId).attr('placeholder', 'Select date');
+                        $(fieldValueId).datepicker({ todayBtn: false, autoclose: true });                        
+                   } else if (dataType == 2) {
+                        $(fieldValueId).attr('type', "number");
+                        $(fieldValueId).attr('min', "0");
+                        $(fieldValueId).attr('max', "1000000000");
+                   } else if (dataType == 4) {
+                        $(fieldValueId).attr('type', "number");
+                        $(fieldValueId).attr('min', "0");
+                        $(fieldValueId).attr('max', "100");
+                        $(fieldValueId).attr('step', "any");
+                   }
+                }
+            });
+        });
+    });
+</script>
+
+

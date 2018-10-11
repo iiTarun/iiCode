@@ -1,0 +1,313 @@
+﻿@model Nom1Done.DTO.WatchListAlertExecutedDataDTO
+@{
+    ViewBag.Title = "ExecutedResult";
+}
+<style>
+    .ScrollBar {
+        max-height: 400px;
+        min-width: 1050px;
+        overflow-x: scroll;
+        overflow-y: scroll;
+    }
+
+    .tblFilter td, th {
+        padding: 6px;
+        border:medium;
+    }
+
+    #OACYTable_filter {
+        display: none
+    }
+
+    #UNSCTable_filter {
+        display: none
+    }
+</style>
+
+
+<script>
+    function CheckValidations() {
+        var result = false;
+        return true;
+    }
+</script>
+
+<div class="row border-bottom white-bg page-heading" style="padding:0px !important;">
+    <div class="col-md-8" style="margin-left:18px !important; margin-top:7px !important;"> <h2><b>WatchList Results</b> </h2></div>
+    <div class="col-md-3" style="margin:20px !important;">
+        <a href="@Url.Action("Index","WatchList")" class="btn btn-w-m btn-success btn-outline  pull-right"><i class="glyphicon glyphicon-plus"></i>Add New WatchList</a>
+    </div>
+</div>
+
+
+<div style="min-height:568px !important">
+
+
+    @if (Model.OacyDataList != null)
+    {
+        #region OACY Table
+        <div class="ibox-title" style="background-color:#f3f3f4 !important;">
+            <h2>Operationally Available Capacity</h2>
+            <h4>Total Records: @Model.OacyDataList.Count() </h4>
+        </div>
+        <div class="row">
+            <div class="col-md-11">
+                <div class="ibox float-e-margins">
+                    <table class="tblFilter">
+                        <tbody>
+                            <tr>
+                                <th>Pipeline</th>
+                                <th>Location Prop Code</th>
+                                <th>Location Name</th>
+                                <th>Post Start Date</th>
+                            </tr>
+                        <tr>
+                                     <td><input type="text" id="searchPipeline" placeholder="Filter" /></td>
+                                     <td><input type="text" id="searchLocPropCode" placeholder="Filter" /></td>
+                                     <td><input type="text" id="searchLocName" placeholder="Filter" /></td>
+                                     <td><input type="text" id="searchPostStartDate" placeholder="Filter"/></td>
+                         </tr>
+                            </tbody>
+                    </table>
+                            <div class="ibox-content ScrollBar" style="background-color:#f3f3f4 !important;">
+                                <table class="table table-bordered table-hover" id="OACYTable">
+                                    <thead>
+                                        <tr>
+                                            <th style="min-width: 120px;">Pipeline</th>
+                                            <th style="min-width: 120px;">Location/LocationPropCode</th>
+                                            <th style="min-width: 120px;">LocationName</th>
+                                            <th style="min-width: 60px;">Cycle</th>
+                                            <th style="min-width: 120px;">DesignCapacity</th>
+                                            <th style="min-width: 120px;">OperatingCapacity</th>
+                                            <th style="min-width: 120px;">TotSchQty</th>
+                                            <th style="min-width: 120px;">OperAvailQty</th>
+                                            <th style="min-width: 60px;">Available%</th>
+                                            <th style="min-width: 120px;">Eff Gas Day</th>
+                                            <th style="min-width: 120px;">Post Start Date</th>
+                                            <th style="min-width: 60px;">FlowIndicator</th>
+                                            <th style="min-width: 120px;">LocQTIDesc</th>
+                                            <th style="min-width: 120px;">MeasBasis</th>
+                                            <th style="min-width: 60px;">IT</th>
+                                            <th style="min-width: 60px;">AllQtyAvail</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.OacyDataList)
+                {
+                        <tr class="gradeX">
+                            <td>@item.PipelineNameDuns</td>
+                            <td>@item.Loc</td>
+                            <td>@item.LocName</td>
+                            <td>@item.CycleIndicator</td>                            
+                            <td>@((item.DesignCapacity == 0) ? "0" : String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}",item.DesignCapacity))</td>
+                            <td>@((item.OperatingCapacity == 0 ) ? "0" : String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}",item.OperatingCapacity))</td>
+                            <td>@((item.TotalScheduleQty == 0 ) ? "0" : String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}", item.TotalScheduleQty))</td>
+                            <td>@((item.OperationallyAvailableQty == 0) ? "0" : String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}", item.OperationallyAvailableQty))</td>
+                            <td>@item.AvailablePercentage</td>
+                            <td>@item.EffectiveGasDay</td>
+                            <td>@item.PostingDate</td>
+                            <td>@item.FlowIndicator</td>
+                            <td>@item.LocQTIDesc</td>
+                            <td>@item.MeasurementBasis</td>
+                            <td>@item.ITIndicator</td>
+                            <td>@item.AllQtyAvailableIndicator</td>
+                        </tr>
+}
+                                    </tbody>
+                                </table>
+
+                            </div>
+</div>
+            </div>
+        </div>
+
+        #endregion
+
+    }
+    else if (Model.UnscDataList != null)
+    {
+        #region UNSC Table
+        <div class="ibox-title" style="background-color:#f3f3f4 !important;">
+            <h2>Unsubscribed Capacity </h2>
+            <h4>Total Records: @Model.UnscDataList.Count() </h4>
+        </div>
+        <div class="row">
+            <div class="col-md-11">
+                <div class="ibox float-e-margins">
+                    <table class="tblFilter">
+                        <tbody>
+                            <tr>
+                                <th>Pipeline</th>
+                                <th>Location Prop Code</th>
+                                <th>Location Name</th>
+                                <th>Post Start Date</th>
+                            </tr>
+                            <tr>
+                                <td><input type="text" id="searchPipelineUNSC" placeholder="Filter" /></td>
+                                <td><input type="text" id="searchLocPropCodeUNSC" placeholder="Filter" /></td>
+                                <td><input type="text" id="searchLocNameUNSC" placeholder="Filter" /></td>
+                                <td><input type="text" id="searchPostStartDateUNSC" placeholder="Filter"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="ibox-content ScrollBar" style="background-color:#f3f3f4 !important;">
+                        <table class="table table-bordered table-hover " id="UNSCTable">
+                            <thead>
+                                <tr>
+                                    <th style="min-width: 120px;">Pipeline</th>
+                                    <th style="min-width: 120px;">Location/LocationPropCode</th>
+                                    <th style="min-width: 120px;">Location Name</th>
+                                    <th style="min-width: 120px;">LocationQTIDesc</th>
+                                    <th style="min-width: 120px;">Post Start Date</th>
+                                    <th style="min-width: 120px;">Start Eff Gas Day</th>
+                                    <th style="min-width: 120px;">End Eff Gas Day</th>
+                                    <th style="min-width: 120px;">Meas Basis</th>
+                                    <th style="min-width: 120px;">Location Zone</th>
+                                    <th style="min-width: 120px;">Unsubscribe Capacity</th>
+                                    <th style="min-width: 120px;">Change% from Yesterday</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.UnscDataList)
+                {
+                    <tr class="gradeX">
+                        <td>@item.PipelineNameDuns</td>
+                        <td>@item.Loc</td>
+                        <td>@item.LocName</td>
+                        <td>@item.LocQTIDesc</td>
+                        <td>@item.PostingDate</td>
+                        <td>@item.EffectiveGasDay</td>
+                        <td>@item.EndingEffectiveDay</td>
+                        <td>@item.MeasBasisDesc</td>
+                        <td>@item.LocZn</td>
+                        <td>@((item.UnsubscribeCapacity == 0) ? "0": String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}", item.UnsubscribeCapacity))</td>
+                        <td>@item.ChangePercentage</td>
+                    </tr>
+}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        #endregion
+
+    }
+    else if (Model.SwntDataList != null)
+    {
+        <div class="ibox-title" style="background-color:#f3f3f4 !important;">
+            <h2>Notices</h2>
+            <h4>Total Records: @Model.SwntDataList.Count() </h4>
+        </div>
+        <div class="row">
+            <div class="col-md-11">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content ScrollBar" style="background-color:#f3f3f4 !important;">
+                        <table class="table table-bordered table-hover" id="NoticeTable">
+                            <thead>
+                                <tr>
+                                    <th style="min-width: 120px;">Pipeline</th>
+                                    <th style="min-width: 120px;">IsCritical</th>
+                                    <th style="min-width: 120px;">Notice Type Desc</th>
+                                    <th style="min-width: 120px;">Notice ID</th>
+                                    <th style="min-width: 120px;">Posted Date/Time</th>
+                                    <th style="min-width: 120px;">Effective Start Date/Time</th>
+                                    <th style="min-width: 120px;">Effective End Date/Time</th>
+                                    <th style="min-width: 120px;">Subject</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.SwntDataList)
+                                {
+                                    <tr class="gradeX">
+                                        <td>@item.PipelineNameDuns</td>
+                                        <td>@item.CriticalNoticeIndicator</td>
+                                        <td>@item.NoticeTypeDesc1</td>
+                                        <td>
+                                            <a href="@Url.Action("Detail", "Notices")?ID=@item.Id &pipelineDuns=@item.TransportationserviceProvider">@item.NoticeId</a>
+                                        </td>
+                                        <td>@item.PostingDateTime</td>
+                                        <td>@item.NoticeEffectiveDateTime</td>
+                                        <td>@item.NoticeEndDateTime</td>
+                                        <td><a href="@Url.Action("Detail", "Notices")?ID=@item.Id &pipelineDuns=@item.TransportationserviceProvider">@item.Subject</a></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#OACYTable,#NoticeTable,#UNSCTable').DataTable();
+       
+     
+        var table = $('#OACYTable').DataTable();
+
+        $('#searchPipeline').on('keyup', function () {
+            table
+                .columns(0)
+                .search(this.value)
+                .draw();
+        });
+
+        $('#searchLocPropCode').on('keyup', function () {
+            table
+                .columns(1)
+                .search(this.value)
+                .draw();
+        });
+        $('#searchLocName').on('keyup', function () {
+            table
+                .columns(2)
+                .search(this.value)
+                .draw();
+        });
+
+        $('#searchPostStartDate').on('keyup', function () {
+            table
+                .columns(10)
+                .search(this.value)
+                .draw();
+        });
+        
+        var tblUnsc = $('#UNSCTable').DataTable();
+
+        $('#searchPipelineUNSC').on('keyup', function () {
+            tblUnsc
+                .columns(0)
+                .search(this.value)
+                .draw();
+        });
+
+        $('#searchLocPropCodeUNSC').on('keyup', function () {
+            tblUnsc
+                .columns(1)
+                .search(this.value)
+                .draw();
+        });
+        $('#searchLocNameUNSC').on('keyup', function () {
+            tblUnsc
+                .columns(2)
+                .search(this.value)
+                .draw();
+        });
+
+        $('#searchPostStartDateUNSC').on('keyup', function () {
+            table
+                .columns(4)
+                .search(this.value)
+                .draw();
+        });
+    });
+
+</script>
+
+

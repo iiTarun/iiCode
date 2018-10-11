@@ -1,0 +1,2360 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="UprdDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="__MigrationHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+            <PropertyRef Name="ContextKey" />
+          </Key>
+          <Property Name="MigrationId" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="ContextKey" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="Model" Type="varbinary(max)" Nullable="false" />
+          <Property Name="ProductVersion" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ApplicationLogs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Source" Type="nvarchar(max)" />
+          <Property Name="Type" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CounterParties">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Identifier" Type="nvarchar(max)" />
+          <Property Name="PropCode" Type="nvarchar(max)" />
+          <Property Name="PipelineID" Type="int" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedDate" Type="datetime" Nullable="false" />
+          <Property Name="PipeDuns" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="DashNominationStatus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TransactionId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Environment" Type="nvarchar(max)" />
+          <Property Name="ShipperCompany" Type="nvarchar(max)" />
+          <Property Name="UserName" Type="nvarchar(max)" />
+          <Property Name="PipelineName" Type="nvarchar(max)" />
+          <Property Name="PipeDuns" Type="nvarchar(max)" />
+          <Property Name="NomTrackingId" Type="nvarchar(max)" />
+          <Property Name="SubmittedDate" Type="datetime" Nullable="false" />
+          <Property Name="NomStatus" Type="nvarchar(max)" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="AlertTrigger" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DataTypeGroupings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="EmailQueues">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ToUserID" Type="nvarchar(max)" />
+          <Property Name="Subject" Type="nvarchar(max)" />
+          <Property Name="Email" Type="nvarchar(max)" />
+          <Property Name="Recipient" Type="nvarchar(max)" />
+          <Property Name="CC" Type="nvarchar(max)" />
+          <Property Name="Bcc" Type="nvarchar(max)" />
+          <Property Name="IsSent" Type="bit" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="SentDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmailTemplates">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Subject" Type="nvarchar(max)" />
+          <Property Name="Body" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="FileSysIncomingDatas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MessageId" Type="nvarchar(max)" />
+          <Property Name="DataReceived" Type="nvarchar(max)" />
+          <Property Name="ReceivedAt" Type="datetime" Nullable="false" />
+          <Property Name="IsProcessed" Type="bit" Nullable="false" />
+          <Property Name="DecryptedData" Type="nvarchar(max)" />
+          <Property Name="PipeDuns" Type="nvarchar(max)" />
+          <Property Name="DatasetType" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="GISBInboxes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MessageID" Type="nvarchar(max)" />
+          <Property Name="Gisb" Type="nvarchar(max)" />
+          <Property Name="ErrorCode" Type="int" Nullable="false" />
+          <Property Name="ErrorDescription" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GISBOutboxes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MessageID" Type="nvarchar(max)" />
+          <Property Name="Gisb" Type="nvarchar(max)" />
+          <Property Name="ErrorCode" Type="int" Nullable="false" />
+          <Property Name="ErrorDescription" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Inboxes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MessageID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DatasetID" Type="int" Nullable="false" />
+          <Property Name="StatusID" Type="int" Nullable="false" />
+          <Property Name="GISB" Type="nvarchar(max)" />
+          <Property Name="IsTest" Type="bit" Nullable="false" />
+          <Property Name="IsRead" Type="bit" Nullable="false" />
+          <Property Name="PipelineID" Type="int" Nullable="false" />
+          <Property Name="RecipientCompanyID" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IncomingDatas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="MessageId" Type="nvarchar(max)" />
+          <Property Name="DataReceived" Type="nvarchar(max)" />
+          <Property Name="ReceivedAt" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="JobStackErrorLogs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkflowId" Type="bigint" Nullable="false" />
+          <Property Name="TranactionId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="StageId" Type="int" Nullable="false" />
+          <Property Name="ErrorMessage" Type="nvarchar(max)" />
+          <Property Name="ErrorType" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="JobWorkflows">
+          <Key>
+            <PropertyRef Name="WorkflowId" />
+          </Key>
+          <Property Name="WorkflowId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TransactionId" Type="uniqueidentifier" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" Nullable="false" />
+          <Property Name="StageId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Locations">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Identifier" Type="nvarchar(max)" />
+          <Property Name="PropCode" Type="nvarchar(max)" />
+          <Property Name="RDUsageID" Type="int" Nullable="false" />
+          <Property Name="PipelineID" Type="int" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedDate" Type="datetime" Nullable="false" />
+          <Property Name="PipeDuns" Type="nvarchar(max)" />
+          <Property Name="TransactionTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LogicalOperators">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar(max)" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="DataTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MasterColumns">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar(max)" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="DataSetId" Type="int" Nullable="false" />
+          <Property Name="DataTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="metadataDatasets">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Identifier" Type="nvarchar(max)" />
+          <Property Name="Code" Type="nvarchar(max)" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="CategoryID" Type="int" Nullable="false" />
+          <Property Name="Direction" Type="nvarchar(max)" />
+          <Property Name="IsUPRDAttribute" Type="bit" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="metadataErrorCodes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Code" Type="nvarchar(max)" />
+          <Property Name="DataElement" Type="nvarchar(max)" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="IsRequired" Type="bit" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="metadataPipelineEncKeyInfoes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PipelineId" Type="int" />
+          <Property Name="KeyName" Type="nvarchar(max)" />
+          <Property Name="PipeDuns" Type="nvarchar(max)" />
+          <Property Name="PgpKey" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="OACYPerTransactions">
+          <Key>
+            <PropertyRef Name="OACYID" />
+          </Key>
+          <Property Name="OACYID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TransactionID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ReceiceFileID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="TransactionServiceProviderPropCode" Type="nvarchar(max)" />
+          <Property Name="TransactionServiceProvider" Type="nvarchar(max)" />
+          <Property Name="PostingDateTime" Type="datetime" />
+          <Property Name="EffectiveGasDayTime" Type="datetime" />
+          <Property Name="Loc" Type="nvarchar(max)" />
+          <Property Name="LocName" Type="nvarchar(max)" />
+          <Property Name="LocZn" Type="nvarchar(max)" />
+          <Property Name="FlowIndicator" Type="nvarchar(max)" />
+          <Property Name="LocPropDesc" Type="nvarchar(max)" />
+          <Property Name="LocQTIDesc" Type="nvarchar(max)" />
+          <Property Name="MeasurementBasis" Type="nvarchar(max)" />
+          <Property Name="ITIndicator" Type="nvarchar(max)" />
+          <Property Name="AllQtyAvailableIndicator" Type="nvarchar(max)" />
+          <Property Name="DesignCapacity" Type="bigint" Nullable="false" />
+          <Property Name="OperatingCapacity" Type="bigint" Nullable="false" />
+          <Property Name="TotalScheduleQty" Type="bigint" Nullable="false" />
+          <Property Name="OperationallyAvailableQty" Type="bigint" Nullable="false" />
+          <Property Name="PipelineID" Type="int" />
+          <Property Name="CycleIndicator" Type="nvarchar(max)" />
+          <Property Name="AvailablePercentage" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Outbox_MultipartForm">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OutboxID" Type="int" Nullable="false" />
+          <Property Name="Data" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Outboxes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MessageID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DatasetID" Type="int" Nullable="false" />
+          <Property Name="StatusID" Type="int" Nullable="false" />
+          <Property Name="GISB" Type="nvarchar(max)" />
+          <Property Name="IsTest" Type="bit" Nullable="false" />
+          <Property Name="PipelineID" Type="int" Nullable="false" />
+          <Property Name="CompanyID" Type="int" Nullable="false" />
+          <Property Name="IsScheduled" Type="bit" Nullable="false" />
+          <Property Name="ScheduledDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PipelineEDISettings">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PipeDuns" Type="nvarchar(max)" />
+          <Property Name="ISA08_segment" Type="nvarchar(max)" />
+          <Property Name="ISA06_Segment" Type="nvarchar(max)" />
+          <Property Name="ISA11_Segment" Type="nvarchar(max)" />
+          <Property Name="ISA12_Segment" Type="nvarchar(max)" />
+          <Property Name="ISA16_Segment" Type="nvarchar(max)" />
+          <Property Name="GS01_Segment" Type="nvarchar(max)" />
+          <Property Name="GS02_Segment" Type="nvarchar(max)" />
+          <Property Name="GS03_Segment" Type="nvarchar(max)" />
+          <Property Name="GS07_Segment" Type="nvarchar(max)" />
+          <Property Name="GS08_Segment" Type="nvarchar(max)" />
+          <Property Name="ST01_Segment" Type="nvarchar(max)" />
+          <Property Name="DataSeparator" Type="nvarchar(max)" />
+          <Property Name="SegmentSeperator" Type="nvarchar(max)" />
+          <Property Name="DatasetId" Type="int" Nullable="false" />
+          <Property Name="ShipperCompDuns" Type="nvarchar(max)" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="SendManually" Type="bit" Nullable="false" />
+          <Property Name="ForOacy" Type="bit" Nullable="false" />
+          <Property Name="ForUnsc" Type="bit" Nullable="false" />
+          <Property Name="ForSwnt" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Pipelines">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="DUNSNo" Type="nvarchar(max)" />
+          <Property Name="TSPId" Type="int" Nullable="false" />
+          <Property Name="ModelTypeID" Type="int" Nullable="false" />
+          <Property Name="ToUseTSPDUNS" Type="bit" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedDate" Type="datetime" Nullable="false" />
+          <Property Name="IsUprdActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Settings">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Value" Type="nvarchar(max)" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ShipperCompanies">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="DUNS" Type="nvarchar(max)" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedDate" Type="datetime" Nullable="false" />
+          <Property Name="SubscriptionID" Type="int" />
+          <Property Name="ShipperAddress" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Shippers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar(max)" />
+          <Property Name="FirstName" Type="nvarchar(max)" />
+          <Property Name="LastName" Type="nvarchar(max)" />
+          <Property Name="ShipperCompanyID" Type="int" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SQTSReductionReasons">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Code" Type="nvarchar(max)" />
+          <Property Name="Value" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="SwntPerTransactions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TransactionId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ReceiveFileId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PipelineId" Type="int" Nullable="false" />
+          <Property Name="TransactionIdentifierCode" Type="nvarchar(max)" />
+          <Property Name="TransactionControlNumber" Type="nvarchar(max)" />
+          <Property Name="TransactionSetPurposeCode" Type="nvarchar(max)" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="NoticeEffectiveDateTime" Type="datetime" />
+          <Property Name="NoticeEndDateTime" Type="datetime" />
+          <Property Name="PostingDateTime" Type="datetime" />
+          <Property Name="ResponseDateTime" Type="datetime" />
+          <Property Name="TransportationserviceProvider" Type="nvarchar(max)" />
+          <Property Name="TransportationServiceProviderPropCode" Type="nvarchar(max)" />
+          <Property Name="CriticalNoticeIndicator" Type="nvarchar(max)" />
+          <Property Name="FreeFormMessageText" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="Message" Type="nvarchar(max)" />
+          <Property Name="NoticeId" Type="nvarchar(max)" />
+          <Property Name="NoticeTypeDesc1" Type="nvarchar(max)" />
+          <Property Name="NoticeTypeDesc2" Type="nvarchar(max)" />
+          <Property Name="ReqrdResp" Type="nvarchar(max)" />
+          <Property Name="Subject" Type="nvarchar(max)" />
+          <Property Name="PriorNotice" Type="nvarchar(max)" />
+          <Property Name="NoticeStatusDesc" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="TaskMgrJobs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TransactionId" Type="nvarchar(max)" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" Nullable="false" />
+          <Property Name="IsSending" Type="bit" Nullable="false" />
+          <Property Name="StageId" Type="int" />
+          <Property Name="DatasetId" Type="int" />
+          <Property Name="EDICheckCount" Type="int" />
+          <Property Name="NoOfXmlInEDI" Type="int" />
+        </EntityType>
+        <EntityType Name="TaskMgrXmls">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TransactionId" Type="nvarchar(max)" />
+          <Property Name="XmlData" Type="nvarchar(max)" />
+          <Property Name="PipelineId" Type="int" Nullable="false" />
+          <Property Name="AddedOn" Type="datetime" />
+          <Property Name="IsProccessed" Type="bit" />
+          <Property Name="EDIData" Type="nvarchar(max)" />
+          <Property Name="EncEDIData" Type="nvarchar(max)" />
+          <Property Name="SendUrl" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="TradingPartnerWorksheets">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="PipelineID" Type="int" Nullable="false" />
+          <Property Name="UsernameLive" Type="nvarchar(max)" />
+          <Property Name="PasswordLive" Type="nvarchar(max)" />
+          <Property Name="URLLive" Type="nvarchar(max)" />
+          <Property Name="KeyLive" Type="nvarchar(max)" />
+          <Property Name="UsernameTest" Type="nvarchar(max)" />
+          <Property Name="PasswordTest" Type="nvarchar(max)" />
+          <Property Name="URLTest" Type="nvarchar(max)" />
+          <Property Name="KeyTest" Type="nvarchar(max)" />
+          <Property Name="ReceiveSubSeperator" Type="nvarchar(max)" />
+          <Property Name="ReceiveDataSeperator" Type="nvarchar(max)" />
+          <Property Name="ReceiveSegmentSeperator" Type="nvarchar(max)" />
+          <Property Name="SendSubSeperator" Type="nvarchar(max)" />
+          <Property Name="SendDataSeperator" Type="nvarchar(max)" />
+          <Property Name="SendSegmentSeperator" Type="nvarchar(max)" />
+          <Property Name="IsTest" Type="bit" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedDate" Type="datetime" Nullable="false" />
+          <Property Name="PipeDuns" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="TransactionLogs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TransactionId" Type="nvarchar(max)" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TransportationServiceProviders">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="DUNSNo" Type="nvarchar(max)" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UnscPerTransactions">
+          <Key>
+            <PropertyRef Name="UnscID" />
+          </Key>
+          <Property Name="UnscID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TransactionID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ReceiveFileID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="PipelineID" Type="int" Nullable="false" />
+          <Property Name="TransactionServiceProvider" Type="nvarchar(max)" />
+          <Property Name="TransactionServiceProviderPropCode" Type="nvarchar(max)" />
+          <Property Name="Loc" Type="nvarchar(max)" />
+          <Property Name="LocName" Type="nvarchar(max)" />
+          <Property Name="LocZn" Type="nvarchar(max)" />
+          <Property Name="LocPurpDesc" Type="nvarchar(max)" />
+          <Property Name="LocQTIDesc" Type="nvarchar(max)" />
+          <Property Name="MeasBasisDesc" Type="nvarchar(max)" />
+          <Property Name="TotalDesignCapacity" Type="bigint" Nullable="false" />
+          <Property Name="UnsubscribeCapacity" Type="bigint" Nullable="false" />
+          <Property Name="PostingDateTime" Type="datetime" />
+          <Property Name="EffectiveGasDayTime" Type="datetime" />
+          <Property Name="EndingEffectiveDay" Type="datetime" />
+          <Property Name="ChangePercentage" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UPRDStatus">
+          <Key>
+            <PropertyRef Name="UPRD_ID" />
+          </Key>
+          <Property Name="UPRD_ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RequestID" Type="nvarchar(max)" />
+          <Property Name="RURD_ID" Type="uniqueidentifier" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="TransactionId" Type="uniqueidentifier" />
+          <Property Name="DatasetSummary" Type="nvarchar(max)" />
+          <Property Name="DatasetRequested" Type="int" />
+          <Property Name="IsRURDReceived" Type="bit" Nullable="false" />
+          <Property Name="IsDataSetAvailable" Type="bit" Nullable="false" />
+          <Property Name="IsDatasetReceived" Type="bit" Nullable="false" />
+          <Property Name="PipeDuns" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="UserPipelineMappings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userId" Type="nvarchar(max)" />
+          <Property Name="shipperId" Type="int" Nullable="false" />
+          <Property Name="PipeDuns" Type="nvarchar(max)" />
+          <Property Name="IsNoms" Type="bit" Nullable="false" />
+          <Property Name="IsUPRD" Type="bit" Nullable="false" />
+          <Property Name="createdBy" Type="nvarchar(max)" />
+          <Property Name="createdDate" Type="datetime" />
+          <Property Name="modifiedBy" Type="nvarchar(max)" />
+          <Property Name="modifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="WatchListLogs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Source" Type="nvarchar(max)" />
+          <Property Name="Type" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WatchListMailAlertUPRDMappings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar(max)" />
+          <Property Name="WatchListId" Type="int" Nullable="false" />
+          <Property Name="DataSetId" Type="int" Nullable="false" />
+          <Property Name="UprdID" Type="bigint" Nullable="false" />
+          <Property Name="EmailSentDateTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="WatchlistMailMappingOACies">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar(max)" />
+          <Property Name="UserEmail" Type="nvarchar(max)" />
+          <Property Name="WatchListId" Type="int" Nullable="false" />
+          <Property Name="OACYID" Type="bigint" Nullable="false" />
+          <Property Name="EmailSentDateTime" Type="datetime" />
+          <Property Name="IsMailSent" Type="bit" Nullable="false" />
+          <Property Name="WatchlistName" Type="nvarchar(max)" />
+          <Property Name="MoreDetailUrl" Type="nvarchar(max)" />
+          <Property Name="CycleIndicator" Type="nvarchar(max)" />
+          <Property Name="PipelineID" Type="int" Nullable="false" />
+          <Property Name="PipelineName" Type="nvarchar(max)" />
+          <Property Name="Loc" Type="nvarchar(max)" />
+          <Property Name="LocName" Type="nvarchar(max)" />
+          <Property Name="OperatingCapacity" Type="bigint" Nullable="false" />
+          <Property Name="TotalScheduleQty" Type="bigint" Nullable="false" />
+          <Property Name="AvailablePercentage" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="PostingDateTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="WatchlistMailMappingSWNTs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar(max)" />
+          <Property Name="WatchListId" Type="int" Nullable="false" />
+          <Property Name="SWNTID" Type="bigint" Nullable="false" />
+          <Property Name="EmailSentDateTime" Type="datetime" />
+          <Property Name="IsMailSent" Type="bit" Nullable="false" />
+          <Property Name="UserEmail" Type="nvarchar(max)" />
+          <Property Name="WatchlistName" Type="nvarchar(max)" />
+          <Property Name="MoreDetailUrl" Type="nvarchar(max)" />
+          <Property Name="PipelineID" Type="int" Nullable="false" />
+          <Property Name="PipelineName" Type="nvarchar(max)" />
+          <Property Name="Loc" Type="nvarchar(max)" />
+          <Property Name="LocName" Type="nvarchar(max)" />
+          <Property Name="CriticalNoticeIndicator" Type="nvarchar(max)" />
+          <Property Name="NoticeId" Type="nvarchar(max)" />
+          <Property Name="NoticeEffectiveDateTime" Type="datetime" />
+          <Property Name="PostingDateTime" Type="datetime" />
+          <Property Name="Category" Type="nvarchar(max)" />
+          <Property Name="Subject" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="WatchlistMailMappingUNSCs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar(max)" />
+          <Property Name="WatchListId" Type="int" Nullable="false" />
+          <Property Name="UNSCID" Type="bigint" Nullable="false" />
+          <Property Name="EmailSentDateTime" Type="datetime" />
+          <Property Name="IsMailSent" Type="bit" Nullable="false" />
+          <Property Name="UserEmail" Type="nvarchar(max)" />
+          <Property Name="WatchlistName" Type="nvarchar(max)" />
+          <Property Name="MoreDetailUrl" Type="nvarchar(max)" />
+          <Property Name="PipelineID" Type="int" Nullable="false" />
+          <Property Name="PipelineName" Type="nvarchar(max)" />
+          <Property Name="Loc" Type="nvarchar(max)" />
+          <Property Name="LocName" Type="nvarchar(max)" />
+          <Property Name="UnsubscribeCapacity" Type="bigint" Nullable="false" />
+          <Property Name="ChangePercentage" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="PostingDateTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="WatchListPipelineMappings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WatchListId" Type="int" Nullable="false" />
+          <Property Name="PipelineId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WatchlistRules">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ColumnId" Type="int" Nullable="false" />
+          <Property Name="OperatorId" Type="int" Nullable="false" />
+          <Property Name="RuleValue" Type="nvarchar(max)" />
+          <Property Name="WatchlistId" Type="int" Nullable="false" />
+          <Property Name="PipelineDuns" Type="nvarchar(max)" />
+          <Property Name="LocationIdentifier" Type="nvarchar(max)" />
+          <Property Name="AlertSent" Type="bit" Nullable="false" />
+          <Property Name="AlertFrequency" Type="int" Nullable="false" />
+          <Property Name="IsCriticalNotice" Type="bit" Nullable="false" />
+          <Property Name="UpperRuleValue" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Watchlists">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="DataSetId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="ModifiedDate" Type="datetime" />
+          <Property Name="ExecutionDateTime" Type="datetime" />
+          <Property Name="Email" Type="nvarchar(max)" />
+          <Property Name="MoreDetailURLinAlert" Type="nvarchar(max)" />
+        </EntityType>
+        <Association Name="FK_dbo_LogicalOperators_dbo_DataTypeGroupings_DataTypeId">
+          <End Role="DataTypeGroupings" Type="Self.DataTypeGroupings" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="LogicalOperators" Type="Self.LogicalOperators" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataTypeGroupings">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LogicalOperators">
+              <PropertyRef Name="DataTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_MasterColumns_dbo_DataTypeGroupings_DataTypeId">
+          <End Role="DataTypeGroupings" Type="Self.DataTypeGroupings" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MasterColumns" Type="Self.MasterColumns" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataTypeGroupings">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MasterColumns">
+              <PropertyRef Name="DataTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_WatchlistRules_dbo_Watchlists_WatchlistId">
+          <End Role="Watchlists" Type="Self.Watchlists" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="WatchlistRules" Type="Self.WatchlistRules" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Watchlists">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WatchlistRules">
+              <PropertyRef Name="WatchlistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="UprdDbModelStoreContainer">
+          <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ApplicationLogs" EntityType="Self.ApplicationLogs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CounterParties" EntityType="Self.CounterParties" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DashNominationStatus" EntityType="Self.DashNominationStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DataTypeGroupings" EntityType="Self.DataTypeGroupings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmailQueues" EntityType="Self.EmailQueues" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmailTemplates" EntityType="Self.EmailTemplates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FileSysIncomingDatas" EntityType="Self.FileSysIncomingDatas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GISBInboxes" EntityType="Self.GISBInboxes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GISBOutboxes" EntityType="Self.GISBOutboxes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Inboxes" EntityType="Self.Inboxes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IncomingDatas" EntityType="Self.IncomingDatas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="JobStackErrorLogs" EntityType="Self.JobStackErrorLogs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="JobWorkflows" EntityType="Self.JobWorkflows" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Locations" EntityType="Self.Locations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LogicalOperators" EntityType="Self.LogicalOperators" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MasterColumns" EntityType="Self.MasterColumns" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="metadataDatasets" EntityType="Self.metadataDatasets" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="metadataErrorCodes" EntityType="Self.metadataErrorCodes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="metadataPipelineEncKeyInfoes" EntityType="Self.metadataPipelineEncKeyInfoes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OACYPerTransactions" EntityType="Self.OACYPerTransactions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Outbox_MultipartForm" EntityType="Self.Outbox_MultipartForm" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Outboxes" EntityType="Self.Outboxes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PipelineEDISettings" EntityType="Self.PipelineEDISettings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Pipelines" EntityType="Self.Pipelines" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Settings" EntityType="Self.Settings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShipperCompanies" EntityType="Self.ShipperCompanies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Shippers" EntityType="Self.Shippers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SQTSReductionReasons" EntityType="Self.SQTSReductionReasons" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SwntPerTransactions" EntityType="Self.SwntPerTransactions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TaskMgrJobs" EntityType="Self.TaskMgrJobs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TaskMgrXmls" EntityType="Self.TaskMgrXmls" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TradingPartnerWorksheets" EntityType="Self.TradingPartnerWorksheets" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TransactionLogs" EntityType="Self.TransactionLogs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TransportationServiceProviders" EntityType="Self.TransportationServiceProviders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UnscPerTransactions" EntityType="Self.UnscPerTransactions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UPRDStatus" EntityType="Self.UPRDStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserPipelineMappings" EntityType="Self.UserPipelineMappings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WatchListLogs" EntityType="Self.WatchListLogs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WatchListMailAlertUPRDMappings" EntityType="Self.WatchListMailAlertUPRDMappings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WatchlistMailMappingOACies" EntityType="Self.WatchlistMailMappingOACies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WatchlistMailMappingSWNTs" EntityType="Self.WatchlistMailMappingSWNTs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WatchlistMailMappingUNSCs" EntityType="Self.WatchlistMailMappingUNSCs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WatchListPipelineMappings" EntityType="Self.WatchListPipelineMappings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WatchlistRules" EntityType="Self.WatchlistRules" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Watchlists" EntityType="Self.Watchlists" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_LogicalOperators_dbo_DataTypeGroupings_DataTypeId" Association="Self.FK_dbo_LogicalOperators_dbo_DataTypeGroupings_DataTypeId">
+            <End Role="DataTypeGroupings" EntitySet="DataTypeGroupings" />
+            <End Role="LogicalOperators" EntitySet="LogicalOperators" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_MasterColumns_dbo_DataTypeGroupings_DataTypeId" Association="Self.FK_dbo_MasterColumns_dbo_DataTypeGroupings_DataTypeId">
+            <End Role="DataTypeGroupings" EntitySet="DataTypeGroupings" />
+            <End Role="MasterColumns" EntitySet="MasterColumns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_WatchlistRules_dbo_Watchlists_WatchlistId" Association="Self.FK_dbo_WatchlistRules_dbo_Watchlists_WatchlistId">
+            <End Role="Watchlists" EntitySet="Watchlists" />
+            <End Role="WatchlistRules" EntitySet="WatchlistRules" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="UprdDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="C__MigrationHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+            <PropertyRef Name="ContextKey" />
+          </Key>
+          <Property Name="MigrationId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ContextKey" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Model" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="ProductVersion" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ApplicationLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Source" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="EmailQueue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ToUserID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Subject" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Recipient" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CC" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Bcc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsSent" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SentDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="EmailTemplate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Subject" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Body" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="GISBInbox">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MessageID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Gisb" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ErrorCode" Type="Int32" Nullable="false" />
+          <Property Name="ErrorDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="GISBOutbox">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MessageID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Gisb" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ErrorCode" Type="Int32" Nullable="false" />
+          <Property Name="ErrorDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Inbox">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MessageID" Type="Guid" Nullable="false" />
+          <Property Name="DatasetID" Type="Int32" Nullable="false" />
+          <Property Name="StatusID" Type="Int32" Nullable="false" />
+          <Property Name="GISB" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsTest" Type="Boolean" Nullable="false" />
+          <Property Name="IsRead" Type="Boolean" Nullable="false" />
+          <Property Name="PipelineID" Type="Int32" Nullable="false" />
+          <Property Name="RecipientCompanyID" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IncomingData">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MessageId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DataReceived" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ReceivedAt" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="JobStackErrorLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkflowId" Type="Int64" Nullable="false" />
+          <Property Name="TranactionId" Type="Guid" Nullable="false" />
+          <Property Name="StageId" Type="Int32" Nullable="false" />
+          <Property Name="ErrorMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ErrorType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="JobWorkflow">
+          <Key>
+            <PropertyRef Name="WorkflowId" />
+          </Key>
+          <Property Name="WorkflowId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TransactionId" Type="Guid" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StageId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="metadataDataset">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Identifier" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CategoryID" Type="Int32" Nullable="false" />
+          <Property Name="Direction" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsUPRDAttribute" Type="Boolean" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="metadataErrorCode">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DataElement" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsRequired" Type="Boolean" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="metadataPipelineEncKeyInfo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PipelineId" Type="Int32" />
+          <Property Name="KeyName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PipeDuns" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PgpKey" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="OACYPerTransaction">
+          <Key>
+            <PropertyRef Name="OACYID" />
+          </Key>
+          <Property Name="OACYID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TransactionID" Type="Guid" Nullable="false" />
+          <Property Name="ReceiceFileID" Type="Guid" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TransactionServiceProviderPropCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionServiceProvider" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PostingDateTime" Type="DateTime" Precision="3" />
+          <Property Name="EffectiveGasDayTime" Type="DateTime" Precision="3" />
+          <Property Name="Loc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LocName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LocZn" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FlowIndicator" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LocPropDesc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LocQTIDesc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MeasurementBasis" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ITIndicator" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AllQtyAvailableIndicator" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DesignCapacity" Type="Int64" Nullable="false" />
+          <Property Name="OperatingCapacity" Type="Int64" Nullable="false" />
+          <Property Name="TotalScheduleQty" Type="Int64" Nullable="false" />
+          <Property Name="OperationallyAvailableQty" Type="Int64" Nullable="false" />
+          <Property Name="PipelineID" Type="Int32" />
+          <Property Name="CycleIndicator" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AvailablePercentage" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Outbox_MultipartForm">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OutboxID" Type="Int32" Nullable="false" />
+          <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Outbox">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MessageID" Type="Guid" Nullable="false" />
+          <Property Name="DatasetID" Type="Int32" Nullable="false" />
+          <Property Name="StatusID" Type="Int32" Nullable="false" />
+          <Property Name="GISB" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsTest" Type="Boolean" Nullable="false" />
+          <Property Name="PipelineID" Type="Int32" Nullable="false" />
+          <Property Name="CompanyID" Type="Int32" Nullable="false" />
+          <Property Name="IsScheduled" Type="Boolean" Nullable="false" />
+          <Property Name="ScheduledDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="PipelineEDISetting">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PipeDuns" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ISA08_segment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ISA06_Segment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ISA11_Segment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ISA12_Segment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ISA16_Segment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GS01_Segment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GS02_Segment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GS03_Segment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GS07_Segment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GS08_Segment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ST01_Segment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DataSeparator" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SegmentSeperator" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DatasetId" Type="Int32" Nullable="false" />
+          <Property Name="ShipperCompDuns" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="SendManually" Type="Boolean" Nullable="false" />
+          <Property Name="ForOacy" Type="Boolean" Nullable="false" />
+          <Property Name="ForUnsc" Type="Boolean" Nullable="false" />
+          <Property Name="ForSwnt" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Pipeline">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DUNSNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TSPId" Type="Int32" Nullable="false" />
+          <Property Name="ModelTypeID" Type="Int32" Nullable="false" />
+          <Property Name="ToUseTSPDUNS" Type="Boolean" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsUprdActive" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Setting">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="ShipperCompany">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DUNS" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SubscriptionID" Type="Int32" />
+          <Property Name="ShipperAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Shipper">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ShipperCompanyID" Type="Int32" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="SwntPerTransaction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TransactionId" Type="Guid" Nullable="false" />
+          <Property Name="ReceiveFileId" Type="Guid" Nullable="false" />
+          <Property Name="PipelineId" Type="Int32" Nullable="false" />
+          <Property Name="TransactionIdentifierCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionControlNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionSetPurposeCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NoticeEffectiveDateTime" Type="DateTime" Precision="3" />
+          <Property Name="NoticeEndDateTime" Type="DateTime" Precision="3" />
+          <Property Name="PostingDateTime" Type="DateTime" Precision="3" />
+          <Property Name="ResponseDateTime" Type="DateTime" Precision="3" />
+          <Property Name="TransportationserviceProvider" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TransportationServiceProviderPropCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CriticalNoticeIndicator" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FreeFormMessageText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NoticeId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NoticeTypeDesc1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NoticeTypeDesc2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ReqrdResp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Subject" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PriorNotice" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NoticeStatusDesc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TaskMgrJob">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TransactionId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsSending" Type="Boolean" Nullable="false" />
+          <Property Name="StageId" Type="Int32" />
+          <Property Name="DatasetId" Type="Int32" />
+          <Property Name="EDICheckCount" Type="Int32" />
+          <Property Name="NoOfXmlInEDI" Type="Int32" />
+        </EntityType>
+        <EntityType Name="TaskMgrXml">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TransactionId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="XmlData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PipelineId" Type="Int32" Nullable="false" />
+          <Property Name="AddedOn" Type="DateTime" Precision="3" />
+          <Property Name="IsProccessed" Type="Boolean" />
+          <Property Name="EDIData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EncEDIData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SendUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TradingPartnerWorksheet">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PipelineID" Type="Int32" Nullable="false" />
+          <Property Name="UsernameLive" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordLive" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="URLLive" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="KeyLive" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UsernameTest" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordTest" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="URLTest" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="KeyTest" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ReceiveSubSeperator" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ReceiveDataSeperator" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ReceiveSegmentSeperator" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SendSubSeperator" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SendDataSeperator" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SendSegmentSeperator" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsTest" Type="Boolean" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PipeDuns" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TransactionLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TransactionId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="TransportationServiceProvider">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DUNSNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="UnscPerTransaction">
+          <Key>
+            <PropertyRef Name="UnscID" />
+          </Key>
+          <Property Name="UnscID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TransactionID" Type="Guid" Nullable="false" />
+          <Property Name="ReceiveFileID" Type="Guid" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PipelineID" Type="Int32" Nullable="false" />
+          <Property Name="TransactionServiceProvider" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionServiceProviderPropCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Loc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LocName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LocZn" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LocPurpDesc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LocQTIDesc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MeasBasisDesc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TotalDesignCapacity" Type="Int64" Nullable="false" />
+          <Property Name="UnsubscribeCapacity" Type="Int64" Nullable="false" />
+          <Property Name="PostingDateTime" Type="DateTime" Precision="3" />
+          <Property Name="EffectiveGasDayTime" Type="DateTime" Precision="3" />
+          <Property Name="EndingEffectiveDay" Type="DateTime" Precision="3" />
+          <Property Name="ChangePercentage" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UPRDStatu">
+          <Key>
+            <PropertyRef Name="UPRD_ID" />
+          </Key>
+          <Property Name="UPRD_ID" Type="Guid" Nullable="false" />
+          <Property Name="RequestID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RURD_ID" Type="Guid" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="TransactionId" Type="Guid" />
+          <Property Name="DatasetSummary" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DatasetRequested" Type="Int32" />
+          <Property Name="IsRURDReceived" Type="Boolean" Nullable="false" />
+          <Property Name="IsDataSetAvailable" Type="Boolean" Nullable="false" />
+          <Property Name="IsDatasetReceived" Type="Boolean" Nullable="false" />
+          <Property Name="PipeDuns" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="UprdDbEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="C__MigrationHistory" EntityType="Self.C__MigrationHistory" />
+          <EntitySet Name="ApplicationLogs" EntityType="Self.ApplicationLog" />
+          <EntitySet Name="EmailQueues" EntityType="Self.EmailQueue" />
+          <EntitySet Name="EmailTemplates" EntityType="Self.EmailTemplate" />
+          <EntitySet Name="GISBInboxes" EntityType="Self.GISBInbox" />
+          <EntitySet Name="GISBOutboxes" EntityType="Self.GISBOutbox" />
+          <EntitySet Name="Inboxes" EntityType="Self.Inbox" />
+          <EntitySet Name="IncomingDatas" EntityType="Self.IncomingData" />
+          <EntitySet Name="JobStackErrorLogs" EntityType="Self.JobStackErrorLog" />
+          <EntitySet Name="JobWorkflows" EntityType="Self.JobWorkflow" />
+          <EntitySet Name="metadataDatasets" EntityType="Self.metadataDataset" />
+          <EntitySet Name="metadataErrorCodes" EntityType="Self.metadataErrorCode" />
+          <EntitySet Name="metadataPipelineEncKeyInfoes" EntityType="Self.metadataPipelineEncKeyInfo" />
+          <EntitySet Name="OACYPerTransactions" EntityType="Self.OACYPerTransaction" />
+          <EntitySet Name="Outbox_MultipartForm" EntityType="Self.Outbox_MultipartForm" />
+          <EntitySet Name="Outboxes" EntityType="Self.Outbox" />
+          <EntitySet Name="PipelineEDISettings" EntityType="Self.PipelineEDISetting" />
+          <EntitySet Name="Pipelines" EntityType="Self.Pipeline" />
+          <EntitySet Name="Settings" EntityType="Self.Setting" />
+          <EntitySet Name="ShipperCompanies" EntityType="Self.ShipperCompany" />
+          <EntitySet Name="Shippers" EntityType="Self.Shipper" />
+          <EntitySet Name="SwntPerTransactions" EntityType="Self.SwntPerTransaction" />
+          <EntitySet Name="TaskMgrJobs" EntityType="Self.TaskMgrJob" />
+          <EntitySet Name="TaskMgrXmls" EntityType="Self.TaskMgrXml" />
+          <EntitySet Name="TradingPartnerWorksheets" EntityType="Self.TradingPartnerWorksheet" />
+          <EntitySet Name="TransactionLogs" EntityType="Self.TransactionLog" />
+          <EntitySet Name="TransportationServiceProviders" EntityType="Self.TransportationServiceProvider" />
+          <EntitySet Name="UnscPerTransactions" EntityType="Self.UnscPerTransaction" />
+          <EntitySet Name="UPRDStatus" EntityType="Self.UPRDStatu" />
+          <EntitySet Name="WatchListMailAlertUPRDMappings" EntityType="UprdDbModel.WatchListMailAlertUPRDMapping" />
+          <EntitySet Name="DataTypeGroupings" EntityType="UprdDbModel.DataTypeGrouping" />
+          <EntitySet Name="LogicalOperators" EntityType="UprdDbModel.LogicalOperator" />
+          <EntitySet Name="MasterColumns" EntityType="UprdDbModel.MasterColumn" />
+          <AssociationSet Name="FK_dbo_LogicalOperators_dbo_DataTypeGroupings_DataTypeId" Association="UprdDbModel.FK_dbo_LogicalOperators_dbo_DataTypeGroupings_DataTypeId">
+            <End Role="DataTypeGrouping" EntitySet="DataTypeGroupings" />
+            <End Role="LogicalOperator" EntitySet="LogicalOperators" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_MasterColumns_dbo_DataTypeGroupings_DataTypeId" Association="UprdDbModel.FK_dbo_MasterColumns_dbo_DataTypeGroupings_DataTypeId">
+            <End Role="DataTypeGrouping" EntitySet="DataTypeGroupings" />
+            <End Role="MasterColumn" EntitySet="MasterColumns" />
+          </AssociationSet>
+          <EntitySet Name="FileSysIncomingDatas" EntityType="UprdDbModel.FileSysIncomingData" />
+          <EntitySet Name="WatchListPipelineMappings" EntityType="UprdDbModel.WatchListPipelineMapping" />
+          <EntitySet Name="CounterParties" EntityType="UprdDbModel.CounterParty" />
+          <EntitySet Name="Locations" EntityType="UprdDbModel.Location" />
+          <EntitySet Name="WatchlistRules" EntityType="UprdDbModel.WatchlistRule" />
+          <EntitySet Name="Watchlists" EntityType="UprdDbModel.Watchlist" />
+          <AssociationSet Name="FK_dbo_WatchlistRules_dbo_Watchlists_WatchlistId" Association="UprdDbModel.FK_dbo_WatchlistRules_dbo_Watchlists_WatchlistId">
+            <End Role="Watchlist" EntitySet="Watchlists" />
+            <End Role="WatchlistRule" EntitySet="WatchlistRules" />
+          </AssociationSet>
+          <EntitySet Name="SQTSReductionReasons" EntityType="UprdDbModel.SQTSReductionReason" />
+          <EntitySet Name="UserPipelineMappings" EntityType="UprdDbModel.UserPipelineMapping" />
+          <EntitySet Name="DashNominationStatus" EntityType="UprdDbModel.DashNominationStatu" />
+          <EntitySet Name="WatchListLogs" EntityType="UprdDbModel.WatchListLog" />
+          <EntitySet Name="WatchlistMailMappingOACies" EntityType="UprdDbModel.WatchlistMailMappingOACy" />
+          <EntitySet Name="WatchlistMailMappingSWNTs" EntityType="UprdDbModel.WatchlistMailMappingSWNT" />
+          <EntitySet Name="WatchlistMailMappingUNSCs" EntityType="UprdDbModel.WatchlistMailMappingUNSC" />
+        </EntityContainer>
+        <EntityType Name="WatchListMailAlertUPRDMapping">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="WatchListId" Type="Int32" Nullable="false" />
+          <Property Name="DataSetId" Type="Int32" Nullable="false" />
+          <Property Name="UprdID" Type="Int64" Nullable="false" />
+          <Property Name="EmailSentDateTime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="DataTypeGrouping">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="LogicalOperators" Relationship="UprdDbModel.FK_dbo_LogicalOperators_dbo_DataTypeGroupings_DataTypeId" FromRole="DataTypeGrouping" ToRole="LogicalOperator" />
+          <NavigationProperty Name="MasterColumns" Relationship="UprdDbModel.FK_dbo_MasterColumns_dbo_DataTypeGroupings_DataTypeId" FromRole="DataTypeGrouping" ToRole="MasterColumn" />
+        </EntityType>
+        <EntityType Name="LogicalOperator">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DataTypeId" Type="Int32" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DataTypeGrouping" Relationship="UprdDbModel.FK_dbo_LogicalOperators_dbo_DataTypeGroupings_DataTypeId" FromRole="LogicalOperator" ToRole="DataTypeGrouping" />
+        </EntityType>
+        <EntityType Name="MasterColumn">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DataSetId" Type="Int32" Nullable="false" />
+          <Property Name="DataTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DataTypeGrouping" Relationship="UprdDbModel.FK_dbo_MasterColumns_dbo_DataTypeGroupings_DataTypeId" FromRole="MasterColumn" ToRole="DataTypeGrouping" />
+        </EntityType>
+        <Association Name="FK_dbo_LogicalOperators_dbo_DataTypeGroupings_DataTypeId">
+          <End Type="UprdDbModel.DataTypeGrouping" Role="DataTypeGrouping" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="UprdDbModel.LogicalOperator" Role="LogicalOperator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataTypeGrouping">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LogicalOperator">
+              <PropertyRef Name="DataTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_MasterColumns_dbo_DataTypeGroupings_DataTypeId">
+          <End Type="UprdDbModel.DataTypeGrouping" Role="DataTypeGrouping" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="UprdDbModel.MasterColumn" Role="MasterColumn" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataTypeGrouping">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MasterColumn">
+              <PropertyRef Name="DataTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="FileSysIncomingData">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MessageId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DataReceived" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ReceivedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsProcessed" Type="Boolean" Nullable="false" />
+          <Property Name="DecryptedData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PipeDuns" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DatasetType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="WatchListPipelineMapping">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WatchListId" Type="Int32" Nullable="false" />
+          <Property Name="PipelineId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CounterParty">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Identifier" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PropCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PipelineID" Type="Int32" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PipeDuns" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Identifier" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PropCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RDUsageID" Type="Int32" Nullable="false" />
+          <Property Name="PipelineID" Type="Int32" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PipeDuns" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionTypeId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WatchlistRule">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ColumnId" Type="Int32" Nullable="false" />
+          <Property Name="OperatorId" Type="Int32" Nullable="false" />
+          <Property Name="RuleValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="WatchlistId" Type="Int32" Nullable="false" />
+          <Property Name="PipelineDuns" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LocationIdentifier" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AlertSent" Type="Boolean" Nullable="false" />
+          <Property Name="AlertFrequency" Type="Int32" Nullable="false" />
+          <Property Name="IsCriticalNotice" Type="Boolean" Nullable="false" />
+          <Property Name="UpperRuleValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Watchlist" Relationship="UprdDbModel.FK_dbo_WatchlistRules_dbo_Watchlists_WatchlistId" FromRole="WatchlistRule" ToRole="Watchlist" />
+        </EntityType>
+        <EntityType Name="Watchlist">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DataSetId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="ExecutionDateTime" Type="DateTime" Precision="3" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MoreDetailURLinAlert" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="WatchlistRules" Relationship="UprdDbModel.FK_dbo_WatchlistRules_dbo_Watchlists_WatchlistId" FromRole="Watchlist" ToRole="WatchlistRule" />
+        </EntityType>
+        <Association Name="FK_dbo_WatchlistRules_dbo_Watchlists_WatchlistId">
+          <End Type="UprdDbModel.Watchlist" Role="Watchlist" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="UprdDbModel.WatchlistRule" Role="WatchlistRule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Watchlist">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WatchlistRule">
+              <PropertyRef Name="WatchlistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SQTSReductionReason">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="UserPipelineMapping">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="shipperId" Type="Int32" Nullable="false" />
+          <Property Name="createdBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="createdDate" Type="DateTime" Precision="3" />
+          <Property Name="modifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="modifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="PipeDuns" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsNoms" Type="Boolean" Nullable="false" />
+          <Property Name="IsUPRD" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DashNominationStatu">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TransactionId" Type="Guid" Nullable="false" />
+          <Property Name="Environment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ShipperCompany" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UserName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PipelineName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PipeDuns" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NomTrackingId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SubmittedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="NomStatus" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="AlertTrigger" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WatchListLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Source" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="WatchlistMailMappingOACy">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UserEmail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="WatchListId" Type="Int32" Nullable="false" />
+          <Property Name="OACYID" Type="Int64" Nullable="false" />
+          <Property Name="EmailSentDateTime" Type="DateTime" Precision="3" />
+          <Property Name="IsMailSent" Type="Boolean" Nullable="false" />
+          <Property Name="WatchlistName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MoreDetailUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CycleIndicator" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PipelineID" Type="Int32" Nullable="false" />
+          <Property Name="PipelineName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Loc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LocName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OperatingCapacity" Type="Int64" Nullable="false" />
+          <Property Name="TotalScheduleQty" Type="Int64" Nullable="false" />
+          <Property Name="AvailablePercentage" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PostingDateTime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="WatchlistMailMappingSWNT">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="WatchListId" Type="Int32" Nullable="false" />
+          <Property Name="SWNTID" Type="Int64" Nullable="false" />
+          <Property Name="EmailSentDateTime" Type="DateTime" Precision="3" />
+          <Property Name="IsMailSent" Type="Boolean" Nullable="false" />
+          <Property Name="UserEmail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="WatchlistName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MoreDetailUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PipelineID" Type="Int32" Nullable="false" />
+          <Property Name="PipelineName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Loc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LocName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CriticalNoticeIndicator" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NoticeId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NoticeEffectiveDateTime" Type="DateTime" Precision="3" />
+          <Property Name="PostingDateTime" Type="DateTime" Precision="3" />
+          <Property Name="Category" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Subject" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="WatchlistMailMappingUNSC">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="WatchListId" Type="Int32" Nullable="false" />
+          <Property Name="UNSCID" Type="Int64" Nullable="false" />
+          <Property Name="EmailSentDateTime" Type="DateTime" Precision="3" />
+          <Property Name="IsMailSent" Type="Boolean" Nullable="false" />
+          <Property Name="UserEmail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="WatchlistName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MoreDetailUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PipelineID" Type="Int32" Nullable="false" />
+          <Property Name="PipelineName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Loc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LocName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UnsubscribeCapacity" Type="Int64" Nullable="false" />
+          <Property Name="ChangePercentage" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PostingDateTime" Type="DateTime" Precision="3" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="UprdDbModelStoreContainer" CdmEntityContainer="UprdDbEntities1">
+          <EntitySetMapping Name="C__MigrationHistory">
+            <EntityTypeMapping TypeName="UprdDbModel.C__MigrationHistory">
+              <MappingFragment StoreEntitySet="__MigrationHistory">
+                <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
+                <ScalarProperty Name="ContextKey" ColumnName="ContextKey" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ApplicationLogs">
+            <EntityTypeMapping TypeName="UprdDbModel.ApplicationLog">
+              <MappingFragment StoreEntitySet="ApplicationLogs">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmailQueues">
+            <EntityTypeMapping TypeName="UprdDbModel.EmailQueue">
+              <MappingFragment StoreEntitySet="EmailQueues">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ToUserID" ColumnName="ToUserID" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Recipient" ColumnName="Recipient" />
+                <ScalarProperty Name="CC" ColumnName="CC" />
+                <ScalarProperty Name="Bcc" ColumnName="Bcc" />
+                <ScalarProperty Name="IsSent" ColumnName="IsSent" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="SentDate" ColumnName="SentDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmailTemplates">
+            <EntityTypeMapping TypeName="UprdDbModel.EmailTemplate">
+              <MappingFragment StoreEntitySet="EmailTemplates">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Body" ColumnName="Body" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GISBInboxes">
+            <EntityTypeMapping TypeName="UprdDbModel.GISBInbox">
+              <MappingFragment StoreEntitySet="GISBInboxes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MessageID" ColumnName="MessageID" />
+                <ScalarProperty Name="Gisb" ColumnName="Gisb" />
+                <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                <ScalarProperty Name="ErrorDescription" ColumnName="ErrorDescription" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GISBOutboxes">
+            <EntityTypeMapping TypeName="UprdDbModel.GISBOutbox">
+              <MappingFragment StoreEntitySet="GISBOutboxes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MessageID" ColumnName="MessageID" />
+                <ScalarProperty Name="Gisb" ColumnName="Gisb" />
+                <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                <ScalarProperty Name="ErrorDescription" ColumnName="ErrorDescription" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Inboxes">
+            <EntityTypeMapping TypeName="UprdDbModel.Inbox">
+              <MappingFragment StoreEntitySet="Inboxes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MessageID" ColumnName="MessageID" />
+                <ScalarProperty Name="DatasetID" ColumnName="DatasetID" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="GISB" ColumnName="GISB" />
+                <ScalarProperty Name="IsTest" ColumnName="IsTest" />
+                <ScalarProperty Name="IsRead" ColumnName="IsRead" />
+                <ScalarProperty Name="PipelineID" ColumnName="PipelineID" />
+                <ScalarProperty Name="RecipientCompanyID" ColumnName="RecipientCompanyID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IncomingDatas">
+            <EntityTypeMapping TypeName="UprdDbModel.IncomingData">
+              <MappingFragment StoreEntitySet="IncomingDatas">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MessageId" ColumnName="MessageId" />
+                <ScalarProperty Name="DataReceived" ColumnName="DataReceived" />
+                <ScalarProperty Name="ReceivedAt" ColumnName="ReceivedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="JobStackErrorLogs">
+            <EntityTypeMapping TypeName="UprdDbModel.JobStackErrorLog">
+              <MappingFragment StoreEntitySet="JobStackErrorLogs">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="WorkflowId" ColumnName="WorkflowId" />
+                <ScalarProperty Name="TranactionId" ColumnName="TranactionId" />
+                <ScalarProperty Name="StageId" ColumnName="StageId" />
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="JobWorkflows">
+            <EntityTypeMapping TypeName="UprdDbModel.JobWorkflow">
+              <MappingFragment StoreEntitySet="JobWorkflows">
+                <ScalarProperty Name="WorkflowId" ColumnName="WorkflowId" />
+                <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StageId" ColumnName="StageId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="metadataDatasets">
+            <EntityTypeMapping TypeName="UprdDbModel.metadataDataset">
+              <MappingFragment StoreEntitySet="metadataDatasets">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Identifier" ColumnName="Identifier" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="Direction" ColumnName="Direction" />
+                <ScalarProperty Name="IsUPRDAttribute" ColumnName="IsUPRDAttribute" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="metadataErrorCodes">
+            <EntityTypeMapping TypeName="UprdDbModel.metadataErrorCode">
+              <MappingFragment StoreEntitySet="metadataErrorCodes">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="DataElement" ColumnName="DataElement" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="IsRequired" ColumnName="IsRequired" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="metadataPipelineEncKeyInfoes">
+            <EntityTypeMapping TypeName="UprdDbModel.metadataPipelineEncKeyInfo">
+              <MappingFragment StoreEntitySet="metadataPipelineEncKeyInfoes">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="PipelineId" ColumnName="PipelineId" />
+                <ScalarProperty Name="KeyName" ColumnName="KeyName" />
+                <ScalarProperty Name="PipeDuns" ColumnName="PipeDuns" />
+                <ScalarProperty Name="PgpKey" ColumnName="PgpKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OACYPerTransactions">
+            <EntityTypeMapping TypeName="UprdDbModel.OACYPerTransaction">
+              <MappingFragment StoreEntitySet="OACYPerTransactions">
+                <ScalarProperty Name="OACYID" ColumnName="OACYID" />
+                <ScalarProperty Name="TransactionID" ColumnName="TransactionID" />
+                <ScalarProperty Name="ReceiceFileID" ColumnName="ReceiceFileID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="TransactionServiceProviderPropCode" ColumnName="TransactionServiceProviderPropCode" />
+                <ScalarProperty Name="TransactionServiceProvider" ColumnName="TransactionServiceProvider" />
+                <ScalarProperty Name="PostingDateTime" ColumnName="PostingDateTime" />
+                <ScalarProperty Name="EffectiveGasDayTime" ColumnName="EffectiveGasDayTime" />
+                <ScalarProperty Name="Loc" ColumnName="Loc" />
+                <ScalarProperty Name="LocName" ColumnName="LocName" />
+                <ScalarProperty Name="LocZn" ColumnName="LocZn" />
+                <ScalarProperty Name="FlowIndicator" ColumnName="FlowIndicator" />
+                <ScalarProperty Name="LocPropDesc" ColumnName="LocPropDesc" />
+                <ScalarProperty Name="LocQTIDesc" ColumnName="LocQTIDesc" />
+                <ScalarProperty Name="MeasurementBasis" ColumnName="MeasurementBasis" />
+                <ScalarProperty Name="ITIndicator" ColumnName="ITIndicator" />
+                <ScalarProperty Name="AllQtyAvailableIndicator" ColumnName="AllQtyAvailableIndicator" />
+                <ScalarProperty Name="DesignCapacity" ColumnName="DesignCapacity" />
+                <ScalarProperty Name="OperatingCapacity" ColumnName="OperatingCapacity" />
+                <ScalarProperty Name="TotalScheduleQty" ColumnName="TotalScheduleQty" />
+                <ScalarProperty Name="OperationallyAvailableQty" ColumnName="OperationallyAvailableQty" />
+                <ScalarProperty Name="PipelineID" ColumnName="PipelineID" />
+                <ScalarProperty Name="CycleIndicator" ColumnName="CycleIndicator" />
+                <ScalarProperty Name="AvailablePercentage" ColumnName="AvailablePercentage" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Outbox_MultipartForm">
+            <EntityTypeMapping TypeName="UprdDbModel.Outbox_MultipartForm">
+              <MappingFragment StoreEntitySet="Outbox_MultipartForm">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="OutboxID" ColumnName="OutboxID" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Outboxes">
+            <EntityTypeMapping TypeName="UprdDbModel.Outbox">
+              <MappingFragment StoreEntitySet="Outboxes">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="MessageID" ColumnName="MessageID" />
+                <ScalarProperty Name="DatasetID" ColumnName="DatasetID" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="GISB" ColumnName="GISB" />
+                <ScalarProperty Name="IsTest" ColumnName="IsTest" />
+                <ScalarProperty Name="PipelineID" ColumnName="PipelineID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="IsScheduled" ColumnName="IsScheduled" />
+                <ScalarProperty Name="ScheduledDate" ColumnName="ScheduledDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PipelineEDISettings">
+            <EntityTypeMapping TypeName="UprdDbModel.PipelineEDISetting">
+              <MappingFragment StoreEntitySet="PipelineEDISettings">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="PipeDuns" ColumnName="PipeDuns" />
+                <ScalarProperty Name="ISA08_segment" ColumnName="ISA08_segment" />
+                <ScalarProperty Name="ISA06_Segment" ColumnName="ISA06_Segment" />
+                <ScalarProperty Name="ISA11_Segment" ColumnName="ISA11_Segment" />
+                <ScalarProperty Name="ISA12_Segment" ColumnName="ISA12_Segment" />
+                <ScalarProperty Name="ISA16_Segment" ColumnName="ISA16_Segment" />
+                <ScalarProperty Name="GS01_Segment" ColumnName="GS01_Segment" />
+                <ScalarProperty Name="GS02_Segment" ColumnName="GS02_Segment" />
+                <ScalarProperty Name="GS03_Segment" ColumnName="GS03_Segment" />
+                <ScalarProperty Name="GS07_Segment" ColumnName="GS07_Segment" />
+                <ScalarProperty Name="GS08_Segment" ColumnName="GS08_Segment" />
+                <ScalarProperty Name="ST01_Segment" ColumnName="ST01_Segment" />
+                <ScalarProperty Name="DataSeparator" ColumnName="DataSeparator" />
+                <ScalarProperty Name="SegmentSeperator" ColumnName="SegmentSeperator" />
+                <ScalarProperty Name="DatasetId" ColumnName="DatasetId" />
+                <ScalarProperty Name="ShipperCompDuns" ColumnName="ShipperCompDuns" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="SendManually" ColumnName="SendManually" />
+                <ScalarProperty Name="ForOacy" ColumnName="ForOacy" />
+                <ScalarProperty Name="ForUnsc" ColumnName="ForUnsc" />
+                <ScalarProperty Name="ForSwnt" ColumnName="ForSwnt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pipelines">
+            <EntityTypeMapping TypeName="UprdDbModel.Pipeline">
+              <MappingFragment StoreEntitySet="Pipelines">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DUNSNo" ColumnName="DUNSNo" />
+                <ScalarProperty Name="TSPId" ColumnName="TSPId" />
+                <ScalarProperty Name="ModelTypeID" ColumnName="ModelTypeID" />
+                <ScalarProperty Name="ToUseTSPDUNS" ColumnName="ToUseTSPDUNS" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="IsUprdActive" ColumnName="IsUprdActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Settings">
+            <EntityTypeMapping TypeName="UprdDbModel.Setting">
+              <MappingFragment StoreEntitySet="Settings">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShipperCompanies">
+            <EntityTypeMapping TypeName="UprdDbModel.ShipperCompany">
+              <MappingFragment StoreEntitySet="ShipperCompanies">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DUNS" ColumnName="DUNS" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="SubscriptionID" ColumnName="SubscriptionID" />
+                <ScalarProperty Name="ShipperAddress" ColumnName="ShipperAddress" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Shippers">
+            <EntityTypeMapping TypeName="UprdDbModel.Shipper">
+              <MappingFragment StoreEntitySet="Shippers">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="ShipperCompanyID" ColumnName="ShipperCompanyID" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SwntPerTransactions">
+            <EntityTypeMapping TypeName="UprdDbModel.SwntPerTransaction">
+              <MappingFragment StoreEntitySet="SwntPerTransactions">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
+                <ScalarProperty Name="ReceiveFileId" ColumnName="ReceiveFileId" />
+                <ScalarProperty Name="PipelineId" ColumnName="PipelineId" />
+                <ScalarProperty Name="TransactionIdentifierCode" ColumnName="TransactionIdentifierCode" />
+                <ScalarProperty Name="TransactionControlNumber" ColumnName="TransactionControlNumber" />
+                <ScalarProperty Name="TransactionSetPurposeCode" ColumnName="TransactionSetPurposeCode" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="NoticeEffectiveDateTime" ColumnName="NoticeEffectiveDateTime" />
+                <ScalarProperty Name="NoticeEndDateTime" ColumnName="NoticeEndDateTime" />
+                <ScalarProperty Name="PostingDateTime" ColumnName="PostingDateTime" />
+                <ScalarProperty Name="ResponseDateTime" ColumnName="ResponseDateTime" />
+                <ScalarProperty Name="TransportationserviceProvider" ColumnName="TransportationserviceProvider" />
+                <ScalarProperty Name="TransportationServiceProviderPropCode" ColumnName="TransportationServiceProviderPropCode" />
+                <ScalarProperty Name="CriticalNoticeIndicator" ColumnName="CriticalNoticeIndicator" />
+                <ScalarProperty Name="FreeFormMessageText" ColumnName="FreeFormMessageText" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="NoticeId" ColumnName="NoticeId" />
+                <ScalarProperty Name="NoticeTypeDesc1" ColumnName="NoticeTypeDesc1" />
+                <ScalarProperty Name="NoticeTypeDesc2" ColumnName="NoticeTypeDesc2" />
+                <ScalarProperty Name="ReqrdResp" ColumnName="ReqrdResp" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="PriorNotice" ColumnName="PriorNotice" />
+                <ScalarProperty Name="NoticeStatusDesc" ColumnName="NoticeStatusDesc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TaskMgrJobs">
+            <EntityTypeMapping TypeName="UprdDbModel.TaskMgrJob">
+              <MappingFragment StoreEntitySet="TaskMgrJobs">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="IsSending" ColumnName="IsSending" />
+                <ScalarProperty Name="StageId" ColumnName="StageId" />
+                <ScalarProperty Name="DatasetId" ColumnName="DatasetId" />
+                <ScalarProperty Name="EDICheckCount" ColumnName="EDICheckCount" />
+                <ScalarProperty Name="NoOfXmlInEDI" ColumnName="NoOfXmlInEDI" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TaskMgrXmls">
+            <EntityTypeMapping TypeName="UprdDbModel.TaskMgrXml">
+              <MappingFragment StoreEntitySet="TaskMgrXmls">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
+                <ScalarProperty Name="XmlData" ColumnName="XmlData" />
+                <ScalarProperty Name="PipelineId" ColumnName="PipelineId" />
+                <ScalarProperty Name="AddedOn" ColumnName="AddedOn" />
+                <ScalarProperty Name="IsProccessed" ColumnName="IsProccessed" />
+                <ScalarProperty Name="EDIData" ColumnName="EDIData" />
+                <ScalarProperty Name="EncEDIData" ColumnName="EncEDIData" />
+                <ScalarProperty Name="SendUrl" ColumnName="SendUrl" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TradingPartnerWorksheets">
+            <EntityTypeMapping TypeName="UprdDbModel.TradingPartnerWorksheet">
+              <MappingFragment StoreEntitySet="TradingPartnerWorksheets">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PipelineID" ColumnName="PipelineID" />
+                <ScalarProperty Name="UsernameLive" ColumnName="UsernameLive" />
+                <ScalarProperty Name="PasswordLive" ColumnName="PasswordLive" />
+                <ScalarProperty Name="URLLive" ColumnName="URLLive" />
+                <ScalarProperty Name="KeyLive" ColumnName="KeyLive" />
+                <ScalarProperty Name="UsernameTest" ColumnName="UsernameTest" />
+                <ScalarProperty Name="PasswordTest" ColumnName="PasswordTest" />
+                <ScalarProperty Name="URLTest" ColumnName="URLTest" />
+                <ScalarProperty Name="KeyTest" ColumnName="KeyTest" />
+                <ScalarProperty Name="ReceiveSubSeperator" ColumnName="ReceiveSubSeperator" />
+                <ScalarProperty Name="ReceiveDataSeperator" ColumnName="ReceiveDataSeperator" />
+                <ScalarProperty Name="ReceiveSegmentSeperator" ColumnName="ReceiveSegmentSeperator" />
+                <ScalarProperty Name="SendSubSeperator" ColumnName="SendSubSeperator" />
+                <ScalarProperty Name="SendDataSeperator" ColumnName="SendDataSeperator" />
+                <ScalarProperty Name="SendSegmentSeperator" ColumnName="SendSegmentSeperator" />
+                <ScalarProperty Name="IsTest" ColumnName="IsTest" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="PipeDuns" ColumnName="PipeDuns" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TransactionLogs">
+            <EntityTypeMapping TypeName="UprdDbModel.TransactionLog">
+              <MappingFragment StoreEntitySet="TransactionLogs">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TransportationServiceProviders">
+            <EntityTypeMapping TypeName="UprdDbModel.TransportationServiceProvider">
+              <MappingFragment StoreEntitySet="TransportationServiceProviders">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DUNSNo" ColumnName="DUNSNo" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UnscPerTransactions">
+            <EntityTypeMapping TypeName="UprdDbModel.UnscPerTransaction">
+              <MappingFragment StoreEntitySet="UnscPerTransactions">
+                <ScalarProperty Name="UnscID" ColumnName="UnscID" />
+                <ScalarProperty Name="TransactionID" ColumnName="TransactionID" />
+                <ScalarProperty Name="ReceiveFileID" ColumnName="ReceiveFileID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="PipelineID" ColumnName="PipelineID" />
+                <ScalarProperty Name="TransactionServiceProvider" ColumnName="TransactionServiceProvider" />
+                <ScalarProperty Name="TransactionServiceProviderPropCode" ColumnName="TransactionServiceProviderPropCode" />
+                <ScalarProperty Name="Loc" ColumnName="Loc" />
+                <ScalarProperty Name="LocName" ColumnName="LocName" />
+                <ScalarProperty Name="LocZn" ColumnName="LocZn" />
+                <ScalarProperty Name="LocPurpDesc" ColumnName="LocPurpDesc" />
+                <ScalarProperty Name="LocQTIDesc" ColumnName="LocQTIDesc" />
+                <ScalarProperty Name="MeasBasisDesc" ColumnName="MeasBasisDesc" />
+                <ScalarProperty Name="TotalDesignCapacity" ColumnName="TotalDesignCapacity" />
+                <ScalarProperty Name="UnsubscribeCapacity" ColumnName="UnsubscribeCapacity" />
+                <ScalarProperty Name="PostingDateTime" ColumnName="PostingDateTime" />
+                <ScalarProperty Name="EffectiveGasDayTime" ColumnName="EffectiveGasDayTime" />
+                <ScalarProperty Name="EndingEffectiveDay" ColumnName="EndingEffectiveDay" />
+                <ScalarProperty Name="ChangePercentage" ColumnName="ChangePercentage" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UPRDStatus">
+            <EntityTypeMapping TypeName="UprdDbModel.UPRDStatu">
+              <MappingFragment StoreEntitySet="UPRDStatus">
+                <ScalarProperty Name="UPRD_ID" ColumnName="UPRD_ID" />
+                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
+                <ScalarProperty Name="RURD_ID" ColumnName="RURD_ID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
+                <ScalarProperty Name="DatasetSummary" ColumnName="DatasetSummary" />
+                <ScalarProperty Name="DatasetRequested" ColumnName="DatasetRequested" />
+                <ScalarProperty Name="IsRURDReceived" ColumnName="IsRURDReceived" />
+                <ScalarProperty Name="IsDataSetAvailable" ColumnName="IsDataSetAvailable" />
+                <ScalarProperty Name="IsDatasetReceived" ColumnName="IsDatasetReceived" />
+                <ScalarProperty Name="PipeDuns" ColumnName="PipeDuns" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WatchListMailAlertUPRDMappings">
+            <EntityTypeMapping TypeName="UprdDbModel.WatchListMailAlertUPRDMapping">
+              <MappingFragment StoreEntitySet="WatchListMailAlertUPRDMappings">
+                <ScalarProperty Name="EmailSentDateTime" ColumnName="EmailSentDateTime" />
+                <ScalarProperty Name="UprdID" ColumnName="UprdID" />
+                <ScalarProperty Name="DataSetId" ColumnName="DataSetId" />
+                <ScalarProperty Name="WatchListId" ColumnName="WatchListId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DataTypeGroupings">
+            <EntityTypeMapping TypeName="UprdDbModel.DataTypeGrouping">
+              <MappingFragment StoreEntitySet="DataTypeGroupings">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LogicalOperators">
+            <EntityTypeMapping TypeName="UprdDbModel.LogicalOperator">
+              <MappingFragment StoreEntitySet="LogicalOperators">
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="DataTypeId" ColumnName="DataTypeId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MasterColumns">
+            <EntityTypeMapping TypeName="UprdDbModel.MasterColumn">
+              <MappingFragment StoreEntitySet="MasterColumns">
+                <ScalarProperty Name="DataTypeId" ColumnName="DataTypeId" />
+                <ScalarProperty Name="DataSetId" ColumnName="DataSetId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FileSysIncomingDatas">
+            <EntityTypeMapping TypeName="UprdDbModel.FileSysIncomingData">
+              <MappingFragment StoreEntitySet="FileSysIncomingDatas">
+                <ScalarProperty Name="DatasetType" ColumnName="DatasetType" />
+                <ScalarProperty Name="PipeDuns" ColumnName="PipeDuns" />
+                <ScalarProperty Name="DecryptedData" ColumnName="DecryptedData" />
+                <ScalarProperty Name="IsProcessed" ColumnName="IsProcessed" />
+                <ScalarProperty Name="ReceivedAt" ColumnName="ReceivedAt" />
+                <ScalarProperty Name="DataReceived" ColumnName="DataReceived" />
+                <ScalarProperty Name="MessageId" ColumnName="MessageId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WatchListPipelineMappings">
+            <EntityTypeMapping TypeName="UprdDbModel.WatchListPipelineMapping">
+              <MappingFragment StoreEntitySet="WatchListPipelineMappings">
+                <ScalarProperty Name="PipelineId" ColumnName="PipelineId" />
+                <ScalarProperty Name="WatchListId" ColumnName="WatchListId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CounterParties">
+            <EntityTypeMapping TypeName="UprdDbModel.CounterParty">
+              <MappingFragment StoreEntitySet="CounterParties">
+                <ScalarProperty Name="PipeDuns" ColumnName="PipeDuns" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="PipelineID" ColumnName="PipelineID" />
+                <ScalarProperty Name="PropCode" ColumnName="PropCode" />
+                <ScalarProperty Name="Identifier" ColumnName="Identifier" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Locations">
+            <EntityTypeMapping TypeName="UprdDbModel.Location">
+              <MappingFragment StoreEntitySet="Locations">
+                <ScalarProperty Name="TransactionTypeId" ColumnName="TransactionTypeId" />
+                <ScalarProperty Name="PipeDuns" ColumnName="PipeDuns" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="PipelineID" ColumnName="PipelineID" />
+                <ScalarProperty Name="RDUsageID" ColumnName="RDUsageID" />
+                <ScalarProperty Name="PropCode" ColumnName="PropCode" />
+                <ScalarProperty Name="Identifier" ColumnName="Identifier" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WatchlistRules">
+            <EntityTypeMapping TypeName="UprdDbModel.WatchlistRule">
+              <MappingFragment StoreEntitySet="WatchlistRules">
+                <ScalarProperty Name="UpperRuleValue" ColumnName="UpperRuleValue" />
+                <ScalarProperty Name="IsCriticalNotice" ColumnName="IsCriticalNotice" />
+                <ScalarProperty Name="AlertFrequency" ColumnName="AlertFrequency" />
+                <ScalarProperty Name="AlertSent" ColumnName="AlertSent" />
+                <ScalarProperty Name="LocationIdentifier" ColumnName="LocationIdentifier" />
+                <ScalarProperty Name="PipelineDuns" ColumnName="PipelineDuns" />
+                <ScalarProperty Name="WatchlistId" ColumnName="WatchlistId" />
+                <ScalarProperty Name="RuleValue" ColumnName="RuleValue" />
+                <ScalarProperty Name="OperatorId" ColumnName="OperatorId" />
+                <ScalarProperty Name="ColumnId" ColumnName="ColumnId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Watchlists">
+            <EntityTypeMapping TypeName="UprdDbModel.Watchlist">
+              <MappingFragment StoreEntitySet="Watchlists">
+                <ScalarProperty Name="MoreDetailURLinAlert" ColumnName="MoreDetailURLinAlert" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="ExecutionDateTime" ColumnName="ExecutionDateTime" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="DataSetId" ColumnName="DataSetId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SQTSReductionReasons">
+            <EntityTypeMapping TypeName="UprdDbModel.SQTSReductionReason">
+              <MappingFragment StoreEntitySet="SQTSReductionReasons">
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserPipelineMappings">
+            <EntityTypeMapping TypeName="UprdDbModel.UserPipelineMapping">
+              <MappingFragment StoreEntitySet="UserPipelineMappings">
+                <ScalarProperty Name="IsUPRD" ColumnName="IsUPRD" />
+                <ScalarProperty Name="IsNoms" ColumnName="IsNoms" />
+                <ScalarProperty Name="PipeDuns" ColumnName="PipeDuns" />
+                <ScalarProperty Name="modifiedDate" ColumnName="modifiedDate" />
+                <ScalarProperty Name="modifiedBy" ColumnName="modifiedBy" />
+                <ScalarProperty Name="createdDate" ColumnName="createdDate" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+                <ScalarProperty Name="shipperId" ColumnName="shipperId" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DashNominationStatus">
+            <EntityTypeMapping TypeName="UprdDbModel.DashNominationStatu">
+              <MappingFragment StoreEntitySet="DashNominationStatus">
+                <ScalarProperty Name="AlertTrigger" ColumnName="AlertTrigger" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="NomStatus" ColumnName="NomStatus" />
+                <ScalarProperty Name="SubmittedDate" ColumnName="SubmittedDate" />
+                <ScalarProperty Name="NomTrackingId" ColumnName="NomTrackingId" />
+                <ScalarProperty Name="PipeDuns" ColumnName="PipeDuns" />
+                <ScalarProperty Name="PipelineName" ColumnName="PipelineName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="ShipperCompany" ColumnName="ShipperCompany" />
+                <ScalarProperty Name="Environment" ColumnName="Environment" />
+                <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WatchListLogs">
+            <EntityTypeMapping TypeName="UprdDbModel.WatchListLog">
+              <MappingFragment StoreEntitySet="WatchListLogs">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WatchlistMailMappingOACies">
+            <EntityTypeMapping TypeName="UprdDbModel.WatchlistMailMappingOACy">
+              <MappingFragment StoreEntitySet="WatchlistMailMappingOACies">
+                <ScalarProperty Name="PostingDateTime" ColumnName="PostingDateTime" />
+                <ScalarProperty Name="AvailablePercentage" ColumnName="AvailablePercentage" />
+                <ScalarProperty Name="TotalScheduleQty" ColumnName="TotalScheduleQty" />
+                <ScalarProperty Name="OperatingCapacity" ColumnName="OperatingCapacity" />
+                <ScalarProperty Name="LocName" ColumnName="LocName" />
+                <ScalarProperty Name="Loc" ColumnName="Loc" />
+                <ScalarProperty Name="PipelineName" ColumnName="PipelineName" />
+                <ScalarProperty Name="PipelineID" ColumnName="PipelineID" />
+                <ScalarProperty Name="CycleIndicator" ColumnName="CycleIndicator" />
+                <ScalarProperty Name="MoreDetailUrl" ColumnName="MoreDetailUrl" />
+                <ScalarProperty Name="WatchlistName" ColumnName="WatchlistName" />
+                <ScalarProperty Name="IsMailSent" ColumnName="IsMailSent" />
+                <ScalarProperty Name="EmailSentDateTime" ColumnName="EmailSentDateTime" />
+                <ScalarProperty Name="OACYID" ColumnName="OACYID" />
+                <ScalarProperty Name="WatchListId" ColumnName="WatchListId" />
+                <ScalarProperty Name="UserEmail" ColumnName="UserEmail" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WatchlistMailMappingSWNTs">
+            <EntityTypeMapping TypeName="UprdDbModel.WatchlistMailMappingSWNT">
+              <MappingFragment StoreEntitySet="WatchlistMailMappingSWNTs">
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="PostingDateTime" ColumnName="PostingDateTime" />
+                <ScalarProperty Name="NoticeEffectiveDateTime" ColumnName="NoticeEffectiveDateTime" />
+                <ScalarProperty Name="NoticeId" ColumnName="NoticeId" />
+                <ScalarProperty Name="CriticalNoticeIndicator" ColumnName="CriticalNoticeIndicator" />
+                <ScalarProperty Name="LocName" ColumnName="LocName" />
+                <ScalarProperty Name="Loc" ColumnName="Loc" />
+                <ScalarProperty Name="PipelineName" ColumnName="PipelineName" />
+                <ScalarProperty Name="PipelineID" ColumnName="PipelineID" />
+                <ScalarProperty Name="MoreDetailUrl" ColumnName="MoreDetailUrl" />
+                <ScalarProperty Name="WatchlistName" ColumnName="WatchlistName" />
+                <ScalarProperty Name="UserEmail" ColumnName="UserEmail" />
+                <ScalarProperty Name="IsMailSent" ColumnName="IsMailSent" />
+                <ScalarProperty Name="EmailSentDateTime" ColumnName="EmailSentDateTime" />
+                <ScalarProperty Name="SWNTID" ColumnName="SWNTID" />
+                <ScalarProperty Name="WatchListId" ColumnName="WatchListId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WatchlistMailMappingUNSCs">
+            <EntityTypeMapping TypeName="UprdDbModel.WatchlistMailMappingUNSC">
+              <MappingFragment StoreEntitySet="WatchlistMailMappingUNSCs">
+                <ScalarProperty Name="PostingDateTime" ColumnName="PostingDateTime" />
+                <ScalarProperty Name="ChangePercentage" ColumnName="ChangePercentage" />
+                <ScalarProperty Name="UnsubscribeCapacity" ColumnName="UnsubscribeCapacity" />
+                <ScalarProperty Name="LocName" ColumnName="LocName" />
+                <ScalarProperty Name="Loc" ColumnName="Loc" />
+                <ScalarProperty Name="PipelineName" ColumnName="PipelineName" />
+                <ScalarProperty Name="PipelineID" ColumnName="PipelineID" />
+                <ScalarProperty Name="MoreDetailUrl" ColumnName="MoreDetailUrl" />
+                <ScalarProperty Name="WatchlistName" ColumnName="WatchlistName" />
+                <ScalarProperty Name="UserEmail" ColumnName="UserEmail" />
+                <ScalarProperty Name="IsMailSent" ColumnName="IsMailSent" />
+                <ScalarProperty Name="EmailSentDateTime" ColumnName="EmailSentDateTime" />
+                <ScalarProperty Name="UNSCID" ColumnName="UNSCID" />
+                <ScalarProperty Name="WatchListId" ColumnName="WatchListId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

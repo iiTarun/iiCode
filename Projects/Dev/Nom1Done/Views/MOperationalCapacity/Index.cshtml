@@ -1,0 +1,276 @@
+﻿@model Nom1Done.Nom.ViewModel.SearchCriteriaOACY
+@using System.Globalization;
+@*@using GridMvc.Html*@
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*<link href="~/Content/customGrid.css" rel="stylesheet" type="text/css"/>*@
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+<link href="~/Assets/plugins/datepicker/datepicker3.css" rel="stylesheet" />
+<script src="~/Assets/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<link href="~/Content/Gridmvc.css" rel="stylesheet" />
+<script src="~/Scripts/gridmvc.js"></script>
+<style>
+    .grid-header {
+        background-color: #3c8dbc;
+        border-color: #367fa9;
+    }
+
+    .grid-header-title a {
+        color: white;
+    }
+
+    .VerticalCenter {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+</style>
+<script>
+
+    $(document).ready(function () {
+        $("#postStartDate").datepicker({
+            dateFormat: 'mm/dd/yyyy', todayHighlight: 'TRUE',
+            autoclose: true, clearBtn: true });
+        $("#postEndDate").datepicker({
+            dateFormat: 'mm/dd/yyyy', todayHighlight: 'TRUE',
+            autoclose: true, clearBtn: true});
+        $("#EffectiveStartDate").datepicker({
+            dateFormat: 'mm/dd/yyyy', todayHighlight: 'TRUE',
+            autoclose: true, clearBtn: true });
+        $("#EffectiveEndDate").datepicker({
+            dateFormat: 'mm/dd/yyyy', todayHighlight: 'TRUE',
+            autoclose: true, clearBtn: true });
+    });
+
+
+    function CheckValidations() {
+        //var result = false;
+        //return true;
+    var val=$("#postStartDate").val();
+        if (val == "") {
+            toastr.warning("", "Please select postdate.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+    function DownloadExcel() {
+        var res = CheckValidations();
+        if (res) {
+            //var PipelineDuns=$("#PipelineDuns").val();
+        var pipelineduns=$("#PipelineDuns").val();
+        var flagDefaultPage=$("#flagDefault").val();
+        var keyword=$("#keyword").val();
+        var watchlistId = 0;//$("#WatchListId").val();
+        var cycle=$("#Cycle").val();
+        var postStartDate = $('#postStartDate').val();
+        if($.trim(postStartDate) == ''){
+            var psDate="";
+        }else{
+            var psdate1=new Date(postStartDate);
+            var psDate=psdate1.toISOString();
+        }
+
+        var effectiveStartDate = $('#EffectiveStartDate').val();
+        if($.trim(effectiveStartDate) == ''){
+            var esDate="";
+        }else{
+            var psdate3=new Date(effectiveStartDate);
+            var esDate=psdate3.toISOString();
+        }
+
+
+        //var dataFilter = { PipelineDuns: pipelineduns, Cycle: cycle, flagDefault: flagDefaultPage, PipelineID: pipelineId, postStartDate: psDate, EffectiveGasDate: esDate, keyword: keyword, WatchListId: watchlistId };
+
+
+        $('#postStartDate').val((postStartDate.split(' '))[0]);
+        $('#EffectiveStartDate').val((effectiveStartDate.split(' '))[0]);
+        window.location.href = '@Url.Action("DownloadCSV", "MOperationalCapacity")' + "?PipelineDuns=" + pipelineduns + "&postStartDate=" + psDate + "&EffectiveGasDate=" + esDate + "&keyword=" + keyword + "&Cycle=" + cycle;
+        }
+
+    }
+</script>
+<div class="section clearfix object-non-visible" data-animation-effect="fadeIn">
+    <div class="container">
+        <div class="row">
+            <div class="ibox-title" style="background-color:#f3f3f4 !important;">
+                <h1 id="about" class="title text-left">Operationally Available Capacity<span id="pipelinedetail"></span></h1>
+            </div>
+        </div>
+        @if (ViewBag.IsPermission != null && ViewBag.IsPermission == true)
+        {
+
+            <div class="ibox-content" style="background-color:#f3f3f4 !important;" id="dvPageResult"></div>
+            <div id="dvSearch">
+                @using (Html.BeginForm("index", "MOperationalCapacity"))
+                {
+                    // @Html.HiddenFor(a => a.PipelineID)
+                    @Html.HiddenFor(a => a.flagDefault)
+                    @Html.HiddenFor(a => a.PipelineDuns)
+                    <div class="row">
+
+                        <div class="col-md-3 col-md-offset-1">
+                            <label class="form-label">Post Start Date</label>
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.postStartDate, "{0:MM/dd/yyyy}", new { id = "postStartDate", @class = "form-control login-textbox", @style = "background-color: white;" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">CST Post Time (greater than)</label>
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.postTime, new { id = "postTime", @class = "form-control login-textbox", @style = "background-color: white;" })
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Effective Gas Day</label>
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.EffectiveStartDate, "{0:MM/dd/yyyy}", new { id = "EffectiveStartDate", @class = "form-control login-textbox", @style = "background-color: white;" })
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row" style="margin-top:15px !important;">
+                        <div class="col-md-3 col-md-offset-1">
+                            <label class="form-label">Cycle</label>
+                            @*@Html.DropDownListFor(r => r.Cycle, (IEnumerable<SelectListItem>)ViewBag.Cycles, "--Select Cycle--", new {@class = "form-control" })*@
+                            @Html.TextBoxFor(m => m.Cycle, new { @placeHolder = "Search by Cycle", @class = "form-control login-textbox" })
+                        </div>
+                        <div class="col-md-4 ">
+                            <label class="form-label">Location</label>
+                            @Html.TextBoxFor(m => m.keyword, new { @placeHolder = "Search by Location / Location Name", @class = "form-control login-textbox" })
+                        </div>
+                    </div>
+
+
+                    @*<div class="row" style="margin-top:15px !important;">
+                        <div class="col-md-4 col-md-offset-1">
+                            <label class="form-label"> Or Search by WatchList</label>
+                            @Html.DropDownListFor(a => a.WatchListId, new SelectList(ViewBag.WatchList, "id", "ListName", Model.WatchListId), "-Select-", new { @class = "form-control" })
+                        </div>
+                    </div>*@
+
+                    <div class="row" style="margin-top:15px !important;">
+
+                        <div class="col-md-2 col-md-offset-1">
+                            <button onclick="return CheckValidations();" style="background-color:#FF6C3A !important; border-color:#FF6C3A !important;" class="btn btn-primary btn-block" type="submit"><span class="icon_search"></span>&nbsp; Search</button>
+                        </div>
+
+                        <div class="col-md-2">
+                            <a class="btn btn-primary btn-block" style="background-color:#FF6C3A !important; border-color:#FF6C3A !important;" href="~/MOperationalCapacity/Index?pipelineDuns=@Model.PipelineDuns&IsClearFilter=True">Reset </a>
+                        </div>
+
+                        <div class="col-md-2">
+                            <button class="btn btn-primary btn-block" style="background-color:#FF6C3A !important; border-color:#FF6C3A !important;" onclick="DownloadExcel();" name="download" type="button">Download Excel</button>
+                        </div>
+
+                    </div>
+                    <br />
+                    <br />
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-content" style="background-color:#f3f3f4 !important;">
+                                    <table class="table table-bordered table-hover" id="OACYTable">
+                                        <thead>
+                                            <tr>
+                                                <th style="min-width: 120px;">Location/LocationPropCode</th>
+                                                <th style="min-width: 120px;">LocationName</th>
+                                                <th style="min-width: 60px;">Cycle</th>
+                                                <th style="min-width: 120px;">DesignCapacity</th>
+                                                <th style="min-width: 120px;">OperatingCapacity</th>
+                                                <th style="min-width: 120px;">TotSchQty</th>
+                                                <th style="min-width: 120px;">OperAvailQty</th>
+                                                <th style="min-width: 60px;">Available%</th>
+                                                <th style="min-width: 120px;">Eff Gas Day</th>
+                                                <th style="min-width: 120px;">Post Start Date</th>
+                                                <th style="min-width: 60px;">FlowIndicator</th>
+                                                <th style="min-width: 120px;">LocQTIDesc</th>
+                                                <th style="min-width: 120px;">MeasBasis</th>
+                                                <th style="min-width: 60px;">IT</th>
+                                                <th style="min-width: 60px;">AllQtyAvail</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.OacyPerTransactionViewModel)
+                                            {
+                                                <tr class="gradeX">
+                                                    <td>@item.Loc</td>
+                                                    <td>@item.LocName</td>
+                                                    <td>@item.CycleIndicator</td>
+                                                    <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.DesignCapacity)</td>
+                                                    <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.OperatingCapacity)</td>
+                                                    <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.TotalScheduleQty)</td>
+                                                    <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.OperationallyAvailableQty)</td>
+                                                    <td>@item.AvailablePercentage</td>
+                                                    <td>@item.EffectiveGasDay</td>
+                                                    <td>@item.PostingDate</td>
+                                                    <td>@item.FlowIndicator</td>
+                                                    <td>@item.LocQTIDesc</td>
+                                                    <td>@item.MeasurementBasis</td>
+                                                    <td>@item.ITIndicator</td>
+                                                    <td>@item.AllQtyAvailableIndicator</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div>
+                <div style="padding-top:170px" class="dz-clickable h1 text-center"><b>You do not have access to this pipeline.</b></div>
+            </div>
+        }
+
+    </div>
+</div>
+@if (ViewBag.IsPermission != null && ViewBag.IsPermission == true)
+{
+
+    <script>
+    function formatAMPM(date) {
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            var strTime = hours + ':' + minutes + ' ' + ampm;
+            return strTime;
+        }
+        var dt = '@Model.postTime.Value';
+        var dts = new Date(dt);
+        var Time = formatAMPM(dts);
+    $(document).ready(function () {
+        $("#postTime").timepicker({
+                timeFormat: 'h:mm p',
+            interval: 60,
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true
+        }).val(Time);
+            var effectiveStartDate = $('#EffectiveStartDate').val();
+            var postStartDate = $('#postStartDate').val();
+        $('#postStartDate').val((postStartDate.split(' '))[0]);
+        $('#EffectiveStartDate').val((effectiveStartDate.split(' '))[0]);
+        $("#OACYTable").DataTable({ "scrollX": true});
+        });
+
+    </script>
+
+
+}

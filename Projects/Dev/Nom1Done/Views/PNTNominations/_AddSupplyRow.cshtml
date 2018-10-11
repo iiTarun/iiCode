@@ -1,0 +1,165 @@
+﻿@model Nom1Done.DTO.BatchDetailDTO
+
+@for (var i = 0; i < Model.SupplyList.Count; i++)
+{
+    Guid CurrentRowId = Guid.NewGuid();
+    var LocationProp = "--Select--";
+    var LocationName = "--Select--";
+    var Location = "--Select--";
+    var TransactionTypeDescription = "--Select--";
+    var TransactionType = "--Select--";
+    var ServiceRequestNo = "--Select--";
+    var ServiceRequestType = "--Select--";
+    var UpstreamIDProp = "--Select--";
+    var UpstreamIDName = "--Select--";
+    var UpstreamID = "--Select--";
+    <tr class="gradeX newSupplyRow" id="SupplyTable_@CurrentRowId" rel="@CurrentRowId">
+        @Html.Hidden("SupplyList.Index", CurrentRowId.ToString())
+        <td><input type="checkbox" value="@CurrentRowId" class="supplychkboxes" onclick="SupplyTableChkBoxClicked(this)" onchange="supplychkboxesOnChange()"></td>
+        @*<td>
+            <span></span>
+        </td>*@
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','Supply','@Model.Duns')">
+                @if (Model.SupplyList[i].LocationProp != null)
+                {
+                    LocationProp = Model.SupplyList[i].LocationProp;
+                }
+                @LocationProp
+            </span>
+            @Html.Hidden("SupplyList[" + CurrentRowId + "].LocationProp", Model.SupplyList[i].LocationProp, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','Supply','@Model.Duns')">
+                @if (Model.SupplyList[i].LocationName != null)
+                {
+                    LocationName = Model.SupplyList[i].LocationName;
+                }
+                @LocationName
+            </span>
+            @Html.Hidden("SupplyList[" + CurrentRowId + "].LocationName", Model.SupplyList[i].LocationName, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('locations','@CurrentRowId','Supply','@Model.Duns')">
+                @if (Model.SupplyList[i].Location != null)
+                {
+                    Location = Model.SupplyList[i].Location;
+                }
+                @Location
+            </span>
+            @Html.Hidden("SupplyList[" + CurrentRowId + "].Location", Model.SupplyList[i].Location, new { @rel = CurrentRowId })
+        </td>
+
+        @*<td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentRowId','Supply','@Model.Duns')">
+                @if (Model.SupplyList[i].TransactionTypeDescription != null)
+                {
+                    TransactionTypeDescription = Model.SupplyList[i].TransactionTypeDescription;
+                }
+                @TransactionTypeDescription
+            </span>
+            @Html.Hidden("SupplyList[" + CurrentRowId + "].TransactionTypeDescription", Model.SupplyList[i].TransactionTypeDescription, new { @rel = CurrentRowId })
+        </td>*@
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('TransactionType','@CurrentRowId','Supply','@Model.Duns')">
+                @if (Model.SupplyList[i].TransactionType != null)
+                {
+                    TransactionType = Model.SupplyList[i].TransactionType;
+                }
+                @TransactionType
+            </span>
+            @Html.Hidden("SupplyList[" + CurrentRowId + "].TransactionType", Model.SupplyList[i].TransactionType, new { @rel = CurrentRowId })
+            @Html.Hidden("SupplyList[" + CurrentRowId + "].TransTypeMapId", Model.SupplyList[i].TransTypeMapId, new { @rel = CurrentRowId })
+            @Html.Hidden("SupplyList[" + CurrentRowId + "].TransactionTypeDescription", Model.SupplyList[i].TransactionTypeDescription, new { @rel = CurrentRowId })
+          </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentRowId','Supply','@Model.Duns')">
+                @if (Model.SupplyList[i].ServiceRequestNo != null)
+                {
+                    ServiceRequestNo = Model.SupplyList[i].ServiceRequestNo;
+                }
+                @ServiceRequestNo
+            </span>
+            @Html.Hidden("SupplyList[" + CurrentRowId + "].ServiceRequestNo", Model.SupplyList[i].ServiceRequestNo, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentRowId','Supply','@Model.Duns')">
+                @if (Model.SupplyList[i].ServiceRequestType != null)
+                {
+                    ServiceRequestType = Model.SupplyList[i].ServiceRequestType;
+                }
+                @ServiceRequestType
+            </span>
+            @Html.Hidden("SupplyList[" + CurrentRowId + "].ServiceRequestType", Model.SupplyList[i].ServiceRequestType, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Supply','@Model.Duns')">
+                @if (Model.SupplyList[i].UpstreamIDProp != null)
+                {
+                    UpstreamIDProp = Model.SupplyList[i].UpstreamIDProp;
+                }
+                @UpstreamIDProp
+            </span>
+            @Html.Hidden("SupplyList[" + CurrentRowId + "].UpstreamIDProp", Model.SupplyList[i].UpstreamIDProp, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Supply','@Model.Duns')">
+                @if (Model.SupplyList[i].UpstreamIDName != null)
+                {
+                    UpstreamIDName = Model.SupplyList[i].UpstreamIDName;
+                }
+                @UpstreamIDName
+            </span>
+            @Html.Hidden("SupplyList[" + CurrentRowId + "].UpstreamIDName", Model.SupplyList[i].UpstreamIDName, new { @rel = CurrentRowId })
+        </td>
+        <td class="cursor">
+            <span data-toggle="modal" onclick="OpenPopUp('CounterParties','@CurrentRowId','Supply','@Model.Duns')">
+                @if (Model.SupplyList[i].UpstreamID != null)
+                {
+                    UpstreamID = Model.SupplyList[i].UpstreamID;
+                }
+                @UpstreamID
+            </span>
+            @Html.Hidden("SupplyList[" + CurrentRowId + "].UpstreamID", Model.SupplyList[i].UpstreamID, new { @rel = CurrentRowId })
+        </td>
+
+        <td>@Html.TextBox("SupplyList[" + CurrentRowId + "].ReceiptQuantityGross", Model.SupplyList[i].ReceiptQuantityGross, new { @class = "form-control cellSupplyRec", @type = "number", @rel = CurrentRowId, @min = "0", @oninput = "FuelValidationSupply(" + "'" + CurrentRowId + "'" + ")", @onkeyup = "FuelValidationSupply(" + "'" + CurrentRowId + "'" + ")", onblur = "OnSupRecQtyChange()" })</td>
+        <td class="cursor">
+            @*<span data-toggle="modal" onclick="OpenPopUp('Contract','@CurrentRowId','Supply','@Model.Duns')">
+                @Html.TextBox("SupplyList[" + CurrentRowId + "].FuelPercentage", Model.SupplyList[i].FuelPercentage, new { @class = "form-control", @rel = CurrentRowId, @readonly = true })
+            </span>*@
+            @Html.TextBox("SupplyList[" + CurrentRowId + "].FuelPercentage", Model.SupplyList[i].FuelPercentage, new { @class = "form-control", @rel = CurrentRowId, @onblur = "FuelPercentChangeSupply(" + "'" + CurrentRowId + "'" + ")" })
+        </td>
+        <td>@Html.TextBox("SupplyList[" + CurrentRowId + "].FuelQunatity", Model.SupplyList[i].FuelQunatity, new { @class = "form-control", @rel = CurrentRowId, @readonly = true })</td>
+        <td>@Html.TextBox("SupplyList[" + CurrentRowId + "].DeliveryQuantityNet", Model.SupplyList[i].DeliveryQuantityNet, new { @class = "form-control cellSupplyDel", @type = "number", @rel = CurrentRowId, @min = "0", @oninput = "FuelValidationSupplyDelQty(" + "'" + CurrentRowId + "'" + ")", @onkeyup = "FuelValidationSupplyDelQty(" + "'" + CurrentRowId + "'" + ")", onblur = "OnSupDelQtyChange()" })</td>
+        <td>@Html.TextBox("SupplyList[" + CurrentRowId + "].UpstreamRank", Model.SupplyList[i].UpstreamRank, new { @class = "form-control rank", @rel = CurrentRowId, maxlength = "3" })</td>
+
+
+        <td>@Html.TextBox("SupplyList[" + CurrentRowId + "].PackageID", Model.SupplyList[i].PackageID, new { @class = "form-control", @rel = CurrentRowId })</td>
+        <td>@Html.TextBox("SupplyList[" + CurrentRowId + "].UpContractIdentifier", Model.SupplyList[i].UpContractIdentifier, new { @class = "form-control", @rel = CurrentRowId })</td>
+        <td>@Html.TextBox("SupplyList[" + CurrentRowId + "].UpPackageID", Model.SupplyList[i].UpPackageID, new { @class = "form-control", @rel = CurrentRowId })</td>
+      
+    </tr>
+
+}
+<script>
+    $('.rank').keypress(function (e) {
+        var regex = new RegExp("^[0-9]+$");
+
+        var charCode = e.which;
+       
+        if (charCode == 8 || charCode == 0) {
+            return;
+        }
+        else {
+            var keyChar = String.fromCharCode(charCode);
+            if (regex.test(keyChar)) {
+                return true;
+            }
+        }
+        e.preventDefault();
+        return false;
+    });
+
+</script>
+

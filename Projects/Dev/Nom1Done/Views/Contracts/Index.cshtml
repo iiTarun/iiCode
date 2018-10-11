@@ -1,0 +1,103 @@
+﻿@model Nom.ViewModel.ContractListDTO
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div class="row border-bottom white-bg page-heading">
+    <h2><b>@Model.PipelineDetails</b></h2>
+    <div class="col-md-offset-10 col-md-2">
+        <a href="@Url.Action("Create",new {pipelineDuns = Model.PipelineDuns })" class="btn btn-w-m btn-success btn-outline "><i class="glyphicon glyphicon-plus"></i>Create Contract</a>
+    </div>    
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox-content m-b-sm border-bottom"> 
+            <div >
+                <table class="table table-bordered table-hover" id="ContractsScreenTable">
+                    <thead>
+                        <tr class="bg-color">
+                            <th style="min-width: 120px;">
+                                Contract #
+                                @*@Html.DisplayNameFor(model => model.RequestNo)*@
+                            </th>
+                            <th style="min-width: 120px;">
+                                Contract Type
+                                @*@Html.DisplayNameFor(model => model.RequestTypeID)*@
+                            </th>
+                            <th style="min-width: 120px;">
+                                Fuel Percentage	
+                                @*@Html.DisplayNameFor(model => model.FuelPercentage)*@
+                            </th>
+                            <th style="min-width: 120px;">
+                                M D Q
+                                @*@Html.DisplayNameFor(model => model.MDQ)*@
+                            </th>
+                            <th style="min-width: 120px;">
+                                Receipt Location
+                                @*@Html.DisplayNameFor(model => model.LocationFromID)*@
+                            </th>
+                            <th style="min-width: 120px;">
+                                Delivery Location
+                                @*@Html.DisplayNameFor(model => model.LocationToID)*@
+                            </th>
+                            <th style="min-width: 80px;">
+                                Expires
+                                @*@Html.DisplayNameFor(model => model.ValidUpto)*@
+                            </th>
+                            <th style="min-width: 120px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model.ContractList)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RequestNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RequestType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FuelPercentage)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MDQ)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.LocationFrom)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.LocationTo)
+                                </td>
+                                <td>       
+                                        @item.ValidUpto.ToShortDateString()     @*Html.DisplayFor(modelItem => item.ValidUpto.ToShortDateString());*@
+                                </td>   
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { pipelineDuns = Model.PipelineDuns,id = item.ID }) |                                  
+                                    @Html.ActionLink("Delete", "Delete", new { pipelineDuns = Model.PipelineDuns , id = item.ID })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+       var value = '@ViewBag.Status';
+         if (value != "") {
+         toastr.success("", "@ViewBag.Status");
+        }
+    });
+</script>
+

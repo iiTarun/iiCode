@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReductionReason xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<Reason><Code>AOK</Code><Value>All Necessary Confirmation Communication Occurred. No Additional Reduction Reason Code Required (All OK)</Value></Reason>
+<Reason><Code>CRE</Code><Value>Capacity Recalled (Cap Recall) </Value></Reason>
+<Reason><Code>CRD</Code><Value>Confirmation Not Conducted by Downstream Confirming Party (No Conf by Dn Conf Pty) </Value></Reason>
+<Reason><Code>CSP</Code><Value>Confirmation Not Conducted by Transportation Service Provider (No Conf by TSP) </Value></Reason>
+<Reason><Code>CRR</Code><Value>Confirmation Not Conducted by Upstream Confirming Party (No Conf by Up Conf Pty) </Value></Reason>
+<Reason><Code>CRN</Code><Value>Confirmation Response Not Received (No Conf Recd) </Value></Reason>
+<Reason><Code>PRD</Code><Value>Confirming Party Reduction at Delivery Location (Conf Pty Reduc-Del) </Value></Reason>
+<Reason><Code>PRR</Code><Value>Confirming Party Reduction at Receipt Location (Conf Pty Reduc-Rec) </Value></Reason>
+<Reason><Code>CPR</Code><Value>Confirming Party Reduction (Conf Pty Reduc) </Value></Reason>
+<Reason><Code>CAP</Code><Value>Confirming Party’s Capacity Constraint (Conf Pty Constraint) </Value></Reason>
+<Reason><Code>PCD</Code><Value>Confirming Party's Capacity Constraint at Delivery Location (Conf Pty Constraint-Del) </Value></Reason>
+<Reason><Code>PCR</Code><Value>Confirming Party's Capacity Constraint at Receipt Location (Conf Pty Constraint-Rec) </Value></Reason>
+<Reason><Code>CBM</Code><Value>Contract Balancing – Market (K Bal-Mkt)  </Value></Reason>
+<Reason><Code>CBR</Code><Value>Contract Balancing – Redirect (K Bal-Redirect) </Value></Reason>
+<Reason><Code>CBF</Code><Value>Contract Balancing – Supply (K Bal-Sup) </Value></Reason>
+<Reason><Code>CBL</Code><Value>Contract Balancing (K Bal) </Value></Reason>
+<Reason><Code>CRI</Code><Value>Credit Issues (Credit Issues) </Value></Reason>
+<Reason><Code>CNE</Code><Value>Critical Day Not in Effect (Crit Day Not Eff) </Value></Reason>
+<Reason><Code>NGD</Code><Value>Downstream Service Requester Did Not Have the Market or Submit the Nomination (Dn SR No Mkt/Nom) </Value></Reason>
+<Reason><Code>EPS</Code><Value>Elapsed-Prorated-Scheduled Quantity (EPSQ) </Value></Reason>
+<Reason><Code>EOV</Code><Value>EPSQ Override (EPSQ Override) </Value></Reason>
+<Reason><Code>CED</Code><Value>Exceeded Contract MDQ Path Rights (Exceed K MDQ Path) </Value></Reason>
+<Reason><Code>ECM</Code><Value>Exceeded Contract MDQ (Exceed K MDQ) </Value></Reason>
+<Reason><Code>CEC</Code><Value>Exceeded Contract MHQ Path Rights (Exceed K MHQ Path) </Value></Reason>
+<Reason><Code>ECH</Code><Value>Exceeded Contract MHQ (Exceed K MHQ) </Value></Reason>
+<Reason><Code>CEB</Code><Value>Exceeded Contract OFIB/LUQ (Exceed K OFIB/LUQ) </Value></Reason>
+<Reason><Code>CEO</Code><Value>Exceeded Family of Contracts MDQ Path Rights.  (Exceed Family K MDQ Path) </Value></Reason>
+<Reason><Code>EFC</Code><Value>Exceeded Family of Contracts MDQ (Exceed Family K MDQ) </Value></Reason>
+<Reason><Code>CEH</Code><Value>Exceeded Family of Contracts MHQ Path Rights (Exceed Family K MHQ Path) </Value></Reason>
+<Reason><Code>CEL</Code><Value>Exceeded Family of Contracts OFIB/LUQ (Exceed Family K OFIB/LUQ) </Value></Reason>
+<Reason><Code>PAL</Code><Value>Exceeded Park and Loan Capacity (Exceed Park/Loan Cap) </Value></Reason>
+<Reason><Code>EPM</Code><Value>Exceeded Point MDQ (Exceed Pt MDQ) </Value></Reason>
+<Reason><Code>SMQ</Code><Value>Exceeded Storage Maximum Capacity (Exceed Stor Max Cap) </Value></Reason>
+<Reason><Code>EDD</Code><Value>Exceeds Design Capacity – Delivery Location (Exceed Design Cap-Del) </Value></Reason>
+<Reason><Code>EDR</Code><Value>Exceeds Design Capacity – Receipt Location (Exceed Design Cap-Rec)  </Value></Reason>
+<Reason><Code>ECD</Code><Value>Exceeds Operating Capacity – Delivery Location (Exceed Oper Cap-Del)  </Value></Reason>
+<Reason><Code>ECR</Code><Value>Exceeds Operating Capacity – Receipt Location (Exceed Oper Cap-Rec) </Value></Reason>
+<Reason><Code>DIS</Code><Value>Excessive Displacement Quantity (Excess Displ Qty) </Value></Reason>
+<Reason><Code>FMD</Code><Value>Force Majeure at Delivery Location (Force Maj-Del) </Value></Reason>
+<Reason><Code>FMR</Code><Value>Force Majeure at Receipt Location (Force Maj-Rec) </Value></Reason>
+<Reason><Code>FMJ</Code><Value>Force Majeure (Force Maj) </Value></Reason>
+<Reason><Code>ZZF</Code><Value>Fuel Adjustment (Fuel Adj)  </Value></Reason>
+<Reason><Code>FPC</Code><Value>Fuel Percent Change (Fuel % Chng)</Value></Reason>
+<Reason><Code>GQS</Code><Value>Gas Quality Specifications Not Met (Gas Qual Spec Not Met) </Value></Reason>
+<Reason><Code>IMB</Code><Value>Imbalance Payback Quantity Exceeded (Imb PB Qty Exceed) </Value></Reason>
+<Reason><Code>IBQ</Code><Value>Insufficient Backhaul Quantity (Insuff BH Qty) </Value></Reason>
+<Reason><Code>INV</Code><Value>Invalid True-Up Nomination Quantities (Invalid True-up Nom Qty) </Value></Reason>
+<Reason><Code>LFD</Code><Value>Limited Firm Day – Delivery (Ltd Firm Day-Del) </Value></Reason>
+<Reason><Code>LFR</Code><Value>Limited Firm Day – Receipt (Ltd Firm Day-Rec) </Value></Reason>
+<Reason><Code>LFT</Code><Value>Limited Firm Day Transportation Exceeded (Ltd Firm Day-Transp Exceed) </Value></Reason>
+<Reason><Code>LCD</Code><Value>Location Capacity Quantity – Delivery (Loc Cap Qty-Del) </Value></Reason>
+<Reason><Code>LCR</Code><Value>Location Capacity Quantity – Receipt (Loc Cap Qty-Rec) </Value></Reason>
+<Reason><Code>DLI</Code><Value>Location No Longer Valid – Delivery (Loc Not Val-Del) </Value></Reason>
+<Reason><Code>RLI</Code><Value>Location No Longer Valid – Receipt (Loc Not Val-Rec) </Value></Reason>
+<Reason><Code>LPI</Code><Value>Loop In (Loop In) </Value></Reason>
+<Reason><Code>LPO</Code><Value>Loop Out (Loop Out) </Value></Reason>
+<Reason><Code>IQC</Code><Value>Max Daily Injection Quantity Change (Max Day Inj Qty Chng) </Value></Reason>
+<Reason><Code>WQC</Code><Value>Max Daily Withdrawal Quantity Change (Max Day W/D Qty Chng) </Value></Reason>
+<Reason><Code>CQC</Code><Value>MDQ Change – Contract (MDQ Chng-K) </Value></Reason>
+<Reason><Code>DQC</Code><Value>MDQ Change – Delivery Point (MDQ Chng-Del) </Value></Reason>
+<Reason><Code>RQC</Code><Value>MDQ Change – Receipt Point (MDQ Chng-Rec) </Value></Reason>
+<Reason><Code>MQD</Code><Value>Minimum Delivery Quantity could not be scheduled. (Min Del Qty Not Sched) </Value></Reason>
+<Reason><Code>MQR</Code><Value>Minimum Receipt Quantity could not be scheduled.  (Min Rec Qty Not Sched) </Value></Reason>
+<Reason><Code>014</Code><Value>No Corresponding Nomination at Delivery Location (No Corrspnd Nom-Del)  </Value></Reason>
+<Reason><Code>013</Code><Value>No Corresponding Nomination at Receipt Location (No Corrspnd Nom-Rec) </Value></Reason>
+<Reason><Code>012</Code><Value>No Corresponding Nomination (No Corrspnd Nom) </Value></Reason>
+<Reason><Code>PBD</Code><Value>Pipeline Balancing of Deliveries at a Location (P/L Bal Del Qty) </Value></Reason>
+<Reason><Code>PBR</Code><Value>Pipeline Balancing of Receipts at a Location (P/L Bal Rec Qty) </Value></Reason>
+<Reason><Code>MCC</Code><Value>Pipeline Capacity Constraint – Market (P/L Cap Constraint-Mkt) </Value></Reason>
+<Reason><Code>FCC</Code><Value>Pipeline Capacity Constraint – Supply (P/L Cap Constraint-Sup) </Value></Reason>
+<Reason><Code>CCD</Code><Value>Pipeline Capacity Constraint at Delivery Location (P/L Cap Constraint-Del) </Value></Reason>
+<Reason><Code>CCG</Code><Value>Pipeline Capacity Constraint at Group Location (P/L Cap Constraint-Grp) </Value></Reason>
+<Reason><Code>CCR</Code><Value>Pipeline Capacity Constraint at Receipt Location (P/L Cap Constraint-Rec)  </Value></Reason>
+<Reason><Code>PCC</Code><Value>Pipeline Capacity Constraint (P/L Cap Constraint) </Value></Reason>
+<Reason><Code>PLC</Code><Value>Pipeline Curtailment (P/L Curtail) </Value></Reason>
+<Reason><Code>PFI</Code><Value>Pipeline Facility Installation (P/L Fac Install) </Value></Reason>
+<Reason><Code>PEM</Code><Value>Pipeline Maintenance – Emergency (P/L Maint-Emerg) </Value></Reason>
+<Reason><Code>PMD</Code><Value>Pipeline Maintenance at Delivery Location (P/L Maint-Del) </Value></Reason>
+<Reason><Code>PMR</Code><Value>Pipeline Maintenance at Receipt Location (P/L Maint-Rec)   </Value></Reason>
+<Reason><Code>PLM</Code><Value>Pipeline Maintenance (P/L Maint) </Value></Reason>
+<Reason><Code>SLD</Code><Value>Pipeline Segment Capacity Constraint – Delivery (P/L Seg Cap Constraint-Del)  </Value></Reason>
+<Reason><Code>SLR</Code><Value>Pipeline Segment Capacity Constraint – Receipt  (P/L Seg Cap Constraint-Rec) </Value></Reason>
+<Reason><Code>PPA</Code><Value>Prior Period Adjustment (PPA) </Value></Reason>
+<Reason><Code>AFF</Code><Value>Processing Affidavit NonCompliance (Proc Affid Non-Comply) </Value></Reason>
+<Reason><Code>QER</Code><Value>Quantity Exceeds MDQ of Associated Contract (Qty Exceed MDQ Assoc K) </Value></Reason>
+<Reason><Code>BMP</Code><Value>Quantity reduced due to bumping (Qty Bump) </Value></Reason>
+<Reason><Code>BOP</Code><Value>Reduction Due to Balancing of Path (Reduc Bal Path) </Value></Reason>
+<Reason><Code>REI</Code><Value>Reinstatement of Reduced Quantity (Reinst Reduc Qty) </Value></Reason>
+<Reason><Code>CNA</Code><Value>Service Requester Contract Inactive (SR K Inactive) </Value></Reason>
+<Reason><Code>SCT</Code><Value>Service Requester Contract Terminated (SR K Term) </Value></Reason>
+<Reason><Code>SBC</Code><Value>Storage Balance Change (Stor Bal Chng) </Value></Reason>
+<Reason><Code>ADJ</Code><Value>Storage Balancing Adjustment (Stor Bal Adj)  </Value></Reason>
+<Reason><Code>SCC</Code><Value>Storage Capacity Constraint (Stor Cap Constraint)</Value></Reason>
+<Reason><Code>SNR</Code><Value>Storage Netting Reduction (Stor Net Reduc) </Value></Reason>
+<Reason><Code>SRP</Code><Value>Storage Ratchet Provision (Stor Rtcht Prov) </Value></Reason>
+<Reason><Code>CNM</Code><Value>Title Transfer Chain Nomination mis-match (TTT Nom Mis-match) </Value></Reason>
+<Reason><Code>QEE</Code><Value>Total Nomination Quantity Exceeds Elected Quantity (Tot Nom Exceed Elctd Qty) </Value></Reason>
+<Reason><Code>UIP</Code><Value>Underperformance by Interconnecting Party (Underperf Inter Pty) </Value></Reason>
+<Reason><Code>UPD</Code><Value>Underperformance of Confirming Party at Delivery Location  (Underperf Conf Pty-Del)  </Value></Reason>
+<Reason><Code>UPR</Code><Value>Underperformance of Confirming Party at Receipt Location (Underperf Conf Pty-Rec)  </Value></Reason>
+<Reason><Code>NGU</Code><Value>Upstream Service Requester Did Not Have the Gas or Submit the Nomination (Up SR No Gas/Nom) </Value></Reason>
+</ReductionReason>

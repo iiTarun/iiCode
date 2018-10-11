@@ -1,0 +1,38 @@
+﻿@model Nom.ViewModel.LocationsDTO
+@{
+    Layout = null;
+}
+
+<div style="width:90%; margin:0 auto">
+    @Html.HiddenFor(Model => Model.ID, new { @id = "frmLocationId" })
+    <div class="form-group">
+        @Html.LabelFor(Model => Model.Name, new { @class = "control-label" })
+        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @id = "frmName" } })
+        @Html.ValidationMessageFor(model => model.Name)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(Model => Model.Identifier, new { @class = "control-label" })
+        @Html.EditorFor(Model => Model.Identifier, new { htmlAttributes = new { @class = "form-control", @id = "frmIdentifier" } })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(Model => Model.PropCode, new { @class = "control-label" })
+        @Html.EditorFor(Model => Model.PropCode, new { htmlAttributes = new { @class = "form-control", @id = "frmPropCode" } })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(Model => Model.RDUsageID, new { @class = "control-label" })
+        @Html.DropDownListFor(Model => Model.RDUsageID, new SelectList(
+                                    new List<Object>{
+new { value = "1" , text = "R"  },
+new { value = "2" , text = "D" },
+new { value = "3" , text = "B" },
+                                      }, "value", "text"), new { @class = "form-control width: -webkit-fill-available;", @id = "frmRDUsageID" })
+    </div>
+    <div class="form-group">
+        @*@Html.LabelFor(Model => Model.IsActive, new { @class = "control-label" })
+            @Html.EditorFor(Model => Model.IsActive, new { htmlAttributes = new { @class = "form-control", @id = "frmIsActive" } })*@
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" onclick="SaveLocation('locData')" />
+        <input type="reset" value="Reset" class="btn" />
+    </div>
+</div>

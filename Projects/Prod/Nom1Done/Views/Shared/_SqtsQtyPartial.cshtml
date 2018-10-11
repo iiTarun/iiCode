@@ -1,0 +1,293 @@
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<Nom1Done.DTO.SummaryDTO>
+@using System.Linq;
+@using System;
+@using Nom1Done.DTO;
+@{
+    bool sqtsForLoc = ViewBag.IsSqtsForLoc;
+    var sumaryNomNew = new List<SummaryDTO>();
+    int daysInMonth = DateTime.DaysInMonth(DateTime.Now.Year, ViewBag.Month);
+    DateTime dtFrom = new DateTime(DateTime.Now.Year, ViewBag.Month, 1);
+    List<DateTime> dates = Enumerable.Range(0, daysInMonth)
+     .Select(offset => dtFrom.AddDays(offset))
+     .ToList();
+    int DateVal = 0;
+}
+
+<style>
+    /*.tooltip-inner {
+        background-color: #FF6C3A;
+    }*/
+
+    /*[data-placement="top"] + .tooltip > .tooltip-arrow {
+        border-top-color: #FF6C3A;
+    }
+
+    [data-placement="right"] + .tooltip > .tooltip-arrow {
+        border-right-color: #FF6C3A;
+    }
+
+    [data-placement="bottom"] + .tooltip > .tooltip-arrow {
+        border-bottom-color: #FF6C3A;
+    }
+
+    [data-placement="left"] + .tooltip > .tooltip-arrow {
+        border-left-color: #FF6C3A;
+    }*/
+
+</style>
+
+<div class="row">
+   
+</div>
+<div class="row">
+    <div class="ibox-content">
+
+        <div id="SqtsQtyPartialTableDiv" class="table-responsive">          
+
+            <table class="table table-bordered table-striped" id="SqtsQtyPartialTable">
+                <thead>
+                    <tr>
+                        @if (sqtsForLoc)
+                        {
+                            <th class="MinimumWidth" rowspan="2">Rec Loc</th>
+                            <th class="MinimumWidth" rowspan="2">Del Loc</th>
+                            <th class="MinimumWidth" rowspan="2">Svc Req K</th>
+                        }
+                        else
+                        {
+                            <th class="MinimumWidth" rowspan="2">Svc Req K</th>
+                            <th class="MinimumWidth" rowspan="2">Rec Loc</th>
+                            <th class="MinimumWidth" rowspan="2">Del Loc</th>
+                        }
+                        <th class="MinimumWidth" rowspan="2">Cycle</th>
+                        <th class="MinimumWidthLargeCol" rowspan="2">Up Name</th>
+                        <th class="MinimumWidthLargeCol" rowspan="2">Dn Name</th>
+                        <th class="MinimumWidth" rowspan="2">Pkg Id</th>
+                        <th class="MinimumWidth" rowspan="2">Nom Tracking Id</th>
+                        <th class="MinimumWidth" rowspan="2">Statement Date</th>
+                        <th class="MinimumWidth" rowspan="2">User</th>
+                        @if (Model.Count() > 0)
+                        {
+                            foreach (var CurrentMonthDates in dates)
+                            {
+                                <th class="nosort" colspan="2">@CurrentMonthDates.Day</th>
+                            }
+
+                        }
+                        <th class="MinimumWidth dates" colspan="2">Total</th>
+                    </tr>
+                    <tr>
+                        @if (Model.Count() > 0)
+                        {
+                            foreach (var CurrentMonthDates in dates)
+                            {
+                                <th class="nosort Rdates">Rec</th>
+                                <th class="nosort Ddates">Del</th>
+                            }
+                        }
+                        <th class="nosort Rdates">Rec</th>
+                        <th class="nosort Ddates">Del</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.GroupBy(a => new { a.NomTrackingId, a.RecLoc, a.DelLoc, a.ContractSVC, a.UpStreamName, a.DownStreamName, a.PkgId,a.Username }))
+                    {
+                    <tr class="sum">
+                        @{
+                            DateVal = 0;
+                        }
+                        @if (sqtsForLoc)
+                        {
+                            <td class="orangeThemeColor">@item.Key.RecLoc</td>
+                            <td class="orangeThemeColor">@item.Key.DelLoc</td>
+                            <td class="orangeThemeColor">@item.Key.ContractSVC</td>
+                        }
+                        else
+                        {
+                            <td class="orangeThemeColor">@item.Key.ContractSVC</td>
+                            <td class="orangeThemeColor">@item.Key.RecLoc</td>
+                            <td class="orangeThemeColor">@item.Key.DelLoc</td>
+                        }
+                        <td>@item.OrderByDescending(a => a.StatementDate).FirstOrDefault().Cycle</td>
+                        <td>@item.Key.UpStreamName</td>
+                        <td>@item.Key.DownStreamName</td>
+                        <td>@item.Key.PkgId</td>
+                        <td>@item.Key.NomTrackingId</td>
+                        <td>@item.Max(a => a.StatementDate)</td>
+                        <td>@item.Key.Username</td>
+                        @if (Model.Count() > 0)
+                        {
+
+                            foreach (var rec1 in dates.Where(a => a.Date < item.FirstOrDefault().nomStartDate))
+                            {
+                                var RclassName = "Rsum" + DateVal;
+                                var DclassName = "Dsum" + DateVal;
+                                <td class="transparentZeros @RclassName">0</td> //TODO: For Rec QTY
+                                <td class="transparentZeros @DclassName">0</td> //TODO: For Del Qty
+                                DateVal = DateVal + 1;
+
+
+                            }
+
+
+                            foreach (var rec1 in dates.Where(a => a.Date >= item.FirstOrDefault().nomStartDate && a.Date <= item.LastOrDefault().nomStartDate))
+                            {
+
+                                var RclassName2 = "Rsum" + DateVal;
+                                var DclassName2 = "Dsum" + DateVal;
+                                //int? resit = item.Where(a => a.StatementDate == rec1).FirstOrDefault().Qty;
+                                var itm = item.Where(a => a.nomStartDate == rec1).FirstOrDefault() == null ? null : item.Where(a => a.nomStartDate == rec1).FirstOrDefault();
+                                //int? resit = item.Where(a => a.StatementDate == rec1).FirstOrDefault() == null ? 0 : item.Where(a => a.StatementDate == rec1).FirstOrDefault().Qty;
+                                string resQty = itm != null ? String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}", itm.RecPointQty) : "0";
+                                string delQty = itm != null ? String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}", itm.DelPointQty) : "0";
+
+                                string ReductionReason = (itm == null || string.IsNullOrEmpty(itm.ReductionReason)) ? "Not Available" : itm.ReductionReason;
+                                int? resit = item.Where(a => a.nomStartDate <= rec1 && a.nomEndDate >= rec1).FirstOrDefault() == null ? 0 : item.Where(a => a.nomStartDate <= rec1 && a.nomEndDate >= rec1).FirstOrDefault().Qty;
+                                <td class="Rsum combat @RclassName2" data-toggle="tooltip" data-container="body" title="Reduction Reason: @ReductionReason">@resQty</td> //TODO: For Rec QTY
+                                <td class="Dsum combat @DclassName2" data-toggle="tooltip" data-container="body" title="Reduction Reason: @ReductionReason">@delQty</td> //TODO: For Del Qty
+                                DateVal++;
+
+                            }
+
+                            foreach (var rec1 in dates.Where(a => a.Date > item.LastOrDefault().nomStartDate))
+                            {
+
+                                var RclassName3 = "sum" + DateVal;
+                                var DclassName3 = "sum" + DateVal;
+                                <td class="transparentZeros sum dates @RclassName3">0</td> //TODO: For Rec QTY
+                                <td class="transparentZeros sum dates @DclassName3">0</td>//TODO: For Del Qty
+                                DateVal++;
+
+                            }
+                        }
+                        @{
+                            //DateVal = DateVal + 1;
+                            var RtempClass = "Rsum" + DateVal;
+                            var DtempClass = "Dsum" + DateVal;
+                        }
+                        <td class="Rtotal-combat dates @RtempClass"></td>
+                        <td class="Dtotal-combat dates @DtempClass"></td>
+                        @{
+                            DateVal++;
+                        }
+                    </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="orangeThemeColor">
+                        @{
+                            DateVal = 0;
+                        }                      
+                        <td colspan="10">Total</td>
+                        @if (Model.Count() > 0)
+                        {
+                            foreach (var CurrentMonthDates in dates)
+                            {
+                                var RclassNameFooter = "Rdates" + DateVal;
+                                var DclassNameFooter = "Ddates" + DateVal;
+                                <td class="sum @RclassNameFooter"></td> //TODO: For Rec QTY
+                                <td class="sum @DclassNameFooter"></td>//TODO: For Del Qty
+                                DateVal = DateVal + 1;
+                            }
+                        }
+                        @{
+                            //DateVal = DateVal + 1;
+                            var RClassNameFooterTotal = "Rdates" + DateVal;
+                            var DClassNameFooterTotal = "Ddates" + DateVal;
+
+                        }
+                        <td class="sum @RClassNameFooterTotal"></td>
+                        <td class="sum @DClassNameFooterTotal"></td>
+
+
+                    </tr>
+                </tfoot>
+            </table>
+            <p>
+                @Html.PagedListPager(Model,page=>Url.Action("SQTSPartials",new
+           {
+               sqts =Request.QueryString["sqts"],
+               month =Request.QueryString["month"],
+               sqtsType= Request.QueryString["sqtsType"],
+               pipelineId=Request.QueryString["pipelineId"],
+               showMine=Request.QueryString["showMine"],
+               page=page
+           }),PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod="GET",UpdateTargetId= "SchedQTY" }))
+            </p>
+            @*</div>*@
+        </div>
+
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+
+        $('[data-toggle="tooltip"]').tooltip();        
+
+        //iterate through each row in the table
+        $('tr').each(function () {
+            //the value of sum needs to be reset for each row, so it has to be set inside the row loop
+            var sum = 0
+            //find the combat elements in the current row and sum it
+            $(this).find('.Rsum').each(function () {
+                var combat = $(this).text();
+                if ( combat.length !== 0) {
+                    sum += parseInt(combat.replace(/\,/g, ''), 10);
+                }
+            });
+            //set the value of currents rows sum to the total-combat element in the current row
+            $('.Rtotal-combat', this).html(sum);
+            $('.Rtotal-combat', this).digits();
+        });
+
+        //iterate through each row in the table
+        $('tr').each(function () {
+            //the value of sum needs to be reset for each row, so it has to be set inside the row loop
+            var sum = 0
+            //find the combat elements in the current row and sum it
+            $(this).find('.Dsum').each(function () {
+                var combat = $(this).text();
+                if ( combat.length !== 0) {
+                    sum += parseInt(combat.replace(/\,/g, ''), 10);
+                }
+            });
+            //set the value of currents rows sum to the total-combat element in the current row
+            $('.Dtotal-combat', this).html(sum);
+            $('.Dtotal-combat', this).digits();
+        });
+
+        CalculateColumn();
+       
+    });
+
+    function CalculateColumn() {
+        $('table thead tr').find('.Rdates').each(function (i) {
+           
+            var sum = 0
+            $("tr td.Rsum" + i).each(function () {
+             
+                var combat = $(this).text();
+                if ( combat.length !== 0) {
+                    sum += parseInt(combat.replace(/\,/g, ''), 10);
+                }
+            });
+            $('.Rdates' + i).html(sum);
+            $('.Rdates' + i).digits();
+        });
+
+        $('table thead tr').find('.Ddates').each(function (i) {
+            var sum = 0
+            $("tr td.Dsum" + i).each(function () {
+                var combat = $(this).text();
+                if (combat.length !== 0) {
+                    sum += parseInt(combat.replace(/\,/g, ''), 10);
+                }
+            });
+            $('.Ddates' + i).html(sum);
+            $('.Ddates' + i).digits();
+        });
+    }
+</script>

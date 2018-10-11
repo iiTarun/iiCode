@@ -1,0 +1,116 @@
+﻿@model Nom1Done.DTO.TransactionalReportDTOs
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h4>Transactional Report</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox-content m-b-sm border-bottom">
+            <div class="ibox-content">
+
+                <div class="row">
+                    <table class="table table-bordered table-hover" id="TransactionalReportTable">
+                        <thead>
+                            <tr>
+                                <th style="min-width: 120px;">Posting Date/Time</th>                               
+                                <th style="min-width: 120px;">Contract Holder Name</th>
+                                <th style="min-width: 120px;">Contract Holder</th>
+                                <th style="min-width: 120px;">Affiliate Indicator</th> 
+                                <th style="min-width: 120px;">Rate Schedule</th>
+                                <th style="min-width: 120px;">Service Requester Contract</th>
+                                <th style="min-width: 120px;">Contract Status</th>
+                                <th style="min-width: 120px;">Amendment Reporting</th>     
+                                <th style="min-width: 120px;">Contract Begin Date</th>
+                                <th style="min-width: 120px;">Contract End Date</th>
+                                <th style="min-width: 120px;">Contract Entitlement Begin Date</th>
+                                <th style="min-width: 120px;">Contract Entitlement End Date</th>
+                                <th style="min-width: 120px;">Surcharge Indicator</th>
+                                <th style="min-width: 120px;">Rate Identification Code</th>
+                                <th style="min-width: 120px;">Rate Charged</th>
+                                <th style="min-width: 120px;">Rate Charged Reference</th>   
+                                <th style="min-width: 120px;">Maximum Tariff Rate</th>
+                                <th style="min-width: 120px;">Maximum Tariff Rate Reference</th>
+                                <th style="min-width: 120px;">Market Based Rate Indicator</th>
+                                <th style="min-width: 120px;">Reservation Rate Basis</th>
+                                <th style="min-width: 120px;">Contractual Quantity - Contract</th>
+                                <th style="min-width: 120px;">Negotiated Rate Indicator	</th>
+                                <th style="min-width: 120px;">Terms/Notes Indicator</th>
+                                <th style="min-width: 120px;">Loc/QTI</th>
+                                <th style="min-width: 120px;">Location</th>
+                                <th style="min-width: 120px;">Location Name</th>
+                                <th style="min-width: 120px;">Location Zone</th>
+                                <th style="min-width: 120px;">Loc/QTI</th>
+                                <th style="min-width: 120px;">Location</th>
+                                <th style="min-width: 120px;">Location Name</th>
+                                <th style="min-width: 120px;">Location Zone</th>
+                                <th style="min-width: 120px;">Capacity Type Indicator</th>
+                                <th style="min-width: 120px;">TSP</th>
+                                <th style="min-width: 120px;">TSP Name</th>
+                                <th style="min-width: 120px;">Comments</th>                                                         
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.TransactionalReportDTOList)
+                            {
+
+                                <tr class="gradeX">
+                                    <td>@item.PostingDateTime</td>
+                                    <td>@item.ContractHolderName</td>
+                                    <td>@item.ContractHolderIdentifier</td>
+                                    <td>@item.AffiliateIndicatorDesc</td>
+                                    <td>@item.RateSchedule</td>
+                                    <td>@item.ServiceRequesterContract</td>
+                                    <td>@item.ContactStatus</td>
+                                    <td>@item.AmendmentReporting</td>
+                                    <td>@item.ContractBeginDate</td>
+                                    <td>@item.ContractEndDate</td>
+                                    <td>@item.ContractEntitlementBeginDate</td>
+                                    <td>@item.ContractEntitlementEndDate</td>
+                                    <td>@item.SurchargeIndicator</td>
+                                    <td>@item.RateIdentificationCode</td>
+                                    <td>@item.RateCharged</td>
+                                    <td>@item.RateChargedReference</td>
+                                    <td>@item.MaximumTariffRate</td>
+                                    <td>@item.MaximumTariffRateReference</td>
+                                    <td>@item.MarketBasedRateIndicator</td>
+                                    <td>@item.ReservationRateBasis</td>
+                                    <td>@item.ContractualQuantityContract</td>
+                                    <td>@item.NegotiatedRateIndicator</td>
+                                    <td>@item.TermsNotesIndicator</td>
+                                    <td>@item.LocQTIPurpDesc1</td>
+                                    <td>@item.Location1</td>
+                                    <td>@item.Location1Name</td>
+                                    <td>@item.LocationZone1</td>
+                                    <td>@item.LocQTIPurpDesc1</td>
+                                    <td>@item.Location2</td>
+                                    <td>@item.Location2Name</td>
+                                    <td>@item.LocationZone2</td>
+                                    <td>@item.CapacityTypeIndicator</td>
+                                    <td>@item.TSP</td>
+                                    <td>@item.TSPName</td>
+                                    <td>@item.Comments</td>                                 
+                                </tr>
+                              
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

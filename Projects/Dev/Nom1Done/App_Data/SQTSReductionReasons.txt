@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReductionReason xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<CRE>Capacity Recalled (Cap Recall)</CRE>
+<CPR>Confirming Party Reduction (Cont Pty Reduc)</CPR>
+<CAP>Confirming Party's Capacity Constraint (Conf Pty Constraint)</CAP>
+<CBM>Contract Balancing -Market (K Bal-Mkt)</CBM>
+<CBR>Contract Balancing -Redirect (K Bal-Redirect)</CBR>
+<CBF>Conract Balancing -Supply (K Bal-Sup)</CBF>
+<CBL>Contract Balancing (K Bal)</CBL>
+<EDD>Exceeds Design Capacity - Delivery Location (Exceed Design Cap-Del)</EDD>
+<EDR>Exceeds Design Capacity - Receipt Location (Exceed Design Cap-Rec)</EDR>
+<FMJ>Force Majeure (Force Maj)</FMJ>
+<GQS>Gas Quality Specifications Not Met (Gas Qual Specs Not Met)</GQS>
+<019>Invalid Location Capacity Flow Indicator (Invalid Loc Cap Flo Ind)</019>
+<017>Invalid Location Capacity (Invalid Loc Cap)</017>
+<LCD>Location Capacity Quantity – Delivery (Loc Cap Qty-Del)</LCD>
+<LCR>Location Capacity Quantity – Receipt (Loc Cap Qty-Rec)</LCR>
+<LPI>Loop In (Loop In)</LPI>
+<LPO>Loop Out (Loop Out)</LPO>
+<020>Missing Location Capacity Flow Indicator (Miss Loc Cap Flo Ind)</020>
+<018>Missing Location Capacity (Miss Loc Cap)</018>
+<014>No Corresponding Nomination at Delivery Location (No Corrspnd Nom-Del)</014>
+<013>No Corresponding Nomination at Receipt Location (No Corrspnd Nom-Rec)</013>
+<012>No Corresponding Nomination (No Corrspnd Nom)</012>
+<PLC>Pipeline Curtailment (P/L Curtail)</PLC>
+<PFI>Pipeline Facility Installation (P/L Fac Install)</PFI>
+<PEM>Pipeline Maintenance – Emergency (P/L Maint-Emerg)</PEM>
+<PLM>Pipeline Maintenance (P/L Maint)</PLM>
+<AFF>Processing Affidavit NonCompliance  (Proc Affid Non-Comply)</AFF>
+<QER>Quantity Exceeds MDQ of Associated Contract (Qty Exceeds MDQ Assoc K)</QER>
+<BOP>Reduction Due to Balancing of Path (Reduc Bal Path)</BOP>
+<SCC>Storage Capacity Constraint (Stor Cap Constraint)</SCC>
+<CNM>Title Transfer Chain Nomination mis-match (TTT Nom Mis-Match)</CNM>
+<QEE>Total Nomination Quantity Exceeds Elected Quantity (Tot Nom Exceeds Elctd Qty) 
+<UIP>Underperformance by Interconnecting Party (Underperf Inter Pty)</UIP>
+<UPD>Underperformance of Confirming Party at Delivery Location  (Underperf Conf Pty-Del)</UPD>
+<UPR>Underperformance of Confirming Party at Receipt Location (Underperf Conf Pty-Rec)</UPR>
+</ReductionReason>
+
+

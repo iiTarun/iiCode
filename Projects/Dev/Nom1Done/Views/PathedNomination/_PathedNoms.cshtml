@@ -1,0 +1,1292 @@
+﻿@model Nom.ViewModel.PathedDTO
+@{ 
+    Guid CurrentRowIndex = Guid.NewGuid();
+    string RowStatusClass = "label-warning";
+}
+
+@using (Html.BeginForm("Index", "PathedNomination", FormMethod.Post))
+{
+    <input id="SortingPagingInfo_PageCount" name="SortingPagingInfo.PageCount" type="hidden" value="@Model.SortingPagingInfo.PageCount">
+   
+    @Html.HiddenFor(a => a.SortingPagingInfo.PageSize)
+    <input id="SortingPagingInfo_CurrentPageIndex" name="SortingPagingInfo.CurrentPageIndex" type="hidden" value="@Model.SortingPagingInfo.CurrentPageIndex">
+    @*@Html.HiddenFor(a => a.SortingPagingInfo.CurrentPageIndex)*@
+    @Html.HiddenFor(a => a.PipelineDuns)
+   
+    @Html.HiddenFor(a => a.PipelineNomType)
+    <div class="wrapper-content animated fadeInRight">
+        <div class="ibox float-e-margins">
+            <button type="button" id="AddPathedButton" class="btn btn-w-m btn-success btn-outline" onclick="AddPathedNomRow('@Model.PipelineDuns')"><i class="glyphicon glyphicon-plus"></i> Add</button>
+            <button type="button" id="RemovePathedBtn" class="btn btn-w-m btn-success btn-outline" onclick="removePathedNom()"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+            <button onclick="window.location.reload()" type="button" class="btn btn-w-m btn-success btn-outline"><i class="glyphicon glyphicon-refresh"></i> Refresh</button>
+            <button onclick="ValidatePathed()" id="ValidationPathedBtn" type="button" class="btn btn-w-m btn-success btn-outline"><i class="glyphicon glyphicon-check"></i> Validate</button>
+            <button type="button" id="CopyPathedBtn" class="btn btn-w-m btn-success btn-outline" onclick="CopyPathedNom('@Model.PipelineDuns')"><i class="glyphicon glyphicon-duplicate"></i> Copy</button>
+            <button type="submit" name="Save" class="btn btn-w-m btn-success btn-outline" onclick="return RankValidation();"><i class="glyphicon glyphicon-save"></i> Save</button>
+            <button onclick="SendNom()" id="SendPathedbtn" type="button" class="btn btn-w-m btn-success btn-outline"><i class="glyphicon glyphicon-send"></i> Send</button>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox-content m-b-sm border-bottom">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label" for="status">StartDate</label>
+                                @*<input type="text" class="form-control" placeholder="Flow Start Date" />*@
+                                @Html.TextBoxFor(a => a.StartDate, "{0:MM/dd/yyyy}", new { @class = "form-control StartDate", @readonly = "true" })
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label" for="status">EndDate</label>
+                                @Html.TextBoxFor(a => a.EndDate, "{0:MM/dd/yyyy}", new { @class = "form-control EndDate", @readonly = "true" })
+                                @*<input type="text" class="form-control" placeholder="Flow End Date" />*@
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label class="control-label" for="status">Status</label>
+                                @Html.DropDownListFor(a => a.StatusId, new SelectList(ViewBag.StatusID, "ID", "Name", Model.StatusId), "-Select-", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group" style="margin-top:22px;">
+                                <button type="submit" onclick="return validationOnSearch();" id="Search" name="Search" style="background-color:#FF6C3A !important; border-color:#FF6C3A !important;" class="btn btn-primary"><i class="glyphicon glyphicons-refresh"></i>Search</button>
+                                @*<button type="button" class="btn btn-w-m btn-success btn-outline"><i class="glyphicon glyphicons-refresh"></i>Reset</button>*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label" for="status">Show Mine Only</label>
+                                @Html.CheckBoxFor(a => a.showMine, new {  @class="checkbox" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <div id="PathedtableDiv">
+                            <div style="overflow: hidden;" id="DivHeaderRow">
+                                <table id="PathedNomTableHeader" class="table table-bordered table-hover" style="margin-top:0px!important;">
+                                    <thead>
+                                        <tr class="bg-color" style="background-color: #F5F5F6!important;">
+                                            <th style="min-width: 100px;"><input type="checkbox" class="selectall" style="margin-top:0px !important;" value="0" onclick="selectallClick(this);" />&nbsp;&nbsp;<label>Select All</label></th>
+                                            <th style="min-width: 100px;">Status</th>
+                                            <th style="min-width: 100px;">Sched Qty</th>
+                                            <th style="min-width: 200px;">*Trans Type</th>
+                                            <th style="min-width: 200px;">*Start Date</th>
+                                            <th style="min-width: 200px;">*End Date</th>
+                                            <th style="min-width: 200px;">Created Date</th>
+                                            <th style="min-width: 200px;">*Cycle</th>
+                                            <th style="min-width: 200px;">*K#</th>
+                                            <th style="min-width: 200px;">*Roll Nom</th>
+                                            <th style="min-width: 200px;">*Rec Location</th>
+                                            <th style="min-width: 200px;">*Rec Loc Prop</th>
+                                            <th style="min-width: 200px;">*Rec Loc ID</th>
+                                            <th style="min-width: 200px;">*Up Name</th>
+                                            <th style="min-width: 200px;">Up ID Prop</th>
+                                            <th style="min-width: 200px;">*Up ID</th>
+                                            <th style="min-width: 200px;">Up K#</th>
+                                            <th style="min-width: 200px;">*Rec Qty</th>
+                                            <th style="min-width: 200px;">*Rec Rank</th>
+                                            <th style="min-width: 200px;">*Del Loc</th>
+                                            <th style="min-width: 200px;">*Del Loc Prop</th>
+                                            <th style="min-width: 200px;">*Del Loc ID</th>
+                                            <th style="min-width: 200px;">*Down Name</th>
+                                            <th style="min-width: 200px;">Down ID Prop</th>
+                                            <th style="min-width: 200px;">*Down ID</th>
+                                            <th style="min-width: 200px;">Down K#</th>
+                                            <th style="min-width: 200px;">*Del Quantity</th>
+                                            <th style="min-width: 200px;">*Del Rank</th>
+                                            <th style="min-width: 200px;">Pkg ID</th>
+                                            <th style="min-width: 200px;">Fuel %</th>
+                                            <th style="min-width: 200px;">CreatedBy</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div style="overflow:scroll;" onscroll="OnScrollDiv(this)" id="DivMainContent">
+                                @Html.Partial("_PathedNomTable", Model)
+                            </div>                          
+                        </div>
+
+                       <div id="container" style="margin-left: 20px;">
+
+                            <div id="DivFirstPrevBtn" style="display:inline-block">
+
+                                @if (Model.SortingPagingInfo.CurrentPageIndex > 0)
+                                {
+                                    <input id="btnPrevious" type="button" value="Previous" />
+                                   
+                                }
+                                else
+                                {
+                                    <input id="btnPrevious" type="button" value="Previous" disabled="disabled" style="color:gray" />
+                               } 
+                                <input id="btnFirst" type="button" value="First" />
+
+                            </div>
+
+                            <div id="DivPagingNumsBtn" style="display:inline-block">
+                                <ul style="padding:5px !important;">
+                                    @for (var i = 0; i < 3; i++)
+                                    {
+                                        <li>
+                                            @if (i == 1)
+                                            {
+                                                var value = (Model.SortingPagingInfo.CurrentPageIndex + 1);
+                                                <span id="pageCurrentIndex">@value</span>
+                                            }
+                                           
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                            <div id="DivLastNextBtn" style="display:inline-block">
+                                @if (Model.SortingPagingInfo.CurrentPageIndex < ((Model.SortingPagingInfo.PageCount) - 1))
+                                {
+                                    <input id="btnNext" type="button" value="Next" />
+                                   
+                                }
+                                else
+                                {
+                                    <input id="btnNext" type="button" value="Next" disabled="disabled" style="color:gray" />
+                                }
+                                <input id="btnLast" type="button" value="Last" />
+                                <span>Out of @Model.SortingPagingInfo.PageCount Pages</span>
+
+                            </div>
+                        </div>
+
+                        <!--Table Paging UI End-->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+<!--  Pathed Js file for Pathed Nomination UI  -->
+<script>
+    function MakeStaticHeader(gridId, height, width, headerHeight, isFooter) {        
+        var tbl = $(gridId);
+        if (tbl) {
+            var DivHR = $('#DivHeaderRow');
+            var DivMC = $('#DivMainContent');
+
+            //*** Set divMainContent Properties ****         
+            DivMC.width("100%");
+            DivMC.css('max-height', height + 'px');
+            DivMC.css({ position: 'relative',top: -headerHeight+1 + 'px', zIndex: '1' });
+          
+
+
+            //*** Set divheaderRow Properties ****           
+            DivHR.height(headerHeight);           
+            DivHR.width("98.5%"); 
+            DivHR.css({position: 'relative', top:'0px',zIndex:'10'});   
+          
+        }
+    }
+
+    function OnScrollDiv(Scrollablediv) {        
+        $("#DivHeaderRow").scrollLeft($(Scrollablediv).scrollLeft());
+      }
+</script>
+<script>
+    function ShowMine() {
+      //  $("#Search").click();
+    }
+
+    var unsaved = false;
+    $("#PathedNomTable").change(function () {
+        unsaved = true;
+    });
+    function unloadPage() {
+        if (unsaved) {
+            return "You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?";
+        }
+    }
+
+    $(document).ready(function () {
+
+        MakeStaticHeader('#PathedNomTable', 300, 1080, 55, false);
+
+        var startdate = $('#StartDate').val();
+        var sDate = new Date(startdate);
+        var enddate = $('#EndDate').val();
+        var eDate = new Date(enddate);
+        var statusId = $("#StatusId").val();
+        var showMeVal=$("#showMine").is(':checked');
+        var currentPage=$("#SortingPagingInfo_CurrentPageIndex").val();
+        var dateFilter = {Showmine:showMeVal , StartDate: sDate.toISOString(), EndDate: eDate.toISOString(), StatusId: statusId, PipelineDuns : '@Model.PipelineDuns',PageSize: @Model.SortingPagingInfo.PageSize,CurrentPage: @Model.SortingPagingInfo.CurrentPageIndex,PageCount: @Model.SortingPagingInfo.PageCount};
+        var pathedTableHeader = $("#PathedNomTableHeader").DataTable({           
+            "bPaginate": false,
+            "bDeferRender": true,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bInfo": false,
+            "searching": false,
+            "serverSide": true,
+            "deferLoading": 0,
+            "order": [[ 6, "desc" ]],
+            "columnDefs":[ {
+                "targets": [0,1,2,3],
+                "orderable": false
+            }],
+            "language": {
+                "emptyTable": " ",
+                "zeroRecords": " "
+            },
+            "ajax":
+               {
+                   "url": "/PathedNomination/GetDataForSortingPaging",
+                   "data":{ pathedFilters: dateFilter },
+                   "type": "POST",
+                   "dataType": "html",
+                    success: function (result) {                       
+                       $("#DivMainContent").empty();
+                       $("#DivMainContent").append(result);                        
+                       $("#pageCurrentIndex").html(1);
+                       $("#SortingPagingInfo_CurrentPageIndex").val(0);
+                   }
+               },
+        });
+
+        $("#PathedNomTableHeader").find("tr:not(:first)").remove();
+        setSearchDates();
+
+        $("#btnFirst").click(function (evt) {
+
+            $("#SortingPagingInfo_CurrentPageIndex").val("0");
+            evt.preventDefault();
+            $("#pageCurrentIndex").html("1");
+            evt.preventDefault();
+            $.ajax({
+                url: "PathedNomination/GetData",
+                type: "post",
+                data: $("form").serialize(),
+                success: function (result) {                  
+                    $("#DivMainContent").empty();
+                    $("#DivMainContent").html(result);                  
+                }
+            });
+            DisableNextPreBtn();
+           // pathedTableHeader.ajax.reload();
+           // $("#Search").click();
+        });
+
+        $("#btnLast").click(function (evt) {
+
+            var totalPage = $("#SortingPagingInfo_PageCount").val();
+            var lastindex = parseInt(totalPage) - 1;
+            $("#SortingPagingInfo_CurrentPageIndex").val(lastindex);           
+            $("#pageCurrentIndex").html(totalPage);
+            evt.preventDefault();
+            $.ajax({
+                url: "PathedNomination/GetData",
+                type: "post",
+                data: $("form").serialize(),
+                success: function (result) {                  
+                    $("#DivMainContent").empty();
+                    $("#DivMainContent").html(result);                  
+                }
+            });
+            DisableNextPreBtn();
+           // pathedTableHeader.ajax.reload();
+           // $("#Search").click();
+        });
+
+        $("#btnNext").click(function (evt) {
+
+            var currentIndex = $("#SortingPagingInfo_CurrentPageIndex").val();
+
+          //  var sortField=$("#SortingPagingInfo_SortField").val();
+          //  var sortDir=$("#SortingPagingInfo_SortDirection").val();
+           
+            var NextIndex = parseInt(currentIndex) + 1;
+            $("#SortingPagingInfo_CurrentPageIndex").val(NextIndex);
+            $("#pageCurrentIndex").html(parseInt(NextIndex) + 1);
+           // debugger;
+            evt.preventDefault();            
+            $.ajax({
+                url: "PathedNomination/GetData",
+                type: "post",
+                data: $("form").serialize(),
+                success: function (result) {                  
+                    $("#DivMainContent").empty();
+                    $("#DivMainContent").html(result);                  
+                }
+            });
+            DisableNextPreBtn();
+            //pathedTableHeader.ajax.reload();
+          // $("#Search").click();
+        });
+
+        $("#btnPrevious").click(function (evt) {
+
+            var currentIndex = $("#SortingPagingInfo_CurrentPageIndex").val();
+            var PreIndex = parseInt(currentIndex) - 1;
+            $("#SortingPagingInfo_CurrentPageIndex").val(PreIndex);
+            $("#pageCurrentIndex").html(parseInt(PreIndex) + 1);
+            evt.preventDefault();
+            $.ajax({
+                url: "PathedNomination/GetData",
+                type: "post",
+                data: $("form").serialize(),
+                success: function (result) {                  
+                    $("#DivMainContent").empty();
+                    $("#DivMainContent").html(result);                  
+                }
+            });
+            DisableNextPreBtn();
+            // pathedTableHeader.ajax.reload();
+            //$("#Search").click();
+        });
+
+
+        //$(".pager").click(function (evt) {
+        //    var pageindex = $(evt.target).data("pageindex");
+        //    var index = parseInt(pageindex) - 1;
+        //    $("#CurrentPageIndex").val(index);
+        //    $("#SortingPagingInfo_CurrentPageIndex").val(index);           
+        //    evt.preventDefault();
+        //   // pathedTableHeader.ajax.reload();
+        //    $("#Search").click();
+        //});
+
+        $(function () {
+            $("#StartDate").datepicker({
+                dateFormat: 'dd/mm/yyyy',
+                autoclose: true,
+                todayHighlight: false
+            }).on('changeDate', function (selected) {
+                var minDate = new Date(selected.date.valueOf());
+                $('#EndDate').datepicker('setStartDate', minDate);
+            });
+
+            $("#EndDate").datepicker({  dateFormat: 'dd/mm/yyyy',autoclose: true })
+                .on('changeDate', function (selected) {
+                    var maxDate = new Date(selected.date.valueOf());
+                    $('#StartDate').datepicker('setEndDate', maxDate);
+                });
+        });
+
+        $(function () {
+            $('.dtpicker').datepicker({ dateFormat: 'dd/mm/yyyy', autoclose: true });
+
+        });
+
+        $("input:text").attr("autocomplete", "off");
+        var value = '@ViewBag.Status';
+        if (value != "") {
+            toastr.success("", "@ViewBag.Status");
+        }
+    });
+
+    function DisableNextPreBtn(){  
+        //debugger;
+        var currentIndex=$("#SortingPagingInfo_CurrentPageIndex").val();
+        var totalCount=$("#SortingPagingInfo_PageCount").val(); 
+        if(parseInt(currentIndex)> parseInt(totalCount) - 2)
+        {
+            $("#btnNext").prop('disabled', true);
+          
+        }else{
+            $("#btnNext").prop('disabled', false);
+        }
+        if(currentIndex < 1)
+        {
+            $("#btnPrevious").prop('disabled', true);
+           
+        }else{
+            $("#btnPrevious").prop('disabled', false);
+        }
+    }
+
+    
+
+
+    function selectallClick(obj) {
+        $(".chkboxes").prop('checked', $(obj).prop('checked'));
+    }
+
+    function ModifyRow(ClickedRow){
+        var modify="#PathedNomsList_" + ClickedRow + "__IsModify";
+        $(modify).val("True");
+    }
+
+    function chkboxesOnchange() {
+
+        if ($(".chkboxes:checked").length == $(".chkboxes").length) {
+            $(".selectall").prop("checked", true);
+        } else {
+            $(".selectall").prop("checked", false);
+        }
+    }
+
+    function OpenPopUpSpecialDelLocation(ClickedRow, PopupFrom, pipelineDuns) {
+        var TransTypeMapId = "#PathedNomsList_" + ClickedRow + "__TransTypeMapId";
+        var ttMapId = $(TransTypeMapId).val();
+        if (ttMapId == "") {
+            toastr.warning("", "Please select transation type, first.");
+        } else {
+
+            $.ajax({
+                url: '/PathedNomination/GetLocationPopUpForSpecialHybrid',
+                type: 'GET',
+                data: { TransTypeMapId: ttMapId, clickedRow: ClickedRow, popUpFor: PopupFrom, pipelineDuns: pipelineDuns },
+                dataType: 'html',
+                contentType: 'application/html;charset=utf-8'
+            })
+                .success(function (result) {
+                    $('#LocationPopUpModal').html(result);
+                    $('#LocationPopUpModal').modal('show');
+                   // $('#locationModalTable').DataTable();
+                })
+                .error(function (xhr, status) {
+                    alert(status);
+                })
+        }
+    }
+
+
+    function OpenPopUp(partialName, ClickedRow, PopupFrom, pipelineDuns) {
+       // CheckExistsLocation(ClickedRow, PopupFrom);
+        $.ajax({
+            url: '/PathedNomination/NotimationsPartials',
+            type: 'GET',
+            data: { partial: partialName, clickedRow: ClickedRow, popUpFor: PopupFrom, pipelineDuns: pipelineDuns },
+            dataType: 'html',
+            contentType: 'application/html;charset=utf-8'
+        })
+            .success(function (result) {
+                if (partialName == 'locations') {
+                    $('#LocationPopUpModal').html(result);
+                    $('#LocationPopUpModal').modal('show');
+                  //  $('#locationModalTable').DataTable();
+                }
+                else if (partialName == 'Contract') {
+
+                    $('#ContractPopUpModal').html(result);
+                    $('#ContractPopUpModal').modal('show');
+                    $('#ContactModalTable').DataTable();
+                }
+                else if (partialName == 'CounterParties') {
+                    $('#CounterPartyPopUpModal').html(result);
+                    $('#CounterPartyPopUpModal').modal('show');
+                    $('#CounterPartyModalTable').DataTable();
+                } else if (partialName == 'TransactionType') {
+                    $('#TransactionTypePopUpModal').html(result);
+                    $('#TransactionTypePopUpModal').modal('show');
+                    $('#TransactionTypeModalTable').DataTable();
+                } else if (partialName == 'StatusReason') {
+                    $('#RejectionReasonPopUpModal').html(result);
+                    $('#RejectionReasonPopUpModal').modal('show');
+                }
+            })
+            .error(function (xhr, status) {
+                alert(status);
+            })
+    }
+
+    function AddPathedNomRow(pipelineDuns) {
+        var rowCount = $('#PathedNomTable tbody tr').length;
+        $.ajax({
+            url: '/PathedNomination/AddPathedNomRow',
+            data: { RowCount: rowCount, pipelineDuns: pipelineDuns },
+            type: 'GET',
+            success: function (html) {
+                $('#PathedNomTable > tbody').prepend(html);
+                CheckEmptyTable();
+                $('#AddPathedButton').blur();
+            }
+        });
+    }
+
+    function CheckEmptyTable() {
+        var isEmpty = false;
+        var EmptyClassCount = $(".dataTables_empty").length;
+        if (EmptyClassCount > 0) {
+            isEmpty = true;
+            jQuery('.dataTables_empty').parents("tr").remove();
+        }
+        return isEmpty;
+    }
+
+
+    function CopyPathedNom(pipelineDuns) {
+        var SelectedChkBox = $('.chkboxes:checkbox:checked').length;
+        if (SelectedChkBox > 1) {
+            toastr.info("", "Please select only one nomination at a time.");
+        }
+        else if (SelectedChkBox == 0) {
+            toastr.warning("", "Please select one nomination.");
+        } else {
+
+            var pathedNom = [];
+
+            var RowCount = $('.chkboxes:checkbox:checked').attr("value");
+            $('.chkboxes:checkbox:checked').attr('checked', false);
+            var StartDate = "#PathedNomsList_" + RowCount + "__StartDate";
+            var EndDate = "#PathedNomsList_" + RowCount + "__EndDate";
+            var CycleID = "#PathedNomsList_" + RowCount + "__CycleID";
+            var Contract = "#PathedNomsList_" + RowCount + "__Contract";
+            var NomSubCycle = "#PathedNomsList_" + RowCount + "__NomSubCycle";
+            var TransType = "#PathedNomsList_" + RowCount + "__TransType";
+            var TransTypeMapId = "#PathedNomsList_" + RowCount + "__TransTypeMapId";
+            var PathedHybridNonpathedType = "#PathedNomsList_" + RowCount + "__PathedHybridNonpathedType";
+            var RecLocation = "#PathedNomsList_" + RowCount + "__RecLocation";
+            var RecLocProp = "#PathedNomsList_" + RowCount + "__RecLocProp";
+            var RecLocID = "#PathedNomsList_" + RowCount + "__RecLocID";
+            var UpName = "#PathedNomsList_" + RowCount + "__UpName";
+            var UpIDProp = "#PathedNomsList_" + RowCount + "__UpIDProp";
+            var UpID = "#PathedNomsList_" + RowCount + "__UpID";
+            var UpKContract = "#PathedNomsList_" + RowCount + "__UpKContract";
+            var RecQty = "#PathedNomsList_" + RowCount + "__RecQty";
+            var RecRank = "#PathedNomsList_" + RowCount + "__RecRank";
+            var PkgIDRec = "#PathedNomsList_" + RowCount + "__PkgIDRec";
+
+            var DelLoc = "#PathedNomsList_" + RowCount + "__DelLoc";
+            var DelLocProp = "#PathedNomsList_" + RowCount + "__DelLocProp";
+            var DelLocID = "#PathedNomsList_" + RowCount + "__DelLocID";
+            var DownName = "#PathedNomsList_" + RowCount + "__DownName";
+            var DownIDProp = "#PathedNomsList_" + RowCount + "__DownIDProp";
+            var DownID = "#PathedNomsList_" + RowCount + "__DownID";
+            var DownContract = "#PathedNomsList_" + RowCount + "__DownContract";
+            var DelQuantity = "#PathedNomsList_" + RowCount + "__DelQuantity";
+            var DelRank = "#PathedNomsList_" + RowCount + "__DelRank";
+            var PkgID = "#PathedNomsList_" + RowCount + "__PkgID";
+            var QuantityType = "#PathedNomsList_" + RowCount + "__QuantityType";
+            var FuelPercentage = "#PathedNomsList_" + RowCount + "__FuelPercentage";
+
+            pathedNom.push({
+                startDate: $(StartDate).val(),
+                endDate: $(EndDate).val(),
+                cycleID: $(CycleID).val(),
+                contract: $(Contract).val(),
+                nomSubCycle: $(NomSubCycle).val(),
+                transType: $(TransType).val(),
+                transTypeMapId: $(TransTypeMapId).val(),
+                pathedHybridNonpathedType: $(PathedHybridNonpathedType).val(),
+                recLocation: $(RecLocation).val(),
+                recLocProp: $(RecLocProp).val(),
+                recLocID: $(RecLocID).val(),
+                upName: $(UpName).val(),
+                upIDProp: $(UpIDProp).val(),
+                upID: $(UpID).val(),
+                upKContract: $(UpKContract).val(),
+                recQty: $(RecQty).val(),
+                recRank: $(RecRank).val(),
+                pkgIDRec: $(PkgIDRec).val(),
+                delLoc: $(DelLoc).val(),
+                delLocProp: $(DelLocProp).val(),
+                delLocID: $(DelLocID).val(),
+                downName: $(DownName).val(),
+                downIDProp: $(DownIDProp).val(),
+                downID: $(DownID).val(),
+                downContract: $(DownContract).val(),
+                delQuantity: $(DelQuantity).val(),
+                delRank: $(DelRank).val(),
+                pkgID: $(PkgID).val(),
+                quantityType: $(QuantityType).val(),
+                fuelPercentage: $(FuelPercentage).val()
+            });
+
+            $.ajax({
+                url: '/PathedNomination/CopyRow',
+                data: { PathedRecordToCopy: pathedNom, pipelineDuns: pipelineDuns },
+                type: 'POST',
+                success: function (html) {
+
+                    $('#PathedNomTable > tbody').prepend(html);
+                    CheckEmptyTable();
+                    $('#CopyPathedBtn').blur();
+                }
+            });
+
+        }
+    }
+
+    //function disablePropertyForFirstRow()
+    //{
+
+    //        var RowCount = $('#PathedNomTable tbody>tr:first').attr("rel");
+
+    //        var typeId = "#PathedNomsList_" + RowCount + "__PathedHybridNonpathedType";
+    //        var datalist = GetPropertiesListByNonPathedTypeToDisable($(typeId).val());
+    //        for (var i = 0; i < datalist.length; i++) {
+    //            var property = datalist[i];
+    //            disableField(RowCount, property);
+    //        }
+
+    //}
+
+
+    function statusReasonBtnClick() {
+        $('#RejectionReasonPopUpModal').modal('hide');
+    }
+
+
+    function CntrTransactionPopUpSelect(Identifier, Name, ForRow, PopUpFor, PathType, ttMapId) {
+        var TransactionTypeIdentifier = "#PathedNomsList_" + ForRow + "__TransType";
+        var TransTypeMapId = "#PathedNomsList_" + ForRow + "__TransTypeMapId";
+        $(TransTypeMapId).val(ttMapId);
+        $('#TransactionTypePopUpModal').modal('hide');
+        $(TransactionTypeIdentifier).val(Identifier); $(TransactionTypeIdentifier).parent().find('span').html(Identifier);
+    }
+
+
+    function CntrLocationPopUpSelect(Name, Id, PropCode, RowNo, LocationPopUpFrom) {
+
+        if (LocationPopUpFrom == "RecLoc") {           
+                var LocProp = "#PathedNomsList_" + RowNo + "__RecLocProp";
+                var LocName = "#PathedNomsList_" + RowNo + "__RecLocation";
+                var LocId = "#PathedNomsList_" + RowNo + "__RecLocID";
+                $('#LocationPopUpModal').modal('hide');
+                $(LocProp).val(PropCode); $(LocProp).parent().find('span').html(PropCode);
+                $(LocName).val(Name); $(LocName).parent().find('span').html(Name);
+                $(LocId).val(Id); $(LocId).parent().find('span').html(Id);
+           // }
+
+        } else if (LocationPopUpFrom == "DelLoc") {         
+                var LocProp = "#PathedNomsList_" + RowNo + "__DelLocProp";
+                var LocName = "#PathedNomsList_" + RowNo + "__DelLoc";
+                var LocId = "#PathedNomsList_" + RowNo + "__DelLocID";
+                $('#LocationPopUpModal').modal('hide');
+                $(LocProp).val(PropCode); $(LocProp).parent().find('span').html(PropCode);
+                $(LocName).val(Name); $(LocName).parent().find('span').html(Name);
+                $(LocId).val(Id); $(LocId).parent().find('span').html(Id);
+           // }
+        }
+    }
+
+    function ContractPopUpClick(RequestNo, RequestTypeID, FuelPercentage, ForRow, ContractFrom) {
+
+        var SvcReqNo = "#PathedNomsList_" + ForRow + "__Contract";
+        var fuelPer = "#PathedNomsList_" + ForRow + "__FuelPercentage";
+        $('#ContractPopUpModal').modal('hide');
+        if ($.trim(RequestNo).length > 0) {
+            $(SvcReqNo).val(RequestNo); $(SvcReqNo).parent().find('span').html(RequestNo);
+        } else {
+            $(SvcReqNo).val("--Select--"); $(SvcReqNo).parent().find('span').html("--Select--");
+        }
+        $(fuelPer).val(FuelPercentage);
+        var recQuantity = "#PathedNomsList_" + ForRow + "__RecQty";
+        var recQtyValue = $(recQuantity).val();
+        var delQuantity = "#PathedNomsList_" + ForRow + "__DelQuantity";
+        var delQtyValue = $(delQuantity).val();
+
+        if (recQtyValue != 0 && recQtyValue != "") {
+            FuelValidation(ForRow);
+        } else if (delQtyValue != 0 && delQtyValue != "") {
+            DelQtyFuelValidation(ForRow);
+        }
+    }
+
+
+    function FuelValidation(ForRow) {
+        var fuelPer = "#PathedNomsList_" + ForRow + "__FuelPercentage";
+        var delQuantity = "#PathedNomsList_" + ForRow + "__DelQuantity";
+        var delQtyValue = $(delQuantity).val();
+
+        var recQuantity = "#PathedNomsList_" + ForRow + "__RecQty";
+        var recQtyValue = $(recQuantity).val();
+
+        var fuelPerValue = $(fuelPer).val();
+
+        if (fuelPerValue != "") {
+            if (recQtyValue > 0 || recQtyValue == 0) {
+                if (recQtyValue > 100000000) {
+                    toastr.remove();
+                    toastr.warning(" Maximum value = 100,000,000 in RecQty. ");
+                    recQtyValue = 100000000;
+                    $(recQuantity).val("100000000");
+                }
+                if (typeof ($(delQuantity).attr('disabled')) == 'undefined') {
+                    delQtyValue = (recQtyValue * ((100 - fuelPerValue) / 100)).toFixed();
+                    $(delQuantity).val(delQtyValue);
+                }
+            } else {
+                toastr.remove();
+                toastr.warning("Please fill positive value in RecQty.");
+                $(recQuantity).val("0");
+                if (typeof ($(delQuantity).attr('disabled')) == 'undefined') {
+                    $(delQuantity).val("0");
+                }
+            }
+        } else {
+            toastr.remove();
+            toastr.warning("Please Select Contract.");
+            $(recQuantity).val("0");
+        }
+    }
+
+    function DelQtyFuelValidation(ForRow) {
+
+        var fuelPer = "#PathedNomsList_" + ForRow + "__FuelPercentage";
+        var fuelPerValue = $(fuelPer).val();
+        var delQuantity = "#PathedNomsList_" + ForRow + "__DelQuantity";
+        var delQtyValue = $(delQuantity).val();
+        var recQuantity = "#PathedNomsList_" + ForRow + "__RecQty";
+        var recQtyValue = $(recQuantity).val();
+
+        if (fuelPerValue != "") {
+            if ((delQtyValue > 0) || (delQtyValue == 0)) {
+                if (delQtyValue > 100000000) {
+                    toastr.remove();
+                    toastr.warning(" Maximum value = 100,000,000 in DelQty. ");
+                    delQtyValue = 100000000;
+                    $(delQuantity).val("100000000");
+                }
+                if (typeof ($(recQuantity).attr('disabled')) == 'undefined') {
+                recQtyValue = ((delQtyValue / (100 - fuelPerValue)) * 100).toFixed();
+                $(recQuantity).val(recQtyValue);
+            }
+            } else {
+                toastr.remove();
+                toastr.warning("Please fill positive value in DelQty.");
+                $(delQuantity).val("0");
+                if (typeof ($(recQuantity).attr('disabled')) == 'undefined') {
+                    $(recQuantity).val("0");
+                }
+            }
+        } else {
+            toastr.remove();
+            toastr.warning("Please Select Contract.");
+            $(delQuantity).val("0");
+        }
+    }
+
+
+    function CounterPartyPopUpSelect(Identifier, Name, PropCode, ForRow, PopUpFrom) {
+        if (PopUpFrom == "Up") {
+            var CounterPartyName = "#PathedNomsList_" + ForRow + "__UpName";
+            var CounterPartyProp = "#PathedNomsList_" + ForRow + "__UpIDProp";
+            var CounterPartyID = "#PathedNomsList_" + ForRow + "__UpID";
+            $('#CounterPartyPopUpModal').modal('hide');
+            $(CounterPartyName).val(Name); $(CounterPartyName).parent().find('span').html(Name);
+            $(CounterPartyProp).val(PropCode); $(CounterPartyProp).parent().find('span').html(PropCode);
+            $(CounterPartyID).val(Identifier); $(CounterPartyID).parent().find('span').html(Identifier);
+        } else if (PopUpFrom == "Down") {
+            var CounterPartyName = "#PathedNomsList_" + ForRow + "__DownName";
+            var CounterPartyProp = "#PathedNomsList_" + ForRow + "__DownIDProp";
+            var CounterPartyID = "#PathedNomsList_" + ForRow + "__DownID";
+            $('#CounterPartyPopUpModal').modal('hide');
+            $(CounterPartyName).val(Name); $(CounterPartyName).parent().find('span').html(Name);
+            $(CounterPartyProp).val(PropCode); $(CounterPartyProp).parent().find('span').html(PropCode);
+            $(CounterPartyID).val(Identifier); $(CounterPartyID).parent().find('span').html(Identifier);
+        }
+    }
+
+
+    function SendNom() {
+
+        var SelectedChkBox = $('.chkboxes:checkbox:checked').length;
+        if (SelectedChkBox == 0) {
+            toastr.warning("", "Please select one nomination.");
+        }
+        else {
+            var isValid = !(Validate());
+            var unsavedNom = true;
+            var notDraft=true;
+            var nomIdsToSend = [];
+            $('.chkboxes:checkbox:checked').each(function () {
+                var currentIndex = $(this).attr("value");
+                $(this).attr('checked', false);
+                var statusTag = "#status_" + currentIndex;
+                var statusId = $(statusTag).attr("value");
+
+                if (statusId == 11) {
+                    if (isValid) {
+                        var transactionID = $(this).attr('rel');
+                        nomIdsToSend.push(transactionID);
+                    }
+                } else if (statusId == 0) {
+                    unsavedNom = false;
+                }else{
+                    notDraft=false;
+                }
+            });
+            if (nomIdsToSend.length > 0) {
+
+                $.ajax({
+                    url: '/PathedNomination/SendNomination',
+                    data: { transactionIDs: nomIdsToSend },
+                    type: 'POST',
+                })
+                    .success(function (result) {
+                        if (result == "True") {
+                            toastr.success("", "Successfully sent");
+                        } else {
+                            toastr.error("", "Sending failed");
+                        }
+                    })
+                    .error(function (xhr, status) {
+                        alert(status);
+                    })
+
+            }
+            if (unsavedNom == false) {
+                toastr.warning("", "Please save your nom first.");
+            }
+            if (notDraft == false) {
+                toastr.warning("", "Submitted/ Accepted/ Exception/ Rejected nom can't resend.");
+            }
+            $('#SendPathedbtn').blur();
+            $(".selectall").prop("checked", false);
+        }
+
+    }
+
+
+    function ValidatePathed() {
+        var SelectedChkBox = $('.chkboxes:checkbox:checked').length;
+        if (SelectedChkBox == 0) {
+            toastr.warning("Please, Select at-least one row to validate");
+        } else {
+            var isNotValidate = Validate();
+            if (!isNotValidate) {
+                toastr.success("", "Successfully validated.");
+                $('.chkboxes:checkbox:checked').attr('checked', false);
+            }
+        }
+        $('#ValidationPathedBtn').blur();
+        $(".selectall").prop("checked", false);
+    }
+
+
+    function Validate() {
+        var flag = false;
+        var count = 0;
+        var clickedCheckBox = 0;
+        var dateMsgCount = 0;
+        var TTCounter = 0;
+        $('#PathedNomTable tbody').find('tr').each(function () {
+            var row = $(this);
+            var checkbox = row.find('input[type="checkbox"]');
+            if (checkbox.is(':checked')) {
+                clickedCheckBox++;
+                var RowCount = checkbox.attr("value");
+                    var StartDate = "#PathedNomsList_" + RowCount + "__StartDate";
+                    var EndDate = "#PathedNomsList_" + RowCount + "__EndDate";
+                    var CycleID = "#PathedNomsList_" + RowCount + "__CycleID";
+                    var contract = "#PathedNomsList_" + RowCount + "__Contract";
+                    var NomSubCycle = "#PathedNomsList_" + RowCount + "__NomSubCycle";
+                    var TransType = "#PathedNomsList_" + RowCount + "__TransType";
+                    var TransTypeName = "#PathedNomsList_" + RowCount + "__TransTypeName";
+                    var RecLocation = "#PathedNomsList_" + RowCount + "__RecLocation";
+                    var RecLocProp = "#PathedNomsList_" + RowCount + "__RecLocProp";
+                    var RecLocID = "#PathedNomsList_" + RowCount + "__RecLocID";
+                    var UpName = "#PathedNomsList_" + RowCount + "__UpName";
+                    var UpIDProp = "#PathedNomsList_" + RowCount + "__UpIDProp";
+                    var UpID = "#PathedNomsList_" + RowCount + "__UpID";
+                    var UpKContract = "#PathedNomsList_" + RowCount + "__UpKContract";
+                    var RecQty = "#PathedNomsList_" + RowCount + "__RecQty";
+                    var RecRank = "#PathedNomsList_" + RowCount + "__RecRank";
+                    var DelLoc = "#PathedNomsList_" + RowCount + "__DelLoc";
+                    var DelLocProp = "#PathedNomsList_" + RowCount + "__DelLocProp";
+                    var DelLocID = "#PathedNomsList_" + RowCount + "__DelLocID";
+                    var DownName = "#PathedNomsList_" + RowCount + "__DownName";
+                    var DownIDProp = "#PathedNomsList_" + RowCount + "__DownIDProp";
+                    var DownID = "#PathedNomsList_" + RowCount + "__DownID";
+                    var DownContract = "#PathedNomsList_" + RowCount + "__DownContract";
+                    var DelQuantity = "#PathedNomsList_" + RowCount + "__DelQuantity";
+                    var DelRank = "#PathedNomsList_" + RowCount + "__DelRank";
+                    //var PkgID = "#PathedNomsList_" + RowCount + "__PkgID";
+                    var NomTrackingId = "#PathedNomsList_" + RowCount + "__NomTrackingId";
+                    var UpPkgID = "#PathedNomsList_" + RowCount + "__UpPkgID";
+                    var UpRank = "#PathedNomsList_" + RowCount + "__UpRank";
+                    var DownPkgID = "#PathedNomsList_" + RowCount + "__DownPkgID";
+                    var DownRank = "#PathedNomsList_" + RowCount + "__DownRank";
+                    var QuantityType = "#PathedNomsList_" + RowCount + "__QuantityType";
+
+                   // columnValidation(QuantityType);
+                    columnValidation(StartDate);
+                    columnValidation(EndDate);
+                    columnValidation(CycleID);
+                    columnValidation(contract);
+                    columnValidation(NomSubCycle);
+                    columnValidation(TransType);
+                    columnValidation(RecLocation);
+                    columnValidation(RecLocProp);
+                    columnValidation(RecLocID);
+                    columnValidation(UpName);
+                    // columnValidation(UpIDProp);
+                    columnValidation(UpID);
+                   // columnValidation(UpKContract);
+                    columnValidation(RecQty);
+                    columnValidation(RecRank);
+                    columnValidation(DelLoc);
+                    columnValidation(DelLocProp);
+                    columnValidation(DelLocID);
+                    columnValidation(DownName);
+                    // columnValidation(DownIDProp);
+                    columnValidation(DownID);
+                   // columnValidation(DownContract);
+                    columnValidation(DelQuantity);
+                    columnValidation(DelRank);
+                    var conditionA = false;
+                var conditionB = false;
+                            
+                    if (($(StartDate).val() == "") || ($(EndDate).val() == "") || ($(CycleID).val() == "") || ($(contract).val() == "") || ($(NomSubCycle).val() == "") || ($(TransType).val() == "") || ($(RecLocation).val() == "") || ($(RecLocProp).val() == "") || ($(RecLocID).val() == "") || ($(UpName).val() == "") || ($(UpID).val() == "")  || ($(RecQty).val() == "") || ($(RecRank).val() == "") || ($(DelLoc).val() == "") || ($(DelLocProp).val() == "") || ($(DelLocID).val() == "") || ($(DownName).val() == "") || ($(DownID).val() == "")  || ($(DelQuantity).val() == "") || ($(DelRank).val() == "")) {
+                        conditionA = true;
+                    }
+
+                    if (($(StartDate).val() == "--Select--") || ($(EndDate).val() == "--Select--") || ($(CycleID).val() == "--Select--") || ($(contract).val() == "--Select--") || ($(NomSubCycle).val() == "--Select--") || ($(TransType).val() == "--Select--") || ($(RecLocation).val() == "--Select--") || ($(RecLocProp).val() == "--Select--") || ($(RecLocID).val() == "--Select--") || ($(UpName).val() == "--Select--") || ($(UpID).val() == "--Select--")  || ($(RecQty).val() == "--Select--") || ($(RecRank).val() == "--Select--") || ($(DelLoc).val() == "--Select--") || ($(DelLocProp).val() == "--Select--") || ($(DelLocID).val() == "--Select--") || ($(DownName).val() == "--Select--") || ($(DownID).val() == "--Select--") || ($(DelQuantity).val() == "--Select--") || ($(DelRank).val() == "--Select--")) {
+                        conditionB = true;
+                    }
+
+                    var isDateValidate = DatesValidate(StartDate, EndDate);
+                    if(isDateValidate==false && dateMsgCount==0){
+                        flag = true;
+                        dateMsgCount++;
+                        toastr.warning("Past date-time is not allowed in start and End datetime.");
+                    }
+
+                    if (conditionA == true || conditionB == true) {
+                        flag = true;
+                        count = count + 1;
+                        if (flag == true && count == 1) {
+                            toastr.warning("Please fill accurate data in highlighted columns");
+                        }
+                    }
+                    if ($(RecQty).val() < 0) {
+                        flag = true;
+                        toastr.warning("Please fill positive value in RecQty.");
+                }
+                if ($(TransType).val() != "") {
+                    var tt = $(TransType).val().length;
+
+                    if (tt == 1 && $(TransType).val() != 0) {
+                        flag = true;
+                        TTCounter = TTCounter + 1;
+                        if (flag == true && TTCounter == 1) {
+                            toastr.warning("Invalid TransType.");
+                        }
+                       
+                    }
+                }
+            }
+        })
+
+        return flag;
+    }
+
+
+    function DatesValidate(StartDateId, EndDateId){
+        var flag=true;
+        var startDate=$(StartDateId).val();
+        var endDate=$(EndDateId).val();
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var sDate = new Date(startDate);
+        var eDate = new Date(endDate);
+        if (sDate < today) {
+            flag=false;
+            if (!$(StartDateId).parent("td").hasClass("danger")) {
+                $(StartDateId).parent("td").addClass("danger");
+            }
+        }else{
+            if ($(StartDateId).parent("td").hasClass("danger")) {
+                $(StartDateId).parent("td").removeClass("danger");
+            }
+        }
+
+
+        if (eDate < today) {
+            flag=false;
+            if (!$(EndDateId).parent("td").hasClass("danger")) {
+                $(EndDateId).parent("td").addClass("danger");
+            }
+        }else{
+            if ($(EndDateId).parent("td").hasClass("danger")) {
+                $(EndDateId).parent("td").removeClass("danger");
+            }
+        }
+        return flag;
+     }
+
+
+
+    function columnValidation(column) {
+        var flag = false;
+        var columnID = $(column);
+        if ($(column).val() == "" || $(column).val() == "--Select--") {
+            flag = true;
+            if (!columnID.parent("td").hasClass("danger")) {
+                columnID.parent("td").addClass("danger");
+            }
+        } else {
+            if (columnID.parent("td").hasClass("danger")) {
+                columnID.parent("td").removeClass("danger");
+            }
+        }
+        return flag;
+    }
+
+
+
+    function validationOnSearch() {
+        var flag = true;
+        var end = $('#EndDate');
+        var start = $('#StartDate');
+        var status = $('#StatusId');
+        var statusVal = status.val();
+        var enddate = end.val();
+        var startdate = start.val();
+        if (enddate == "") {
+            //if (!end.hasClass("danger")) {
+            //    end.addClass("danger");
+            //}
+            toastr.warning("Please Fill End Date.");
+            flag = false;
+        }
+        if (startdate == "") {
+            toastr.warning("Please Fill Start Date.");
+            flag = false;
+        }
+
+        // if(flag==true){ $("#SortingPagingInfo_CurrentPageIndex").val('0'); }
+
+        return flag;
+    }
+
+
+    function ChkBoxClick(element, status) {
+        if ($(element).prop("checked") == false) {
+            //if($(element).parent().parent("tr").hasClass("danger"))
+            //{
+            //    $(element).parent().parent("tr").removeClass("danger");
+            //}
+        }
+    }
+
+
+    $(".cycleSelect").change(function () {
+
+        var rel = $(this).attr("rel");
+
+        var index = rel;
+
+        var startDate = "#PathedNomsList_" + index + "__StartDate";
+        var startDateValue = $(startDate).val();
+        var endDate = "#PathedNomsList_" + index + "__EndDate";
+        var endDateValue = $(endDate).val();
+        var cycle = "#PathedNomsList_" + index + "__CycleID";
+        var valueCycle = $(cycle).val();
+        var BegginingTime = "";
+        var EndTime = "";
+
+        if (valueCycle == 1 || valueCycle == 2) // timeley
+        {
+            BegginingTime = " 09:00 AM";
+            EndTime = " 09:00 AM";
+        }
+        else if (valueCycle == 3)//intrs day 1
+        {
+            BegginingTime = " 02:00 PM";
+            EndTime = " 09:00 AM";
+        }
+        else if (valueCycle == 4)//intrs day 2
+        {
+            BegginingTime = " 06:00 PM";
+            EndTime = " 09:00 AM";
+        }
+        else if (valueCycle == 5)//intrs day 3
+        {
+            BegginingTime = " 10:00 PM";
+            EndTime = " 09:00 AM";
+        }
+
+        var startDateOnly = startDateValue.split(" ");
+        var endDateOnly = endDateValue.split(" ");
+        var finalStartdate = startDateOnly[0].concat(BegginingTime);
+        var finalEndDate = endDateOnly[0].concat(EndTime);
+
+        $(startDate).val(finalStartdate);
+        $(endDate).val(finalEndDate);
+
+
+        //  var minDate = new Date($(startDate).val());
+        //  $(endDate).datepicker('setStartDate', minDate);
+
+        //   var maxDate = new Date($(endDate).val());
+        //   $(startDate).datepicker('setEndDate', maxDate);
+
+
+    });
+
+
+    function removePathedNom() {
+
+        var SelectedChkBox = $('.chkboxes:checkbox:checked').length;
+        if (SelectedChkBox == 0) {
+            toastr.warning("", "Please select one nomination.");
+        } else {
+            var nomIdsToDeleteList = [];
+            var IsDeleted = true;
+            var notDraft=true;
+            var newNom=true;
+            $('.chkboxes:checkbox:checked').each(function () {
+                var row = $(this).parent().parent();
+                if (row.hasClass('newPathedRow')) {
+                    row.remove();
+                    newNom=false;
+                    //$('#PathedNomTable tbody input:checkbox:checked').parents("tr").remove();
+                } else {
+                    var currentIndex = $(this).attr("value");
+                    var statusTag = "#status_" + currentIndex;
+                    var statusId = $(statusTag).attr("value");
+                    if (statusId == 11) {
+                            var transactionID = $(this).attr('rel');
+                            nomIdsToDeleteList.push(transactionID);
+                    }else{
+                        $(this).attr('checked', false);
+                        notDraft=false;
+                    }
+                }
+            });
+
+            if (nomIdsToDeleteList.length > 0) {
+                $.ajax({
+                    url: '/PathedNomination/DeletePathedNom',// + '?transactionID=' + transactionId,
+                    type: 'POST',
+                    data: { transactionIDs: nomIdsToDeleteList },
+                })
+               .success(function (result) {
+
+                   if (result == "True") {
+                      jQuery('#PathedNomTable tbody input:checkbox:checked').parents("tr").remove();
+                    } else {
+                       IsDeleted = false;
+                   }
+                   if (IsDeleted == true) {
+                       toastr.success("", "Data deleted successfully");
+                   } else {
+                       toastr.error("", "Deletion failed");
+                   }
+                   if(notDraft==false){
+                       toastr.warning("", "You may only delete a Nom in ‘Draft’ or ‘Unsubmitted’ status.");
+                   }
+               })
+              .error(function (xhr, status) {
+                  alert(status);
+                  toastr.error("", "Deletion failed");
+              })
+            } else if(notDraft==false){
+                toastr.warning("", "You may only delete a Nom in ‘Draft’ or ‘Unsubmitted’ status.");
+            }else if(newNom==false) {
+                toastr.success("", "Data deleted successfully");
+            }
+            $('#RemovePathedBtn').blur();
+            $(".selectall").prop("checked", false);
+        }
+    }
+
+    $("#frmDemo").submit(function (e) {
+        e.preventDefault();
+        var name = $("#name").val();
+        var comment = $("#comment").val();
+
+        if (name == "" || comment == "") {
+            $("#error_message").show().html("All Fields are Required");
+        } else {
+            $("#error_message").html("").hide();
+            $.ajax({
+                type: "POST",
+                url: "post-form.php",
+                data: "name=" + name + "&comment=" + comment,
+                success: function (data) {
+                    $('#success_message').fadeIn().html(data);
+                    setTimeout(function () {
+                        $('#success_message').fadeOut("slow");
+                    }, 2000);
+
+                }
+            });
+        }
+    })
+
+    function RankValidation() {
+        var flag = true;
+        var flagForRank = RankValidate();
+        if (flagForRank == false) {
+            toastr.warning("", "Empty Ranks are in Pathed Nom Table");
+            var r = confirm('Nomination Rank must be between 1 and 999. Default Rank will be applied to rows with Empty or Invalid Rank. Do you want to continue?');
+            if (r == true) {
+                var isfilled = RankDefaultValue();
+                if (isfilled) {
+                    toastr.info("", "Empty Ranks are filled by Default Vlaue(500) in Pathed Nom table.");
+                    flag = true;
+                }
+            } else {
+                toastr.info("", "Please Fill Empty Ranks in Pathed Nom Table.");
+                e.preventDefault();
+                return false;
+            }
+        }
+        if (flag == true) {
+            // Remove navigation prompt
+            window.onbeforeunload = null;
+        }
+        return flag;
+    }
+
+
+    function RankValidate() {
+
+        var flag = true;
+        $('#PathedNomTable tbody').find('tr').each(function () {
+            var RowCount = $(this).attr("rel");
+
+            var recRank = "#PathedNomsList_" + RowCount + "__RecRank";
+            var delRank = "#PathedNomsList_" + RowCount + "__DelRank";
+           // var isExists = $(recRank).attr('disabled');
+            //  var upPthRank = "#PathedNomsList_" + RowCount + "__UpRank";
+            //  var dnPathRank = "#PathedNomsList_" + RowCount + "__DownRank"; disabled="disabled"
+           //  $(recRank).has(attr)
+            if ((typeof ($(recRank).attr('disabled')) == 'undefined') && ($(recRank).val() == ""))
+            {
+                flag = false;
+            }
+            if ((typeof ($(delRank).attr('disabled')) == 'undefined') && ($(delRank).val() == "")) {
+                flag = false;
+            }
+        });
+        return flag;
+    }
+
+
+    function RankDefaultValue() {
+
+        var flag = false;
+        var defaultValue = 500;
+        $('#PathedNomTable tbody').find('tr').each(function () {
+            var RowCount = $(this).attr("rel");
+            var recRank = "#PathedNomsList_" + RowCount + "__RecRank";
+            var delRank = "#PathedNomsList_" + RowCount + "__DelRank";
+           // var upPthRank = "#PathedNomsList_" + RowCount + "__UpRank";
+           // var dnPathRank = "#PathedNomsList_" + RowCount + "__DownRank";
+            if ($(recRank).val() == "" && (typeof ($(recRank).attr('disabled')) == 'undefined')) {
+                $(recRank).val(defaultValue);
+            }
+            if ($(delRank).val() == "" && (typeof ($(delRank).attr('disabled')) == 'undefined')) {
+                $(delRank).val(defaultValue);
+            }
+           
+            flag = true;
+        });
+        return flag;
+    }
+
+</script>
+
+
+

@@ -1,0 +1,344 @@
+﻿@model Nom1Done.Nom.ViewModel.SearchCriteriaUNSC
+@using System.Globalization;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //var grid = new WebGrid(source: Model.UnscPerTransactionViewModel, canPage: true, rowsPerPage: 10, ajaxUpdateContainerId: "unscGrid");
+    //grid.Pager(WebGridPagerModes.All);
+}
+
+@*<link href="~/Content/customGrid.css" rel="stylesheet" type="text/css" />*@
+
+@if (ViewBag.IsPermission != null && ViewBag.IsPermission == true)
+{
+
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("#postStartDate").datepicker({
+            dateFormat: 'mm/dd/yyyy', todayHighlight: 'TRUE',
+            autoclose: true, clearBtn: true});
+        $("#postEndDate").datepicker({
+            dateFormat: 'mm/dd/yyyy', todayHighlight: 'TRUE',
+            autoclose: true, clearBtn: true});
+        $("#effectiveStartDate").datepicker({
+            dateFormat: 'mm/dd/yyyy', todayHighlight: 'TRUE',
+            autoclose: true, clearBtn: true });
+        $("#effectiveEndDate").datepicker({
+            dateFormat: 'mm/dd/yyyy', todayHighlight: 'TRUE',
+            autoclose: true, clearBtn: true });
+    });
+
+    function CheckValidations() {
+        //var result = false;
+        //return true;
+    var val=$("#postStartDate").val();
+        if (val == "") {
+            toastr.warning("", "Please select postdate.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function DownloadExcel() {
+        var res = CheckValidations();
+        if (res) {
+           // var pipelineId = $("#PipelineID").val();
+        var pipelineduns = $("#PipelineDuns").val();
+        var flagDefaultPage=$("#flagDefault").val();
+        var keyword = $("#keyword").val();
+        var watchlistId = 0;
+        var postStartDate = $('#postStartDate').val();
+        if($.trim(postStartDate) == ''){
+            var psDate="";
+        }else{
+            var psdate1=new Date(postStartDate);
+            var psDate=psdate1.toISOString();
+        }
+
+        var effectiveStartDate = $('#effectiveStartDate').val();
+        if($.trim(effectiveStartDate) == ''){
+            var esDate="";
+        }else{
+            var psdate3=new Date(effectiveStartDate);
+            var esDate=psdate3.toISOString();
+        }
+        //effectiveEndDate
+        var effectiveEndDate = $('#effectiveEndDate').val();
+        if ($.trim(effectiveEndDate) == '') {
+            var eeDate = "";
+        } else {
+            var psdate4 = new Date(effectiveEndDate);
+            var eeDate = psdate4.toISOString();
+        }
+
+        $('#postStartDate').val((postStartDate.split(' '))[0]);
+        $('#effectiveStartDate').val((effectiveStartDate.split(' '))[0]);
+        $('#effectiveEndDate').val((effectiveEndDate.split(' '))[0]);
+
+        //var dataFilter = { PipelineDuns: pipelineduns, flagDefault: flagDefaultPage, PipelineID: pipelineId, postStartDate: psDate, StartEffectiveGasDate: esDate, EndEffectiveGasDate: eeDate, keyword: keyword, WatchListId: watchlistId };
+        //console.log(dataFilter);
+        window.location.href = '@Url.Action("DownloadCSV", "MUnsubscribedCapacity")' + "?PipelineDuns=" + pipelineduns + "&postStartDate=" + psDate + "&StartEffectiveGasDate=" + esDate + "&EndEffectiveGasDate=" + eeDate + "&keyword=" + keyword;
+        }
+
+    }
+    </script>
+}
+    <div class="section clearfix object-non-visible" data-animation-effect="fadeIn"></div>
+
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="ibox-title" style="background-color:#f3f3f4 !important;">
+                <h1 id="about" class="title text-left">Unsubscribed Capacity <span id="pipelinedetail"></span></h1>
+            </div>
+        </div>
+   
+        @using (Html.BeginForm("index", "MUnsubscribedCapacity", FormMethod.Post))
+        {
+
+            @Html.HiddenFor(a => a.flagDefault)
+            //  @Html.HiddenFor(a => a.PipelineID)
+            @Html.HiddenFor(a => a.PipelineDuns)
+
+            <div id="dvSearch">
+                @if (ViewBag.IsPermission != null && ViewBag.IsPermission == true)
+                {
+                    <div class="row">
+
+                        <div class="col-md-3 col-md-offset-1">
+                            <label class="form-label">Post Start Date</label>
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.postStartDate, "{0:MM/dd/yyyy}", new { id = "postStartDate", @class = "form-control login-textbox", @style = "background-color: white;" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">CST Post Time (greater than)</label>
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.postTime, new { id = "postTime", @class = "form-control login-textbox", @style = "background-color: white;" })
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Start Effective Gas Day</label>
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.EffectiveStartDate, "{0:MM/dd/yyyy}", new { id = "effectiveStartDate", @class = "form-control login-textbox", @style = "background-color: white;" })
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="row" style="margin-top:15px !important;">
+                        <div class="col-md-3 col-md-offset-1">
+                            <label class="form-label">End Effective Gas Day</label>
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.EffectiveEndDate, "{0:MM/dd/yyyy}", new { id = "effectiveEndDate", @class = "form-control login-textbox", @style = "background-color: white;" })
+
+                            </div>
+                        </div>
+                        <div class="col-md-4 ">
+                            <label class="form-label">Location</label>
+
+                            @Html.TextBoxFor(m => m.keyword, new { @placeHolder = "Search by Location / Location Name", @class = "form-control login-textbox", @name = "keyword" })
+
+
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:15px !important;">
+                        <div class="col-md-2 col-md-offset-1">
+                            <button class="btn btn-primary btn-block" style="background-color:#FF6C3A !important; border-color:#FF6C3A !important;" onclick="return CheckValidations();" type="submit"><span class="icon_search"></span>&nbsp; Search</button>
+                        </div>
+                        <div class="col-md-2">
+                            <a class="btn btn-primary btn-block" style="background-color:#FF6C3A !important; border-color:#FF6C3A !important;" href="~/MUnsubscribedCapacity/Index?pipelineDuns=@Model.PipelineDuns&IsClearFilter=True">Reset </a>
+                        </div>
+
+                        <div class="col-md-2">
+                            <button class="btn btn-primary btn-block" style="background-color:#FF6C3A !important; border-color:#FF6C3A !important;" onclick="DownloadExcel();" type="button" name="download">Download Excel</button>
+                        </div>
+
+                    </div>
+                    <br />
+                    <br />
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-content" style="background-color:#f3f3f4 !important;">
+                                    <table class="table table-bordered table-hover " id="UNSCTable">
+                                        <thead>
+                                            <tr>
+                                                <th style="min-width: 120px;">Location/LocationPropCode</th>
+                                                <th style="min-width: 120px;">Location Name</th>
+                                                <th style="min-width: 120px;">LocationQTIDesc</th>
+                                                <th style="min-width: 120px;">Post Start Date</th>
+                                                <th style="min-width: 120px;">Start Eff Gas Day</th>
+                                                <th style="min-width: 120px;">End Eff Gas Day</th>
+                                                <th style="min-width: 120px;">Meas Basis</th>
+                                                <th style="min-width: 120px;">Location Zone</th>
+                                                <th style="min-width: 120px;">Unsubscribe Capacity</th>
+                                                <th style="min-width: 120px;">Change% from Yesterday</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.UnscPerTransactionViewModel)
+                                            {
+                                                <tr class="gradeX">
+                                                    <td>@item.Loc</td>
+                                                    <td>@item.LocName</td>
+                                                    <td>@item.LocQTIDesc</td>
+                                                    <td>@item.PostingDate</td>
+                                                    <td>@item.EffectiveGasDay</td>
+                                                    <td>@item.EndingEffectiveDay</td>
+                                                    <td>@item.MeasBasisDesc</td>
+                                                    <td>@item.LocZn</td>
+                                                    <td>@String.Format(CultureInfo.InvariantCulture, "{0:0,0}", item.UnsubscribeCapacity)</td>
+                                                    <td>@item.ChangePercentage</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div style="padding-top:170px" >
+                        <div class="dz-clickable h1 text-center"><b>You do not have access to this pipeline.</b></div>
+                    </div>
+                }
+            </div>
+
+
+        }
+    </div>
+    @if (ViewBag.IsPermission != null && ViewBag.IsPermission == true)
+    {
+        <script>
+    function formatAMPM(date) {
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        return strTime;
+    }
+    var dt = '@Model.postTime.Value';
+    var dts = new Date(dt);
+    var Time = formatAMPM(dts);
+    $(document).ready(function () {
+        $("#postTime").timepicker({
+            timeFormat: 'h:mm p',
+            interval: 60,
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true
+        }).val(Time);
+        var effectiveStartDate = $('#effectiveStartDate').val();
+        var postStartDate = $('#postStartDate').val();
+        var effectiveEndDate = $('#effectiveEndDate').val();
+        $('#postStartDate').val((postStartDate.split(' '))[0]);
+        $('#effectiveStartDate').val((effectiveStartDate.split(' '))[0]);
+        $('#effectiveEndDate').val((effectiveEndDate.split(' '))[0]);
+        $("#UNSCTable").DataTable({
+            "scrollX": true
+        });
+        //var pipelineId = $("#PipelineID").val();
+        //var pipelineduns = $("#PipelineDuns").val();
+        //var flagDefaultPage=$("#flagDefault").val();
+        //var keyword = $("#keyword").val();
+        //var watchlistId = 0;
+        //var postStartDate = $('#postStartDate').val();
+        //if($.trim(postStartDate) == ''){
+        //    var psDate="";
+        //}else{
+        //    var psdate1=new Date(postStartDate);
+        //    var psDate=psdate1.toISOString();
+        //}
+
+        //var effectiveStartDate = $('#effectiveStartDate').val();
+        //if($.trim(effectiveStartDate) == ''){
+        //    var esDate="";
+        //}else{
+        //    var psdate3=new Date(effectiveStartDate);
+        //    var esDate=psdate3.toISOString();
+        //}
+        ////effectiveEndDate
+        //var effectiveEndDate = $('#effectiveEndDate').val();
+        //if ($.trim(effectiveEndDate) == '') {
+        //    var eeDate = "";
+        //} else {
+        //    var psdate4 = new Date(effectiveEndDate);
+        //    var eeDate = psdate4.toISOString();
+        //}
+
+        //$('#postStartDate').val((postStartDate.split(' '))[0]);
+        //$('#effectiveStartDate').val((effectiveStartDate.split(' '))[0]);
+        //$('#effectiveEndDate').val((effectiveEndDate.split(' '))[0]);
+
+        //var dataFilter = { PipelineDuns: pipelineduns, flagDefault: flagDefaultPage, PipelineID: pipelineId, postStartDate: psDate, StartEffectiveGasDate: esDate, EndEffectiveGasDate: eeDate, keyword: keyword, WatchListId: watchlistId };
+
+        //$('#UNSCTable').DataTable(
+        //{
+        //    "searching": false,
+        //    "columnDefs": [
+        //        { "className": "text-center custom-middle-align", "targets": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
+        //        //{ "render": $.fn.dataTable.render.number(',', '.', 2), "targets": [8]}
+        //    ],
+        //    "language":
+        //        {
+        //            "processing": "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>",
+        //            "emptyTable": "No data available"
+        //        },
+        //    "processing": false,
+        //    "serverSide": true,
+        //    "scrollX": true,
+        //    "scrollCollapse": true,
+        //    "ajax":
+        //        {
+        //            "url": "/MUnsubscribedCapacity/GetData",
+        //            "data": { unscDataFilter : dataFilter},
+        //            "type": "POST",
+        //            "dataType": "JSON"
+        //        },
+        //    "columns": [
+        //             { "data": "Loc"},
+        //            { "data": "LocName" },
+        //            { "data": "LocQTIDesc" },
+        //             { "data": "PostingDate",
+        //                 "render": function(data){
+        //                     return moment(data).format("MM/DD/YYYY h:mm A");
+        //                 } },
+        //            { "data": "EffectiveGasDay",
+        //                "render": function(data){
+        //                    return moment(data).format("MM/DD/YYYY");
+        //                }
+        //            },
+        //            {
+        //                "data": "EndingEffectiveDay",
+        //                 "render": function (data) {
+        //                     return moment(data).format("MM/DD/YYYY");
+        //                 }
+        //             },
+        //            { "data": "MeasBasisDesc" } ,
+        //            { "data": "LocZn"  },
+        //            {
+        //            "data": "UnsubscribeCapacity",
+        //            "render": $.fn.dataTable.render.number(',','.')
+        //            },
+        //            { "data": "ChangePercentage" }
+        //    ]
+        //});
+    });
+
+        </script>
+
+    }

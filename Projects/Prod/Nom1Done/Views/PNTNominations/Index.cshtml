@@ -1,0 +1,306 @@
+﻿@model Nom1Done.DTO.BatchDetailDTO
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "PNT Nominations";
+    Guid CurrentContractId = Guid.NewGuid();
+    Guid CurrentSupplyRowId = Guid.NewGuid();
+    Guid CurrentMarketRowId = Guid.NewGuid();
+
+    var RowStatusClass = "";
+    var Status = "";
+    var shiperduns = @Model.ShiperDuns.ToString();
+    var shipperName= @Model.ShiperName.ToString();
+    var isSNG = (Model.Duns == "006900518" ? true : false);
+}
+<script src="~/Scripts/jquery.tabletojson.js"></script>
+
+
+<div class="wrapper wrapper-content">
+
+    <div class="row">
+        <div class="col-lg-4" >
+            <div class="ibox float-e-margins" >
+                <div class="ibox-title">
+                    <h5>Transportation Service Provider</h5>
+                </div>
+                <div class="ibox-content" style="height:135px !important;">
+                     <h2 class="no-margins">@Model.PipeLineName</h2> 
+                     <div class="stat-percent font-bold" style="color:#272F3C  !important;" ><strong>Duns:</strong> @Model.Duns</div>
+                     <br/>
+                     @if (Model.PipelineModelType == Nom1Done.DTO.NomType.HyPathedPNT)
+                     {
+                     <button id="PNTBtn" type="button" onclick="PNTbtnClick();" class="btn btn-w-m btn-success btn-outline">PNT</button>
+                     <button id="PathedBtn" type="button" onclick="pathedBtnClick()" class="btn btn-w-m btn-success btn-outline">Pathed</button>
+                     }
+                     @if (Model.PipelineModelType == Nom1Done.DTO.NomType.HyNonPathedPNT)
+                     {
+                        <button id="PNTBtn" type="button" onclick="PNTbtnClick();" class="btn btn-w-m btn-success btn-outline">PNT</button>
+                        <button id="NonPathedBtn" type="button" onclick="nonpathedBtnClick()" class="btn btn-w-m btn-success btn-outline">NonPathed</button>
+                     }
+
+                 </div>
+            </div>
+        </div>
+        <div class="col-lg-4" >
+            <div class="ibox float-e-margins" >
+                <div class="ibox-title">
+                    <h5>Service Requester</h5>
+                </div>
+                <div class="ibox-content" style="height:135px !important;">
+                    <h2 class="no-margins">@Model.ShiperName</h2>
+                    <div class="stat-percent font-bold" style="color:#272F3C  !important;"><strong>Duns:</strong> @Model.ShiperDuns </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="ibox float-e-margins" >
+                <div class="ibox-title">
+                    @if (Model.StatusId == 1 || Model.StatusId == 2 || Model.StatusId == 3 || Model.StatusId == 4)
+                    {
+                        RowStatusClass = "label-info";
+                        Status = "In-Process";
+                    }
+                    else if (Model.StatusId == 5 || Model.StatusId == 6)
+                    {
+                        RowStatusClass = "label-success";
+                        Status = "Submitted";
+                    }
+                    else if (Model.StatusId == 7)
+                    {
+                        RowStatusClass = "label-success";
+                        Status = "Accepted";
+                    }
+                    else if (Model.StatusId == 8 || Model.StatusId == 9)
+                    {
+                        RowStatusClass = "label-warning";
+                        Status = "Exception Occured";
+                    }
+                    else if (Model.StatusId == 10)
+                    {
+                        RowStatusClass = "label-warning";
+                        Status = "Rejected";
+                    }
+                    else if (Model.StatusId == 11)
+                    {
+                        RowStatusClass = "label-warning";
+                        Status = "Draft";
+                    }
+                    else if (Model.StatusId == 0)
+                    {
+                        RowStatusClass = "label-warning";
+                        Status = "GISB Unprocessed";
+                    }
+                    <span class="label @RowStatusClass pull-right">@Status</span>
+                    <h5>Status</h5>
+                </div>
+                <div class="ibox-content" style="padding-bottom:2px!important;height:135px !important;">
+                    <div class="row">
+                        <div class="font-bold" style="color:#FF6C3A !important;">
+                            <strong>Beg Date:&nbsp;</strong> @string.Format("{0:d}", Model.StartDateTime)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="font-bold" style="color:#272F3C  !important;">
+                            <strong>End Date:&nbsp;</strong> @string.Format("{0:d}", Model.EndDateTime)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="font-bold" style="color:#272F3C  !important;">
+                            <strong>Created Date:&nbsp;</strong> @string.Format("{0:d}", Model.CreatedDateTime)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>   
+     @Html.Hidden("NotifierEntity", (object)ViewBag.NotifierEntity)
+    <div id="MainPartialDiv">
+        @if (Model.PipelineModelType == Nom1Done.DTO.NomType.HyPathedNonPathed)
+        {
+            @Html.Partial("_NewNonPathedPartial", Model);
+        }
+        else
+        {
+            @Html.Partial("_Pnt", Model);
+        }
+
+
+    </div>
+</div>
+
+<div class="modal inmodal" id="RoutesPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+
+</div>
+
+<div class="modal inmodal" id="LocationPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+
+</div>
+
+
+<div class="modal inmodal" id="ContractPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+
+</div>
+
+<div class="modal inmodal" id="CounterPartyPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+
+</div>
+
+<div class="modal inmodal" id="TransactionTypePopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+</div>
+<div id="RankValidationPopUpModal"></div>
+<div class="modal inmodal" id="RejectionReasonPopUpModal" tabindex="-1" role="dialog" aria-hidden="true">
+</div>
+<script>
+
+    
+    $(function () {
+        var activeBtnPNTHybrid = localStorage.getItem('activeBtnPNTHybrid');       
+        if (activeBtnPNTHybrid) {
+            if ('@Model.PipelineModelType' == 'HyNonPathedPNT' && activeBtnPNTHybrid=="#PathedBtn") {
+               $("#PNTBtn").addClass("active hover");
+            } else if ('@Model.PipelineModelType' == 'HyPathedPNT' && activeBtnPNTHybrid == "#NonPathedBtn") {
+                $("#PNTBtn").addClass("active hover");
+            } else {
+                $(activeBtnPNTHybrid).click();
+            }
+        } else {
+            $("#PNTBtn").addClass("active hover");
+        }
+    });
+
+    function PNTbtnClick() {
+        localStorage.setItem('activeBtnPNTHybrid', "#PNTBtn");
+        if ('@Model.PipelineModelType' == 'HyNonPathedPNT') {           
+            $("#NonPathedBtn").removeClass("active hover");
+        } else {           
+            $("#PathedBtn").removeClass("active hover");
+        }
+        $("#PNTBtn").addClass("active hover");
+             var mainDiv = $("#MainPartialDiv");
+
+        $.ajax({
+                 url: '/PNTNominations/LoadPNTPartial',
+            type: 'post',
+            data: $("form").serialize(),
+        })
+      .success(function (result) {
+                 mainDiv.empty();
+                 mainDiv.html(result);
+             });
+         }
+
+    function pathedBtnClick() {
+        localStorage.setItem('activeBtnPNTHybrid', "#PathedBtn");
+        $("#PathedBtn").addClass("active hover");
+        $("#PNTBtn").removeClass("active hover");
+        var mainDiv = $("#MainPartialDiv");
+
+        $.ajax({
+            url: '/PNTNominations/LoadHybridPathedPartial',
+            type: 'post',
+            data: $("form").serialize(),
+        })
+       .success(function (result) {
+           mainDiv.empty();
+           mainDiv.html(result);
+       });
+
+    }
+
+    function nonpathedBtnClick() {
+        localStorage.setItem('activeBtnPNTHybrid', "#NonPathedBtn");
+        $("#NonPathedBtn").addClass("active hover");
+        $("#PNTBtn").removeClass("active hover");
+        var mainDiv = $("#MainPartialDiv");
+
+        $.ajax({
+            url: '/PNTNominations/LoadHybridNonPathedPartial',
+            type: 'post',
+            data: $("form").serialize(),
+        })
+       .success(function (result) {
+           mainDiv.empty();
+           mainDiv.html(result);
+       });
+
+    }
+
+</script>
+
+@section scripts {
+
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+
+    <script type="text/javascript">
+        var signalRHubInitialized = false;
+
+        $(function () {
+            InitializeSignalRHubStore();
+        });
+
+        function InitializeSignalRHubStore() {
+
+           
+            if (signalRHubInitialized)
+                return;
+
+            try {
+                var clientHub = $.connection.nomDoneHub;
+
+                clientHub.client.broadcastMessage = function (message) {
+
+                    if (message === "Refresh")
+                        ReloadIndexPartial();
+                };
+
+                $.connection.hub.start().done(function () {
+
+                    clientHub.server.initializeNomTable($("#NotifierEntity").val());
+                    signalRHubInitialized = true;
+                });
+
+            } catch (err) {
+                signalRHubInitialized = false;
+            }
+        };
+
+        function ReloadIndexPartial() {
+            
+            var mainDiv = $("#MainPartialDiv");
+            var URL = " ";
+            if ('@Model.PipelineModelType' == 'HyNonPathedPNT' && $("#NonPathedBtn").hasClass("active hover")) {
+                URL = "/PNTNominations/LoadHybridNonPathedPartial";
+            } else if ('@Model.PipelineModelType' == 'HyPathedPNT' && $("#PathedBtn").hasClass("active hover")) {
+                URL = "PNTNominations/LoadHybridPathedPartial";
+            } 
+            if (URL != " ") {
+                $.ajax({
+                    url: URL,
+                    type: "post",
+                    data: $("form").serialize(),
+                    success: function (result) {
+                        mainDiv.empty();
+                        mainDiv.html(result);
+                        if (!signalRHubInitialized)
+                            InitializeSignalRHubStore();
+                    }
+                });
+            }
+
+        };
+
+
+
+    </script>
+}
+
+
+
+

@@ -1,0 +1,127 @@
+﻿@model Nom1Done.DTO.BatchDetailDTO
+@{
+    Guid ContractTransportPathDivId = Guid.NewGuid();
+    string ServiceRequestNo = "--Select--";
+    string ServiceRequestType = "--Select--";
+    var isSNG = (Model.Duns == "006900518" ? true : false);
+    var isElPaso = (Model.Duns == "008001703" ? true : false);
+}
+
+<div class="panel panel-default" id="@ContractTransportPathDivId" style="margin-top: 10px !important;">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse_@ContractTransportPathDivId">
+                <span class="glyphicon glyphicon-minus">
+                </span>Contract
+            </a>
+        </h4>
+        <br />
+        <table id="Contract_@ContractTransportPathDivId" class="table table-bordered table-hover ServiceReqTablePart">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>*Svc Req K</th>
+                    <th>Svc Type</th>
+                    <th>Nominated</th>
+                    <th>Overrun</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="gradeX" rel="@ContractTransportPathDivId">
+                    @Html.Hidden("ContractPath.Index", ContractTransportPathDivId.ToString())
+                    <td class="center">
+                        <input type="checkbox" class="mainchkboxes" rel="@ContractTransportPathDivId" onchange="OnChangeMainCheckBox();" />
+                    </td>
+                    <td class="cursor">
+                        <span data-toggle="modal" onclick="OpenPopUp('Contract','@ContractTransportPathDivId','ContractPath',@Model.PipelineId)">
+                            @if (Model.ContractPath[0].ServiceRequestNo != null)
+                            {
+                                ServiceRequestNo = Model.ContractPath[0].ServiceRequestNo;
+                            }
+                            @ServiceRequestNo
+                        </span>@Html.Hidden("ContractPath[" + ContractTransportPathDivId + "].ServiceRequestNo", Model.ContractPath[0].ServiceRequestNo, new { @rel = ContractTransportPathDivId })
+                    </td>
+                    <td class="cursor">
+                        <span data-toggle="modal" onclick="OpenPopUp('Contract','@ContractTransportPathDivId','ContractPath',@Model.PipelineId,'@ContractTransportPathDivId')">
+                            @if (Model.ContractPath[0].ServiceRequestType != null)
+                            {
+                                ServiceRequestType = Model.ContractPath[0].ServiceRequestType;
+                            }
+                            @ServiceRequestType
+                        </span>
+                        @Html.Hidden("ContractPath[" + ContractTransportPathDivId + "].ServiceRequestType", Model.ContractPath[0].ServiceRequestType, new { @rel = ContractTransportPathDivId })
+                    </td>
+                    <td>@Html.TextBox("ContractPath[" + ContractTransportPathDivId + "].NominatedQuantity", Model.ContractPath[0].NominatedQuantity, new { @class = "form-control", @rel = ContractTransportPathDivId })</td>
+                    <td>@Html.TextBox("ContractPath[" + ContractTransportPathDivId + "].OverrunQuantity", Model.ContractPath[0].OverrunQuantity, new { @class = "form-control", @rel = ContractTransportPathDivId })</td>
+                    @Html.Hidden("HiddenFuelPercentage_" + ContractTransportPathDivId, null)
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="collapse_@ContractTransportPathDivId" class="panel-collapse collapse in">
+        <div class="ibox-content">
+            <div class="btn-group">
+                <a class="btn" onclick="AddContractPathRow('@Model.PipelineId','@ContractTransportPathDivId');"><span class="glyphicon glyphicon-plus-sign glyphicon-color" title="Add"></span></a>
+                <a class="btn" onclick="CopyCotractNomRow('@Model.PipelineId','@ContractTransportPathDivId')" href="javascript:void(0)"><span class="glyphicon glyphicon-copy glyphicon-color" title="Copy"></span></a>
+                <a class="btn" onclick="removeContract('@ContractTransportPathDivId')" href="javascript:void(0)"><span class="glyphicon glyphicon-remove glyphicon-color" title="Delete"></span></a>
+            </div>
+            <div class="table-responsive">
+                <table id="transportTable_@ContractTransportPathDivId" class="table table-bordered table-hover contractPart">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" class="selectallTranspose" value="0" onclick="selectAllTransport('@ContractTransportPathDivId',this);"> Select All</th>
+                            <th>TT</th>
+                            @*<th>Sched Qty</th>*@
+                            <th>*RecLocProp</th>
+                            <th>RecLocName</th>
+                            <th>*RecLoc</th>
+                            <th>*RecRank</th>
+                            <th>RecZone</th>
+                            <th>*DelLocProp</th>
+                            <th>DelLocName</th>
+                            <th>*DelLoc</th>
+                            <th>*DelRank</th>
+                            <th>DelZone</th>
+                            <th>*RecDTH</th>
+                            <th>FuelPercentage</th>
+                            <th>FuelDTH</th>
+                            <th>*DelDTH</th>
+                         @if (isSNG == true || isElPaso == true)
+                          {
+                            <th>*Route</th>
+                         }
+                            <th>PkgID</th>
+                            <th>*PathRank</th>                           
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="12">Total</td>
+                            <td><span id="transRecTotal_@ContractTransportPathDivId">@Model.ContractPath[0].transportRecTotal</span></td>
+                            <td colspan="2"></td>
+                            <td><span id="transDelTotal_@ContractTransportPathDivId">@Model.ContractPath[0].transportDelTotal</span></td>
+                          @if (isSNG == true || isElPaso == true)
+                          {
+                              <td colspan="6"></td>
+                          }
+                          else
+                          {
+                            <td colspan="5"></td>
+                          }
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('.collapse').on('shown.bs.collapse', function () {
+        $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+    }).on('hidden.bs.collapse', function () {
+        $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+    });
+</script>

@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Nom1Done.DTO.UPRDStatusDTO>
+
+@*<p>
+    @Html.ActionLink("Create New", "Create")
+</p>*@
+<table class="table">
+    <tr>
+        <th>
+            Pipeline
+        </th>
+        <th>
+            Date
+        </th>
+        <th>
+            Dataset
+        </th>
+        <th>
+            RURD Received
+        </th>
+        <th>
+            Dataset Available
+        </th>
+        <th>
+            Dataset Received
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        @Html.HiddenFor(modelItem => item.UPRD_ID)
+        @Html.HiddenFor(modelItem => item.RequestID)
+        @Html.HiddenFor(modelItem => item.RURD_ID)
+        @Html.HiddenFor(modelItem => item.TransactionId)
+        @Html.HiddenFor(modelItem=>item.DatasetRequested)
+        <td>
+            @item.Pipeline
+        </td>
+        <td>
+            @item.CreatedDate.Value.ToString("MM/dd/yyyy")
+        </td>
+        <td>
+            @item.DatasetSummary
+        </td>
+        @if (item.IsRURDReceived)
+        {
+        <td><font color="green">Yes</font></td>
+        }
+        else
+        {
+            <td><font color="red">No</font></td>
+        }
+        @if (item.IsDataSetAvailable)
+        {
+            <td><font color="green">Yes</font></td>
+        }
+        else
+        {
+            <td><font color="red">No</font></td>
+        }
+        @if (item.IsDatasetReceived)
+        {
+            <td><font color="green">Yes</font></td>
+        }
+        else
+        {
+            <td><font color="red">No</font></td>
+        }
+    </tr>
+}
+</table>
+
